@@ -68,6 +68,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             var lineSeriesDiameterData = new LineSeries();
             lineSeriesDiameterData.ItemsSource = DiameterPoints;
+            lineSeriesDiameterData.Color = OxyColor.FromRgb(0, 153, 255);
 
             this.RealTimeModel = new PlotModel { Title = "Realtime Diameter" };
             this.RealTimeModel.Series.Add(lineSeriesDiameterData);
@@ -82,6 +83,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             var lineSeriesDiameterData = new LineSeries();
             lineSeriesDiameterData.ItemsSource = DiameterPoints;
+            lineSeriesDiameterData.Color = OxyColor.FromRgb(0, 153, 255);
 
             this.HistoricalModel = new PlotModel { Title = "Historical Diameter" };
             this.HistoricalModel.Series.Add(lineSeriesDiameterData);
@@ -98,6 +100,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             lineSeriesNominal.Title = "1.75";
             lineSeriesNominal.StrokeThickness = 1;
             lineSeriesNominal.ItemsSource = DiameterReference;
+            lineSeriesNominal.Color = OxyColor.FromRgb(255,0,0);
 
             return lineSeriesNominal;
         }
