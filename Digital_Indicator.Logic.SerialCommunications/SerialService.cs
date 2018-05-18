@@ -16,14 +16,38 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public SerialService()
         {
             serialPort = new SerialPort();
+        }
 
+        private string portName;
+        public string PortName
+        {
+            get { return portName; }
+            set
+            {
+                portName = value;
+                UnbindHandlers();
+                SetPort();
+                BindHandlers();
+            }
+        }
+        public void BindHandlers()
+        {
+            serialPort.DataReceived += SerialPort_DataReceived;
+        }
+        public void UnbindHandlers()
+        {
+            serialPort.DataReceived -= SerialPort_DataReceived;
         }
 
         public void ConnectToSerialPort(string portName)
         {
-            serialPort.PortName = portName;
+            PortName = portName;
             serialPort.Open();
-            serialPort.DataReceived += SerialPort_DataReceived;
+        }
+
+        private void SetPort()
+        {
+            serialPort.PortName = portName;
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -34,10 +58,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
             string buildString = string.Empty;
 
             buildString = System.Text.Encoding.ASCII.GetString(buf);
-
-
-            
-
 
             DiameterChanged?.Invoke(buildString, null);
         }
