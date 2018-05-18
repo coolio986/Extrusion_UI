@@ -77,6 +77,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void ResetGraph_Click()
         {
             HistoricalModel.ResetAllAxes();
+            HistoricalModel.InvalidatePlot(true);
         }
 
         private void SetupRealTimeView()
