@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
-    public class ViewAViewModel : BindableBase
+    public class DiameterViewModel : BindableBase
     {
         private ISerialService _serialService;
 
@@ -29,7 +29,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref _message, value); }
         }
 
-        public ViewAViewModel(ISerialService serialService)
+        public DiameterViewModel(ISerialService serialService)
         {
             Message = "View A from your Prism Module";
 
@@ -38,7 +38,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
             SerialPortList = new ObservableCollection<string>(_serialService.GetSerialPortList());
 
-            _serialService.ConnectToSerialPort("COM3");
+            if (_serialService.IsSimulationModeActive())
+            {
+                //************TEST DATA**********//
+                _serialService.ConnectToSerialPort("COM3");
+                //*******************************//
+            }
             
         }
 

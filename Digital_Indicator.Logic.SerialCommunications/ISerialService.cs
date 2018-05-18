@@ -13,5 +13,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         void ConnectToSerialPort(string portName);
 
         event EventHandler DiameterChanged;
+
+        bool IsSimulationModeActive();
     }
 }

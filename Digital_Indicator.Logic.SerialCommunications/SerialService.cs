@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Digital_Indicator.Logic.SerialCommunications
@@ -15,7 +16,10 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public SerialService()
         {
-            serialPort = new SerialPort();
+            SimulationModeActive = true;
+
+            if (!SimulationModeActive)
+                serialPort = new SerialPort();
         }
 
         private string portName;
@@ -30,6 +34,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 BindHandlers();
             }
         }
+
+        private bool SimulationModeActive { get; set; }
+
         public void BindHandlers()
         {
             serialPort.DataReceived += SerialPort_DataReceived;
@@ -41,8 +48,15 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void ConnectToSerialPort(string portName)
         {
-            PortName = portName;
-            serialPort.Open();
+            if (!SimulationModeActive)
+            {
+                PortName = portName;
+                serialPort.Open();
+            }
+            else
+            {
+                RunSimulation();
+            }
         }
 
         private void SetPort()
@@ -62,9 +76,34 @@ namespace Digital_Indicator.Logic.SerialCommunications
             DiameterChanged?.Invoke(buildString, null);
         }
 
+        private void RunSimulation()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    double diameter = GetRandomNumber(1.00, 2.00);
+                    DiameterChanged?.Invoke(diameter.ToString("0.##"), null);
+                    Thread.Sleep(50);
+                }
+            });
+            
+        }
+
+        private double GetRandomNumber(double minimum, double maximum)
+        {
+            Random random = new Random();
+            return random.NextDouble() * (maximum - minimum) + minimum;
+        }
+
         public List<string> GetSerialPortList()
         {
             return SerialPort.GetPortNames().ToList();
+        }
+
+        public bool IsSimulationModeActive()
+        {
+            return SimulationModeActive;
         }
     }
 }

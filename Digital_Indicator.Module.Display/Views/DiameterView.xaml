@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:Digital_Indicator.Module.Display.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
@@ -34,5 +35,11 @@
         <!--<ItemsControl ItemsSource="{Binding SerialPortList}" />-->
         <Label Content="Diameter" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" FontSize="26" HorizontalAlignment="Center" Padding="0"/>
         <Label Content="{Binding Diameter}" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Center" Padding="0" />
+
+        <oxy:Plot Title="Test Title" Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="5" Grid.RowSpan="4">
+            <oxy:Plot.Series>
+                <oxy:LineSeries ItemsSource="{Binding Points}" />
+            </oxy:Plot.Series>
+        </oxy:Plot>
     </Grid>
 </UserControl>
