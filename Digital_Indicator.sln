@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Module.Di
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Navigation", "Digital_Indicator.Logic.Navigation\Digital_Indicator.Logic.Navigation.csproj", "{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.SerialCommunications", "Digital_Indicator.Logic.SerialCommunications\Digital_Indicator.Logic.SerialCommunications.csproj", "{F7861637-3550-49D6-9B8D-F9D38C6A3602}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7861637-3550-49D6-9B8D-F9D38C6A3602}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7861637-3550-49D6-9B8D-F9D38C6A3602}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7861637-3550-49D6-9B8D-F9D38C6A3602}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7861637-3550-49D6-9B8D-F9D38C6A3602}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

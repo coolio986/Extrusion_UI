@@ -5,6 +5,7 @@ using Microsoft.Practices.Unity;
 using Prism.Unity;
 using Digital_Indicator.Logic.Navigation;
 using Prism.Regions;
+using Digital_Indicator.Logic.SerialCommunications;
 
 namespace Digital_Indicator.Startup
 {
@@ -38,6 +39,8 @@ namespace Digital_Indicator.Startup
             base.ConfigureContainer();
 
             Container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ISerialService, SerialService>(new ContainerControlledLifetimeManager());
+            
         }
 
         //protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
