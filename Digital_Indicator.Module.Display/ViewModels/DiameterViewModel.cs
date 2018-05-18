@@ -38,15 +38,15 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref diameter, value); }
         }
 
-        private double? highestValue;
-        public double? HighestValue
+        private string highestValue;
+        public string HighestValue
         {
             get { return highestValue; }
             set { SetProperty(ref highestValue, value); }
         }
 
-        private double? lowestValue;
-        public double? LowestValue
+        private string lowestValue;
+        public string LowestValue
         {
             get { return lowestValue; }
             set { SetProperty(ref lowestValue, value); }
@@ -158,8 +158,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void UpdateHighsAndLows()
         {
-            HighestValue = highestValue == null ? (double)diameter.GetDouble() : highestValue.GetDouble() < diameter.GetDouble() ? diameter.GetDouble() : highestValue;
-            LowestValue = lowestValue == null ? (double)diameter.GetDouble() : lowestValue.GetDouble() > diameter.GetDouble() ? diameter.GetDouble() : lowestValue;
+            HighestValue = highestValue == null ? diameter : highestValue.GetDouble() < diameter.GetDouble() ? diameter : highestValue;
+            LowestValue = lowestValue == null ? diameter : lowestValue.GetDouble() > diameter.GetDouble() ? diameter : lowestValue;
         }
     }
 }
