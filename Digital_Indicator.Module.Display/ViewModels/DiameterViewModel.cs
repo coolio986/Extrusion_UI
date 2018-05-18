@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Digital_Indicator.Module.Display.ViewModels
@@ -48,6 +49,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
             SetupRealTimeView();
             SetupHistoricalView();
+            StartHistoricalTimer();
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
 
@@ -71,8 +73,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
             this.RealTimeModel.Series.Add(lineSeriesDiameterData);
 
             RealTimeModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
-            RealTimeModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = .5,  });
-            
+            RealTimeModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = .5, });
+
             this.RealTimeModel.Series.Add(GetNominalDiameter());
         }
 
@@ -100,6 +102,18 @@ namespace Digital_Indicator.Module.Display.ViewModels
             return lineSeriesNominal;
         }
 
+        private void StartHistoricalTimer()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    HistoricalModel.InvalidatePlot(true);
+                    Thread.Sleep(5000);
+                }
+            });
+        }
+
         private void _serialService_DiameterChanged(object sender, EventArgs e)
         {
             UpdateRealTimePlot();
@@ -116,9 +130,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
                 if (RealTimeModel.Axes.Count > 1)
                 {
-                    RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-4000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
+                    RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
                     RealTimeModel.InvalidatePlot(true);
-                    HistoricalModel.InvalidatePlot(true);
+                    
                 }
             }
         }
