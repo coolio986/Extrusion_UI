@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Digital_Indicator.Logic.Helpers;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -35,6 +36,20 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             get { return diameter; }
             set { SetProperty(ref diameter, value); }
+        }
+
+        private double? highestValue;
+        public double? HighestValue
+        {
+            get { return highestValue; }
+            set { SetProperty(ref highestValue, value); }
+        }
+
+        private double? lowestValue;
+        public double? LowestValue
+        {
+            get { return lowestValue; }
+            set { SetProperty(ref lowestValue, value); }
         }
 
         public DiameterViewModel(ISerialService serialService)
@@ -100,7 +115,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             lineSeriesNominal.Title = "1.75";
             lineSeriesNominal.StrokeThickness = 1;
             lineSeriesNominal.ItemsSource = DiameterReference;
-            lineSeriesNominal.Color = OxyColor.FromRgb(255,0,0);
+            lineSeriesNominal.Color = OxyColor.FromRgb(255, 0, 0);
 
             return lineSeriesNominal;
         }
@@ -119,9 +134,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _serialService_DiameterChanged(object sender, EventArgs e)
         {
-            UpdateRealTimePlot();
-
             Diameter = sender.ToString();
+
+            UpdateRealTimePlot();
+            UpdateHighsAndLows();
         }
 
         private void UpdateRealTimePlot()
@@ -135,9 +151,15 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 {
                     RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
                     RealTimeModel.InvalidatePlot(true);
-                    
+
                 }
             }
+        }
+
+        private void UpdateHighsAndLows()
+        {
+            HighestValue = highestValue == null ? (double)diameter.GetDouble() : highestValue.GetDouble() < diameter.GetDouble() ? diameter.GetDouble() : highestValue;
+            LowestValue = lowestValue == null ? (double)diameter.GetDouble() : lowestValue.GetDouble() > diameter.GetDouble() ? diameter.GetDouble() : lowestValue;
         }
     }
 }

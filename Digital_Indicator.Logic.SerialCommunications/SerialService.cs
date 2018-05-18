@@ -82,7 +82,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
                 while (true)
                 {
-                    double diameter = GetRandomNumber(1.00, 2.00);
+                    double diameter = GetRandomNumber(1.12, 1.98);
                     DiameterChanged?.Invoke(diameter.ToString("0.##"), null);
                     Thread.Sleep(50);
                 }
