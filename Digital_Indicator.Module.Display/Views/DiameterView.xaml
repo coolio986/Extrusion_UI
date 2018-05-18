@@ -33,13 +33,10 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <!--<ItemsControl ItemsSource="{Binding SerialPortList}" />-->
-        <Label Content="Diameter" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4" FontSize="26" HorizontalAlignment="Center" Padding="0"/>
-        <Label Content="{Binding Diameter}" Grid.Row="4" Grid.Column="4" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Center" Padding="0" />
-
-        <oxy:Plot Title="Test Title" Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="5" Grid.RowSpan="4">
-            <oxy:Plot.Series>
-                <oxy:LineSeries ItemsSource="{Binding Points}" />
-            </oxy:Plot.Series>
-        </oxy:Plot>
+        <Label Content="Diameter" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" FontSize="26" HorizontalAlignment="Center" Padding="0"/>
+        <Label Content="{Binding Diameter}" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Center" Padding="0" />
+        <oxy:PlotView Model="{Binding HistoricalModel}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3"/>
+        <oxy:PlotView Model="{Binding RealTimeModel}" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3"/>
+        <Button Grid.ColumnSpan="2" Content="Reset Graph" Command="{Binding ResetGraph}" Grid.Column="7" Grid.Row="1" Margin="30,0,30,15"/>
     </Grid>
 </UserControl>
