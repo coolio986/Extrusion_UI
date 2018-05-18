@@ -122,6 +122,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void StartHistoricalTimer()
         {
+            //acts as a timer
             Task.Factory.StartNew(() =>
             {
                 while (true)
@@ -151,7 +152,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 {
                     RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
                     RealTimeModel.InvalidatePlot(true);
-
                 }
             }
         }
