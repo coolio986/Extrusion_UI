@@ -18,9 +18,9 @@ namespace Digital_Indicator.Module.Display.Views
     /// <summary>
     /// Interaction logic for ViewA.xaml
     /// </summary>
-    public partial class ViewA : UserControl
+    public partial class DiameterView : UserControl
     {
-        public ViewA()
+        public DiameterView()
         {
             InitializeComponent();
         }

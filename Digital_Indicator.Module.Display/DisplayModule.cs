@@ -23,9 +23,9 @@ namespace Digital_Indicator.Module.Display
 
         public void Initialize()
         {
-            _container.RegisterTypeForNavigation<ViewA>();
+            _container.RegisterTypeForNavigation<DiameterView>();
 
-            _naviService.NavigateTo("ViewA");
+            _naviService.NavigateTo("DiameterView");
         }
     }
 }

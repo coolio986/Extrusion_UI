@@ -64,8 +64,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModels\ViewAViewModel.cs" />
-    <Compile Include="Views\ViewA.xaml.cs">
-      <DependentUpon>ViewA.xaml</DependentUpon>
+    <Compile Include="Views\DiameterView.xaml.cs">
+      <DependentUpon>DiameterView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -88,7 +88,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ViewA.xaml">
+    <Page Include="Views\DiameterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
