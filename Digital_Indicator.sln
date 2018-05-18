@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Startup", "Digital_Indicator\Digital_Indicator.Startup.csproj", "{71A7D172-E640-4192-8F3A-4AE87729E632}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Startup", "Digital_Indicator.Startup\Digital_Indicator.Startup.csproj", "{71A7D172-E640-4192-8F3A-4AE87729E632}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Module.Display", "Digital_Indicator.Module.Display\Digital_Indicator.Module.Display.csproj", "{17D124EA-F1E0-4A24-810F-81151C48638B}"
 EndProject
