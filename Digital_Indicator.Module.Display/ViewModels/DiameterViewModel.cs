@@ -21,8 +21,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private ISerialService _serialService;
         public DelegateCommand ResetGraph { get; set; }
 
-        public ObservableCollection<string> SerialPortList { get; }
-
         private IList<DataPoint> DiameterPoints { get; set; }
 
         private IList<DataPoint> DiameterReference { get; set; }
@@ -57,7 +55,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _serialService = serialService;
             _serialService.DiameterChanged += _serialService_DiameterChanged;
 
-            SerialPortList = new ObservableCollection<string>(_serialService.GetSerialPortList());
             DiameterPoints = new List<DataPoint>();
             DiameterReference = new List<DataPoint>();
 
@@ -69,7 +66,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             ResetGraph = new DelegateCommand(ResetGraph_Click);
 
             //************TEST DATA**********//
-            _serialService.ConnectToSerialPort("COM3");
+            //_serialService.ConnectToSerialPort("COM3");
             //*******************************//
 
         }

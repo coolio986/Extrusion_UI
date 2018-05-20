@@ -64,8 +64,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModels\DiameterViewModel.cs" />
+    <Compile Include="ViewModels\SerialPortSelectionViewModel.cs" />
     <Compile Include="Views\DiameterView.xaml.cs">
       <DependentUpon>DiameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SerialPortSelectionView.xaml.cs">
+      <DependentUpon>SerialPortSelectionView.xaml</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -93,6 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\DiameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SerialPortSelectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

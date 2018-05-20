@@ -8,7 +8,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 {
     public interface ISerialService
     {
-        List<string> GetSerialPortList();
+        List<SerialPortClass> GetSerialPortList();
 
         void ConnectToSerialPort(string portName);
 

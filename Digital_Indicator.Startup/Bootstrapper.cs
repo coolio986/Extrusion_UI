@@ -31,6 +31,8 @@ namespace Digital_Indicator.Startup
                 ModuleType = "Digital_Indicator.Module.Display.DisplayModule, Digital_Indicator.Module.Display",
                 InitializationMode = InitializationMode.WhenAvailable,
             });
+
+
             //moduleCatalog.AddModule(typeof(YOUR_MODULE));
         }
 
