@@ -20,14 +20,33 @@ namespace Digital_Indicator.Module.Display.ViewModels
     {
         private ISerialService _serialService;
         public DelegateCommand ResetGraph { get; set; }
+        public DelegateCommand StartCapture { get; set; }
+        public DelegateCommand StopCapture { get; set; }
 
         private IList<DataPoint> DiameterPoints { get; set; }
 
-        private IList<DataPoint> DiameterReference { get; set; }
+        private IList<DataPoint> DiameterReferenceNominal { get; set; }
 
-        public PlotModel RealTimeModel { get; private set; }
+        private IList<DataPoint> DiameterReferenceUpperLimit { get; set; }
 
-        public PlotModel HistoricalModel { get; private set; }
+        private IList<DataPoint> DiameterReferenceLowerLimit { get; set; }
+
+        private PlotModel realTimeModel;
+        public PlotModel RealTimeModel
+        {
+            get { return realTimeModel; }
+            private set { SetProperty(ref realTimeModel, value); }
+        }
+
+        private PlotModel historicalModel;
+        public PlotModel HistoricalModel
+        {
+            get { return historicalModel; }
+            set { SetProperty(ref historicalModel, value); }
+        }
+
+        private bool IsStarted;
+
 
         private string diameter;
         public string Diameter
@@ -52,29 +71,47 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         public DiameterViewModel(ISerialService serialService)
         {
+            //TODO Move Plot data to service
             _serialService = serialService;
             _serialService.DiameterChanged += _serialService_DiameterChanged;
 
-            DiameterPoints = new List<DataPoint>();
-            DiameterReference = new List<DataPoint>();
-
-
+            SetupDataPoints();
             SetupRealTimeView();
             SetupHistoricalView();
             StartHistoricalTimer();
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
-
-            //************TEST DATA**********//
-            //_serialService.ConnectToSerialPort("COM3");
-            //*******************************//
-
+            StartCapture = new DelegateCommand(StartCapture_Click);
+            StopCapture = new DelegateCommand(StopCapture_Click);
         }
 
         private void ResetGraph_Click()
         {
             HistoricalModel.ResetAllAxes();
             HistoricalModel.InvalidatePlot(true);
+        }
+
+        private void StartCapture_Click()
+        {
+            IsStarted = true;
+            SetupDataPoints();
+            SetupRealTimeView();
+            SetupHistoricalView();
+            StartHistoricalTimer();
+        }
+
+        private void StopCapture_Click()
+        {
+            IsStarted = false;
+            
+        }
+
+        private void SetupDataPoints()
+        {
+            DiameterPoints = new List<DataPoint>();
+            DiameterReferenceNominal = new List<DataPoint>();
+            DiameterReferenceUpperLimit = new List<DataPoint>();
+            DiameterReferenceLowerLimit = new List<DataPoint>();
         }
 
         private void SetupRealTimeView()
@@ -86,10 +123,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
             this.RealTimeModel = new PlotModel { Title = "Realtime Diameter" };
             this.RealTimeModel.Series.Add(lineSeriesDiameterData);
 
-            RealTimeModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
-            RealTimeModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = .5, });
+            this.RealTimeModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
+            this.RealTimeModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.5, });
 
+            this.RealTimeModel.Series.Add(GetUpperLimitDiameter());
             this.RealTimeModel.Series.Add(GetNominalDiameter());
+            this.RealTimeModel.Series.Add(GetLowerLimitDiameter());
         }
 
         private void SetupHistoricalView()
@@ -102,20 +141,44 @@ namespace Digital_Indicator.Module.Display.ViewModels
             this.HistoricalModel.Series.Add(lineSeriesDiameterData);
 
             HistoricalModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
-            HistoricalModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = .5, });
-
+            HistoricalModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.5, });
+            
+            this.HistoricalModel.Series.Add(GetUpperLimitDiameter());
             this.HistoricalModel.Series.Add(GetNominalDiameter());
+            this.HistoricalModel.Series.Add(GetLowerLimitDiameter());
         }
 
         private LineSeries GetNominalDiameter()
         {
-            var lineSeriesNominal = new LineSeries();
-            lineSeriesNominal.Title = "1.75";
-            lineSeriesNominal.StrokeThickness = 1;
-            lineSeriesNominal.ItemsSource = DiameterReference;
-            lineSeriesNominal.Color = OxyColor.FromRgb(255, 0, 0);
+            var lineSeries = new LineSeries();
+            lineSeries.Title = "1.75";
+            lineSeries.StrokeThickness = 2;
+            lineSeries.ItemsSource = DiameterReferenceNominal;
+            lineSeries.Color = OxyColor.FromRgb(64, 191, 67);
 
-            return lineSeriesNominal;
+            return lineSeries;
+        }
+
+        private LineSeries GetUpperLimitDiameter()
+        {
+            var lineSeries = new LineSeries();
+            lineSeries.Title = "1.80";
+            lineSeries.StrokeThickness = 1;
+            lineSeries.ItemsSource = DiameterReferenceUpperLimit;
+            lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
+
+            return lineSeries;
+        }
+
+        private LineSeries GetLowerLimitDiameter()
+        {
+            var lineSeries = new LineSeries();
+            lineSeries.Title = "1.70";
+            lineSeries.StrokeThickness = 1;
+            lineSeries.ItemsSource = DiameterReferenceLowerLimit;
+            lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
+
+            return lineSeries;
         }
 
         private void StartHistoricalTimer()
@@ -123,7 +186,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             //acts as a timer
             Task.Factory.StartNew(() =>
             {
-                while (true)
+                while (IsStarted)
                 {
                     HistoricalModel.InvalidatePlot(true);
                     Thread.Sleep(5000);
@@ -135,8 +198,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             Diameter = sender.ToString();
 
-            UpdateRealTimePlot();
-            UpdateHighsAndLows();
+            if (IsStarted)
+            {
+                UpdateRealTimePlot();
+                UpdateHighsAndLows();
+            }
         }
 
         private void UpdateRealTimePlot()
@@ -144,7 +210,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             if (RealTimeModel != null)
             {
                 this.DiameterPoints.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(Diameter)));
-                this.DiameterReference.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), 1.75));
+                this.DiameterReferenceNominal.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), 1.75));
+                this.DiameterReferenceUpperLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), 1.80));
+                this.DiameterReferenceLowerLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), 1.70));
 
                 if (RealTimeModel.Axes.Count > 1)
                 {
@@ -161,3 +229,4 @@ namespace Digital_Indicator.Module.Display.ViewModels
         }
     }
 }
+
