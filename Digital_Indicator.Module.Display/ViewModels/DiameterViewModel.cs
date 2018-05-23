@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Digital_Indicator.Logic.Helpers;
+using System.Windows;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -44,9 +45,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return historicalModel; }
             set { SetProperty(ref historicalModel, value); }
         }
-
-        private bool IsStarted;
-
 
         private string diameter;
         public string Diameter
@@ -91,6 +89,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             HistoricalModel.InvalidatePlot(true);
         }
 
+        private bool IsStarted;
         private void StartCapture_Click()
         {
             IsStarted = true;
@@ -103,7 +102,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StopCapture_Click()
         {
             IsStarted = false;
-            
+
         }
 
         private void SetupDataPoints()
@@ -142,7 +141,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
             HistoricalModel.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
             HistoricalModel.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.5, });
-            
+
             this.HistoricalModel.Series.Add(GetUpperLimitDiameter());
             this.HistoricalModel.Series.Add(GetNominalDiameter());
             this.HistoricalModel.Series.Add(GetLowerLimitDiameter());
@@ -151,7 +150,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private LineSeries GetNominalDiameter()
         {
             var lineSeries = new LineSeries();
-            lineSeries.Title = "1.75";
+            lineSeries.Title = "1.75"; //TODO user entry on view
             lineSeries.StrokeThickness = 2;
             lineSeries.ItemsSource = DiameterReferenceNominal;
             lineSeries.Color = OxyColor.FromRgb(64, 191, 67);
@@ -162,7 +161,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private LineSeries GetUpperLimitDiameter()
         {
             var lineSeries = new LineSeries();
-            lineSeries.Title = "1.80";
+            lineSeries.Title = "1.80"; //TODO user entry on view
             lineSeries.StrokeThickness = 1;
             lineSeries.ItemsSource = DiameterReferenceUpperLimit;
             lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
@@ -173,7 +172,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private LineSeries GetLowerLimitDiameter()
         {
             var lineSeries = new LineSeries();
-            lineSeries.Title = "1.70";
+            lineSeries.Title = "1.70"; //TODO user entry on view
             lineSeries.StrokeThickness = 1;
             lineSeries.ItemsSource = DiameterReferenceLowerLimit;
             lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
@@ -188,7 +187,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             {
                 while (IsStarted)
                 {
-                    HistoricalModel.InvalidatePlot(true);
+                    //Update plot on main UI thread, prevents cross thread violations
+                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        HistoricalModel.InvalidatePlot(true);
+                    }));
                     Thread.Sleep(5000);
                 }
             });
