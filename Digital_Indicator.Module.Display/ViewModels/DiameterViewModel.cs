@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Digital_Indicator.Logic.Helpers;
 using System.Windows;
 using Digital_Indicator.Module.Display.Views;
+using System.Windows.Controls;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -92,7 +93,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
 
-            
+
         }
 
         private void ResetGraph_Click()
@@ -123,6 +124,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
             SettingsViewModel SettingsViewModel = (SettingsViewModel)((SettingsView)SettingsView).DataContext;
 
             SettingsViewModel.CloseSettingsView = new DelegateCommand(CloseSettings_Click); //TODO use region manager
+
+
         }
 
         private void CloseSettings_Click()
