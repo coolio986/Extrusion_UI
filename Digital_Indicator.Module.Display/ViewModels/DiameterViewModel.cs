@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Digital_Indicator.Logic.Helpers;
 using System.Windows;
+using Digital_Indicator.Module.Display.Views;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -23,6 +24,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand ResetGraph { get; set; }
         public DelegateCommand StartCapture { get; set; }
         public DelegateCommand StopCapture { get; set; }
+        public DelegateCommand Settings { get; set; }
 
         private IList<DataPoint> DiameterPoints { get; set; }
 
@@ -67,6 +69,13 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref lowestValue, value); }
         }
 
+        private object settingsView;
+        public object SettingsView
+        {
+            get { return settingsView; }
+            set { SetProperty(ref settingsView, value); }
+        }
+
         public DiameterViewModel(ISerialService serialService)
         {
             //TODO Move Plot data to service
@@ -81,6 +90,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
+            Settings = new DelegateCommand(Settings_Click);
+
+            
         }
 
         private void ResetGraph_Click()
@@ -103,6 +115,19 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             IsStarted = false;
 
+        }
+
+        private void Settings_Click()
+        {
+            SettingsView = new SettingsView();
+            SettingsViewModel SettingsViewModel = (SettingsViewModel)((SettingsView)SettingsView).DataContext;
+
+            SettingsViewModel.CloseSettingsView = new DelegateCommand(CloseSettings_Click); //TODO use region manager
+        }
+
+        private void CloseSettings_Click()
+        {
+            SettingsView = null;
         }
 
         private void SetupDataPoints()

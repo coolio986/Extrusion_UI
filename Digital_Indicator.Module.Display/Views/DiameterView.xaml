@@ -4,11 +4,12 @@
              xmlns:local="clr-namespace:Digital_Indicator.Module.Display.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
+             prism:ViewModelLocator.AutoWireViewModel="True"  >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,7 +23,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="0.5*"/>
             <ColumnDefinition/>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -33,7 +34,21 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <!--<ItemsControl ItemsSource="{Binding SerialPortList}" />-->
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2">
+        <Grid Grid.ColumnSpan="3" Grid.RowSpan="9" Panel.ZIndex="1000">
+            <ContentPresenter Content="{Binding SettingsView}" />
+        </Grid>
+        <Grid Grid.RowSpan="2">
+            <Border BorderThickness="0,0,1,0" BorderBrush="#FFA6A6A6">
+                <StackPanel >
+                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" >
+                        <Button.Content>
+                            <fa:ImageAwesome Icon="Cog" Margin="0,2" />
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -73,5 +88,6 @@
 
             <Button Grid.ColumnSpan="2" Content="Reset Graph" Command="{Binding ResetGraph}" MinHeight="35"/>
         </Grid>
+
     </Grid>
 </UserControl>
