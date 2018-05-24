@@ -13,7 +13,7 @@
              d:DesignHeight="600" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"  >
     <UserControl.Resources>
-        <Storyboard x:Key="Storeyboard_Slide_Settings_Out">
+        <Storyboard x:Key="Storyboard_Slide_Settings_Out">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
                 <EasingDoubleKeyFrame KeyTime="0" Value="-300">
                     <EasingDoubleKeyFrame.EasingFunction>
@@ -33,9 +33,9 @@
         <EventTrigger RoutedEvent="FrameworkElement.Loaded" SourceName="contentPresenter"/>
     </UserControl.Triggers>
     <i:Interaction.Triggers>
-        <ei:PropertyChangedTrigger Binding="{Binding SettingsView}">
-            <ei:ControlStoryboardAction Storyboard="{StaticResource Storeyboard_Slide_Settings_Out}"/>
-        </ei:PropertyChangedTrigger>
+        <ei:DataTrigger Binding="{Binding SettingsView}" Comparison="NotEqual" Value="null">
+            <ei:ControlStoryboardAction x:Name="ControlStoryboardAction_SlideOut" Storyboard="{StaticResource Storyboard_Slide_Settings_Out}"/>
+        </ei:DataTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>

@@ -123,7 +123,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             SettingsView = new SettingsView();
             SettingsViewModel SettingsViewModel = (SettingsViewModel)((SettingsView)SettingsView).DataContext;
 
-            SettingsViewModel.CloseSettingsView = new DelegateCommand(CloseSettings_Click); //TODO use region manager
+            //SettingsViewModel.CloseSettingsView = new DelegateCommand(CloseSettings_Click); //TODO use region manager
 
 
         }

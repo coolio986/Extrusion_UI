@@ -1,17 +1,47 @@
-﻿<UserControl x:Class="Digital_Indicator.Module.Display.Views.SettingsView"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:local="clr-namespace:Digital_Indicator.Module.Display.Views"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Name="userControl" x:Class="Digital_Indicator.Module.Display.Views.SettingsView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Width="300"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" >
+             Width="296"
+             prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
+    <UserControl.Resources>
+        <Storyboard x:Key="Storyboard_Slide_Settings_In">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="userControl">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-300">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Click" SourceName="button">
+            <ei:ControlStoryboardAction Storyboard="{StaticResource Storyboard_Slide_Settings_In}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <UserControl.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform/>
+            <SkewTransform/>
+            <RotateTransform/>
+            <TranslateTransform/>
+        </TransformGroup>
+    </UserControl.RenderTransform>
     <Grid>
-        <Button MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}">
+        <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35">
             <fa:ImageAwesome Icon="ArrowLeft" />
         </Button>
         <Label x:Name="label" Content="Settings Screen" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
