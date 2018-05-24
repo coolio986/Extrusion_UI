@@ -115,22 +115,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StopCapture_Click()
         {
             IsStarted = false;
-
         }
 
         private void Settings_Click()
         {
             SettingsView = new SettingsView();
-            SettingsViewModel SettingsViewModel = (SettingsViewModel)((SettingsView)SettingsView).DataContext;
-
-            //SettingsViewModel.CloseSettingsView = new DelegateCommand(CloseSettings_Click); //TODO use region manager
-
-
-        }
-
-        private void CloseSettings_Click()
-        {
-            SettingsView = null;
         }
 
         private void SetupDataPoints()
@@ -216,10 +205,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 while (IsStarted)
                 {
                     //Update plot on main UI thread, prevents cross thread violations
-                    Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    {
-                        HistoricalModel.InvalidatePlot(true);
-                    }));
+                    //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    //{
+                    //    HistoricalModel.InvalidatePlot(true);
+                    //}));
+                    HistoricalModel.InvalidatePlot(true);
                     Thread.Sleep(5000);
                 }
             });

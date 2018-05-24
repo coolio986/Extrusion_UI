@@ -41,10 +41,46 @@
         </TransformGroup>
     </UserControl.RenderTransform>
     <Grid>
-        <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35">
-            <fa:ImageAwesome Icon="ArrowLeft" />
-        </Button>
-        <Label x:Name="label" Content="Settings Screen" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35">
+                <fa:ImageAwesome Icon="ArrowLeft" />
+            </Button>
+        </Grid>
+        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />
+        <StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">
+                <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+                    <TextBlock Text="Filament Diameter" FontSize="18" VerticalAlignment="Center" />
+                    <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding FilamentDiameter}" />
+                    <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Upper Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,53,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding UpperLimit}" />
+                <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Lower Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,55,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding LowerLimit}" />
+                <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+
+        </StackPanel>
 
     </Grid>
 </UserControl>
