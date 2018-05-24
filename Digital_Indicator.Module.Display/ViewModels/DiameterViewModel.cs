@@ -77,6 +77,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref settingsView, value); }
         }
 
+        Stopwatch stopWatch;
+        long previousMillis;
+
         public DiameterViewModel(ISerialService serialService)
         {
             //TODO Move Plot data to service
@@ -93,6 +96,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
 
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
+            previousMillis = stopWatch.ElapsedMilliseconds;
 
         }
 
@@ -209,7 +215,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
                     //{
                     //    HistoricalModel.InvalidatePlot(true);
                     //}));
-                    HistoricalModel.InvalidatePlot(true);
+
+                    //HistoricalModel.InvalidatePlot(true);
+
                     Thread.Sleep(5000);
                 }
             });
@@ -222,6 +230,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             if (IsStarted)
             {
                 UpdateRealTimePlot();
+                UpdateHistoricalPlot();
                 UpdateHighsAndLows();
             }
         }
@@ -240,6 +249,19 @@ namespace Digital_Indicator.Module.Display.ViewModels
                     RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
                     RealTimeModel.InvalidatePlot(true);
                 }
+            }
+        }
+
+        
+        private void UpdateHistoricalPlot()
+        {
+            if (stopWatch.ElapsedMilliseconds >= previousMillis + 5000)
+            {
+                Task.Factory.StartNew(() =>
+                {
+                    HistoricalModel.InvalidatePlot(true);
+                    previousMillis = stopWatch.ElapsedMilliseconds;
+                });
             }
         }
 
