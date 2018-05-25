@@ -21,15 +21,15 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand StopCapture { get; set; }
         public DelegateCommand Settings { get; set; }
 
-        private PlotModel realTimeModel;
-        public PlotModel RealTimeModel
+        private LinearSeriesPlotModel realTimeModel;
+        public LinearSeriesPlotModel RealTimeModel
         {
             get { return realTimeModel; }
             private set { SetProperty(ref realTimeModel, value); }
         }
 
-        private PlotModel historicalModel;
-        public PlotModel HistoricalModel
+        private LinearSeriesPlotModel historicalModel;
+        public LinearSeriesPlotModel HistoricalModel
         {
             get { return historicalModel; }
             set { SetProperty(ref historicalModel, value); }
@@ -168,8 +168,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             if (RealTimeModel != null)
             {
-                ((LinearSeriesPlotModel)RealTimeModel).AddDataPoint(Diameter);
-                ((LinearSeriesPlotModel)HistoricalModel).AddDataPoint(Diameter);
+                RealTimeModel.AddDataPoint(Diameter);
+                HistoricalModel.AddDataPoint(Diameter);
 
                 if (RealTimeModel.Axes.Count > 1)
                 {
