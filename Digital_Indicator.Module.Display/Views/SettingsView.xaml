@@ -85,7 +85,7 @@
             </StackPanel>
             <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Spool Number" FontSize="18" VerticalAlignment="Center" Margin="0,0,50,0" />
-                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding LowerLimit}" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolNumber}" />
             </StackPanel>
 
         </StackPanel>

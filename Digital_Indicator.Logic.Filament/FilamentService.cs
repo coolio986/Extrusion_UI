@@ -61,6 +61,13 @@ namespace Digital_Indicator.Logic.Filament
             set { lowestValue = value; }
         }
 
+        private string spoolNumber;
+        public string SpoolNumber
+        {
+            get { return spoolNumber; }
+            set { spoolNumber = value; }
+        }
+
         private bool captureStarted;
         public bool CaptureStarted
         {

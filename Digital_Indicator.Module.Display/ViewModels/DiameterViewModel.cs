@@ -110,9 +110,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RealTimeModel = new LinearSeriesPlotModel()
             {
                 Title = "RealTime Diameter",
-                UpperLimitDiameter = "1.80",
-                NominalDiameter = "1.75",
-                LowerLimitDiameter = "1.70",
+                UpperLimitDiameter = _filamentService.UpperLimit,
+                NominalDiameter = _filamentService.NominalDiameter,
+                LowerLimitDiameter = _filamentService.LowerLimit,
             };
         }
 
@@ -121,9 +121,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             HistoricalModel = new LinearSeriesPlotModel()
             {
                 Title = "Historical Diameter",
-                UpperLimitDiameter = "1.80",
-                NominalDiameter = "1.75",
-                LowerLimitDiameter = "1.70",
+                UpperLimitDiameter = _filamentService.UpperLimit,
+                NominalDiameter = _filamentService.NominalDiameter,
+                LowerLimitDiameter = _filamentService.LowerLimit,
             };
         }
 
