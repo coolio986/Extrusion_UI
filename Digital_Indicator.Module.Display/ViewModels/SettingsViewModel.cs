@@ -38,12 +38,19 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref lowerLimit, value); }
         }
 
+        private string filamentDescription;
+        public string FilamentDescription
+        {
+            get { return filamentDescription; }
+            set { SetProperty(ref filamentDescription, value); }
+        }
+
         public SettingsViewModel()
         {
+            FilamentDescription = "PLA, Black, 4043D";
             FilamentDiameter = "1.75";
             UpperLimit = "1.80";
             LowerLimit = "1.70";
-
         }
     }
 }
