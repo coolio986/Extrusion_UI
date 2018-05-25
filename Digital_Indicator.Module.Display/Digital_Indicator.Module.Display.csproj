@@ -87,6 +87,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure.UI\Digital_Indicator.Infrastructure.UI.csproj">
+      <Project>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</Project>
+      <Name>Digital_Indicator.Infrastructure.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj">
       <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
       <Name>Digital_Indicator.Logic.Helpers</Name>

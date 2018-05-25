@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Helpers", "Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj", "{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Infrastructure.UI", "Digital_Indicator.Infrastructure.UI\Digital_Indicator.Infrastructure.UI.csproj", "{3CD37F03-D9B7-426C-8447-3CEF0284FABE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CD37F03-D9B7-426C-8447-3CEF0284FABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CD37F03-D9B7-426C-8447-3CEF0284FABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CD37F03-D9B7-426C-8447-3CEF0284FABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CD37F03-D9B7-426C-8447-3CEF0284FABE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
