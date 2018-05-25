@@ -19,42 +19,33 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref closeSettingsView, value); }
         }
 
-        private string filamentDiameter;
         public string FilamentDiameter
         {
-            get { return filamentDiameter; }
-            set { SetProperty(ref filamentDiameter, value); }
+            get { return _filamentService.NominalDiameter; }
+            set { _filamentService.NominalDiameter = value; RaisePropertyChanged(); }
         }
 
-        private string upperLimit;
         public string UpperLimit
         {
-            get { return upperLimit; }
-            set { SetProperty(ref upperLimit, value); }
+            get { return _filamentService.UpperLimit; }
+            set { _filamentService.UpperLimit = value; RaisePropertyChanged(); }
         }
 
-        private string lowerLimit;
         public string LowerLimit
         {
-            get { return lowerLimit; }
-            set { SetProperty(ref lowerLimit, value); }
+            get { return _filamentService.LowerLimit; }
+            set { _filamentService.LowerLimit = value; RaisePropertyChanged(); }
         }
 
-        private string filamentDescription;
         public string FilamentDescription
         {
-            get { return filamentDescription; }
-            set { SetProperty(ref filamentDescription, value); }
+            get { return _filamentService.Description; }
+            set { _filamentService.Description = value; RaisePropertyChanged(); }
         }
 
         public SettingsViewModel(IFilamentService filamentService)
         {
             _filamentService = filamentService;
-
-            FilamentDescription = _filamentService.Description;
-            FilamentDiameter = _filamentService.NominalDiameter;
-            UpperLimit = _filamentService.UpperLimit;
-            LowerLimit = _filamentService.LowerLimit;
         }
     }
 }

@@ -65,7 +65,15 @@ namespace Digital_Indicator.Logic.Filament
         public bool CaptureStarted
         {
             get { return captureStarted; }
-            set { captureStarted = value; }
+            set
+            {
+                captureStarted = value;
+                if (captureStarted)
+                {
+                    highestValue = nominalDiameter;
+                    lowestValue = nominalDiameter;
+                }
+            }
         }
 
         public FilamentService(ISerialService serialService)
@@ -79,14 +87,8 @@ namespace Digital_Indicator.Logic.Filament
             DiameterChanged?.Invoke(sender, e);
 
             if (captureStarted)
-            {
                 UpdateHighsAndLows();
-            }
-            else
-            {
-                highestValue = nominalDiameter;
-                lowestValue = nominalDiameter;
-            }
+           
         }
 
         private void UpdateHighsAndLows()
