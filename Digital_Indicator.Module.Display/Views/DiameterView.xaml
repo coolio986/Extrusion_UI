@@ -60,10 +60,7 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <!--<ItemsControl ItemsSource="{Binding SerialPortList}" />-->
-        <Grid Grid.ColumnSpan="3" Grid.RowSpan="9" Panel.ZIndex="1000">
-
-
+        <Grid Grid.ColumnSpan="9" Grid.RowSpan="9" Panel.ZIndex="1000" Width="300" HorizontalAlignment="Left">
             <ContentPresenter x:Name="contentPresenter" Content="{Binding SettingsView}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" >
                 <ContentPresenter.RenderTransform>
                     <TransformGroup>
