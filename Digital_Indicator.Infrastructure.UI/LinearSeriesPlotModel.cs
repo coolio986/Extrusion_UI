@@ -11,7 +11,6 @@ namespace Digital_Indicator.Infrastructure.UI
 {
     public class LinearSeriesPlotModel : PlotModel
     {
-        //private PlotModel plotModel;
         private LineSeries lineSeries;
         private IList<DataPoint> diameterPoints;
         private IList<DataPoint> diameterReferenceNominal;
@@ -21,28 +20,15 @@ namespace Digital_Indicator.Infrastructure.UI
         public LinearSeriesPlotModel()
         {
             lineSeries = new LineSeries();
-            //plotModel = new PlotModel();
             diameterPoints = new List<DataPoint>();
             diameterReferenceNominal = new List<DataPoint>();
             diameterReferenceUpperLimit = new List<DataPoint>();
             diameterReferenceLowerLimit = new List<DataPoint>();
 
-
-            //var lineSeriesDiameterData = new LineSeries();
-            //lineSeriesDiameterData.ItemsSource = DiameterPoints;
-            //lineSeriesDiameterData.Color = OxyColor.FromRgb(0, 153, 255);
-
-            //plotModel = new PlotModel { Title = "Realtime Diameter" };
-            //plotModel.Series.Add(lineSeriesDiameterData);
             this.Series.Add(GetDiameterPointsLineSeries());
 
             this.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
             this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.5, });
-
-            //this.Series.Add(GetUpperLimitDiameterLineSeries());
-            //this.Series.Add(GetNominalDiameterLineSeries());
-            //this.Series.Add(GetLowerLimitDiameterLineSeries());
-
         }
 
         private string nominalDiameter;
