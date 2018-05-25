@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Digital_Indicator.Logic.Filament;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class SettingsViewModel : BindableBase
     {
+        IFilamentService _filamentService;
         private DelegateCommand closeSettingsView;
         public DelegateCommand CloseSettingsView
         {
@@ -45,12 +47,14 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref filamentDescription, value); }
         }
 
-        public SettingsViewModel()
+        public SettingsViewModel(IFilamentService filamentService)
         {
-            FilamentDescription = "PLA, Black, 4043D";
-            FilamentDiameter = "1.75";
-            UpperLimit = "1.80";
-            LowerLimit = "1.70";
+            _filamentService = filamentService;
+
+            FilamentDescription = _filamentService.Description;
+            FilamentDiameter = _filamentService.NominalDiameter;
+            UpperLimit = _filamentService.UpperLimit;
+            LowerLimit = _filamentService.LowerLimit;
         }
     }
 }
