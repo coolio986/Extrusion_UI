@@ -28,7 +28,7 @@ namespace Digital_Indicator.Infrastructure.UI
             this.Series.Add(GetDiameterPointsLineSeries());
 
             this.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
-            this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.5, });
+            this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.65, });
         }
 
         private string nominalDiameter;

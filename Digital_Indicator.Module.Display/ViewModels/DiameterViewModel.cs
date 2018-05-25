@@ -16,7 +16,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class DiameterViewModel : BindableBase
     {
-        private ISerialService _serialService;
+        //private ISerialService _serialService;
         private IFilamentService _filamentService;
         public DelegateCommand ResetGraph { get; set; }
         public DelegateCommand StartCapture { get; set; }
@@ -37,25 +37,19 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref historicalModel, value); }
         }
 
-        private string diameter;
         public string Diameter
         {
-            get { return diameter; }
-            set { SetProperty(ref diameter, value); }
+            get { return _filamentService.ActualDiameter; }
         }
 
-        private string highestValue;
         public string HighestValue
         {
-            get { return highestValue; }
-            set { SetProperty(ref highestValue, value); }
+            get { return _filamentService.HighestValue; }
         }
 
-        private string lowestValue;
         public string LowestValue
         {
-            get { return lowestValue; }
-            set { SetProperty(ref lowestValue, value); }
+            get { return _filamentService.LowestValue; }
         }
 
         private object settingsView;
@@ -68,11 +62,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
         Stopwatch stopWatch;
         long previousMillis;
 
-        public DiameterViewModel(ISerialService serialService, IFilamentService filamentService)
+        public DiameterViewModel(IFilamentService filamentService)
         {
-            _serialService = serialService;
             _filamentService = filamentService;
-            _serialService.DiameterChanged += _serialService_DiameterChanged;
+            _filamentService.DiameterChanged += _filamentService_DiameterChanged;
 
             SetupRealTimeView();
             SetupHistoricalView();
@@ -94,10 +87,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             HistoricalModel.InvalidatePlot(true);
         }
 
-        private bool IsStarted;
         private void StartCapture_Click()
         {
-            IsStarted = true;
+            _filamentService.CaptureStarted = true;
             SetupRealTimeView();
             SetupHistoricalView();
             StartHistoricalTimer();
@@ -105,7 +97,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void StopCapture_Click()
         {
-            IsStarted = false;
+            _filamentService.CaptureStarted = false;
         }
 
         private void Settings_Click()
@@ -138,32 +130,33 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StartHistoricalTimer()
         {
             //acts as a timer
-            Task.Factory.StartNew(() =>
-            {
-                while (IsStarted)
-                {
-                    //Update plot on main UI thread, prevents cross thread violations
-                    //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    //{
-                    //    HistoricalModel.InvalidatePlot(true);
-                    //}));
+            //Task.Factory.StartNew(() =>
+            //{
+            //    while (IsStarted)
+            //    {
+            //        //Update plot on main UI thread, prevents cross thread violations
+            //        //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //        //{
+            //        //    HistoricalModel.InvalidatePlot(true);
+            //        //}));
 
-                    //HistoricalModel.InvalidatePlot(true);
+            //        //HistoricalModel.InvalidatePlot(true);
 
-                    Thread.Sleep(5000);
-                }
-            });
+            //        Thread.Sleep(5000);
+            //    }
+            //});
         }
 
-        private void _serialService_DiameterChanged(object sender, EventArgs e)
+        private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
-            Diameter = sender.ToString();
+            RaisePropertyChanged("Diameter");
+            RaisePropertyChanged("HighestValue");
+            RaisePropertyChanged("LowestValue");
 
-            if (IsStarted)
+            if (_filamentService.CaptureStarted)
             {
                 UpdateRealTimePlot();
                 UpdateHistoricalPlot();
-                UpdateHighsAndLows();
             }
         }
 
@@ -194,11 +187,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             }
         }
 
-        private void UpdateHighsAndLows()
-        {
-            HighestValue = highestValue == null ? diameter : highestValue.GetDouble() < diameter.GetDouble() ? diameter : highestValue;
-            LowestValue = lowestValue == null ? diameter : lowestValue.GetDouble() > diameter.GetDouble() ? diameter : lowestValue;
-        }
+        
     }
 }
 
