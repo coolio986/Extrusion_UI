@@ -6,6 +6,7 @@ using Prism.Unity;
 using Digital_Indicator.Logic.Navigation;
 using Prism.Regions;
 using Digital_Indicator.Logic.SerialCommunications;
+using Digital_Indicator.Logic.Filament;
 
 namespace Digital_Indicator.Startup
 {
@@ -42,6 +43,7 @@ namespace Digital_Indicator.Startup
 
             Container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerialService, SerialService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IFilamentService, FilamentService>(new ContainerControlledLifetimeManager());
             
         }
 

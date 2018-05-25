@@ -91,6 +91,10 @@
       <Project>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</Project>
       <Name>Digital_Indicator.Infrastructure.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.Filament\Digital_Indicator.Logic.Filament.csproj">
+      <Project>{FDD57CAC-B228-496A-8BC7-496F742013C0}</Project>
+      <Name>Digital_Indicator.Logic.Filament</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj">
       <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
       <Name>Digital_Indicator.Logic.Helpers</Name>
