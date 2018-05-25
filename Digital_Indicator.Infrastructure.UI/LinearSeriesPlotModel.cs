@@ -17,6 +17,10 @@ namespace Digital_Indicator.Infrastructure.UI
         private IList<DataPoint> diameterReferenceUpperLimit;
         private IList<DataPoint> diameterReferenceLowerLimit;
 
+        private LineSeries NominalDiameterLineSeries;
+        private LineSeries UpperLimitDiameterLineSeries;
+        private LineSeries LowerLimitDiameterLineSeries;
+
         public LinearSeriesPlotModel()
         {
             lineSeries = new LineSeries();
@@ -37,8 +41,12 @@ namespace Digital_Indicator.Infrastructure.UI
             get { return nominalDiameter; }
             set
             {
+                if (NominalDiameterLineSeries != null)
+                    this.Series.Remove(NominalDiameterLineSeries);
+
                 nominalDiameter = value;
-                this.Series.Add(GetNominalDiameterLineSeries());
+                NominalDiameterLineSeries = GetNominalDiameterLineSeries();
+                this.Series.Add(NominalDiameterLineSeries);
             }
         }
 
@@ -48,8 +56,12 @@ namespace Digital_Indicator.Infrastructure.UI
             get { return upperLimitDiameter; }
             set
             {
+                if (UpperLimitDiameterLineSeries != null)
+                    this.Series.Remove(UpperLimitDiameterLineSeries);
+
                 upperLimitDiameter = value;
-                this.Series.Add(GetUpperLimitDiameterLineSeries());
+                UpperLimitDiameterLineSeries = GetUpperLimitDiameterLineSeries();
+                this.Series.Add(UpperLimitDiameterLineSeries);
             }
         }
 
@@ -59,8 +71,12 @@ namespace Digital_Indicator.Infrastructure.UI
             get { return lowerLimitDiameter; }
             set
             {
+                if (LowerLimitDiameterLineSeries != null)
+                    this.Series.Remove(LowerLimitDiameterLineSeries);
+
                 lowerLimitDiameter = value;
-                this.Series.Add(GetLowerLimitDiameterLineSeries());
+                LowerLimitDiameterLineSeries = GetLowerLimitDiameterLineSeries();
+                this.Series.Add(LowerLimitDiameterLineSeries);
             }
         }
 

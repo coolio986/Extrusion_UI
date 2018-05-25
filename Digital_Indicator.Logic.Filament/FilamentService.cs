@@ -2,7 +2,9 @@
 using Digital_Indicator.Logic.SerialCommunications;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,6 +13,8 @@ namespace Digital_Indicator.Logic.Filament
     public class FilamentService : IFilamentService
     {
         public event EventHandler DiameterChanged;
+
+        public event EventHandler PropertyChanged;
 
         private string description;
         public string Description
@@ -30,21 +34,21 @@ namespace Digital_Indicator.Logic.Filament
         public string NominalDiameter
         {
             get { return nominalDiameter; }
-            set { nominalDiameter = value; }
+            set { nominalDiameter = value; OnPropertyChanged(); }
         }
 
         private string upperLimit;
         public string UpperLimit
         {
             get { return upperLimit; }
-            set { upperLimit = value; }
+            set { upperLimit = value; OnPropertyChanged(); }
         }
 
         private string lowerLimit;
         public string LowerLimit
         {
             get { return lowerLimit; }
-            set { lowerLimit = value; }
+            set { lowerLimit = value; OnPropertyChanged(); }
         }
 
         private string highestValue;
@@ -102,6 +106,11 @@ namespace Digital_Indicator.Logic.Filament
         {
             HighestValue = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
             LowestValue = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

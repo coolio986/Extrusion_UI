@@ -66,6 +66,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService = filamentService;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
+            _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             SetupRealTimeView();
             SetupHistoricalView();
@@ -79,6 +80,17 @@ namespace Digital_Indicator.Module.Display.ViewModels
             stopWatch = new Stopwatch(); //For timing historical plot
             stopWatch.Start();
             previousMillis = stopWatch.ElapsedMilliseconds;
+        }
+
+        private void _filamentService_PropertyChanged(object sender, EventArgs e)
+        {
+            RealTimeModel.NominalDiameter = _filamentService.NominalDiameter;
+            RealTimeModel.UpperLimitDiameter = _filamentService.UpperLimit;
+            RealTimeModel.LowerLimitDiameter = _filamentService.LowerLimit;
+
+            HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
+            HistoricalModel.UpperLimitDiameter = _filamentService.UpperLimit;
+            HistoricalModel.LowerLimitDiameter = _filamentService.LowerLimit;
         }
 
         private void ResetGraph_Click()
@@ -114,6 +126,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 NominalDiameter = _filamentService.NominalDiameter,
                 LowerLimitDiameter = _filamentService.LowerLimit,
             };
+            
         }
 
         private void SetupHistoricalView()
@@ -152,6 +165,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("Diameter");
             RaisePropertyChanged("HighestValue");
             RaisePropertyChanged("LowestValue");
+
 
             if (_filamentService.CaptureStarted)
             {

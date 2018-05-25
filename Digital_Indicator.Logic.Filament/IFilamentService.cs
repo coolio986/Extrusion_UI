@@ -18,6 +18,7 @@ namespace Digital_Indicator.Logic.Filament
         string SpoolNumber { get; set; }
 
         event EventHandler DiameterChanged;
+        event EventHandler PropertyChanged;
 
         bool CaptureStarted { get; set; }
         
