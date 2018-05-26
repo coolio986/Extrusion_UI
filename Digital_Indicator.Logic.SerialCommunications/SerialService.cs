@@ -18,7 +18,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public SerialService()
         {
-            SimulationModeActive = true;
+            SimulationModeActive = false;
 
             if (!SimulationModeActive)
                 serialPort = new SerialPort();
@@ -73,9 +73,20 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
             string buildString = string.Empty;
 
-            buildString = System.Text.Encoding.ASCII.GetString(buf);
+            buildString = System.Text.Encoding.ASCII.GetString(buf).TrimEnd('\r', '\n').Insert(4, ".");
 
-            DiameterChanged?.Invoke(buildString, null);
+            try
+            {
+                double diameter = Convert.ToDouble(buildString);
+                DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
+
+            }
+            catch
+            {
+
+            }
+
+            
         }
 
         private void RunSimulation()

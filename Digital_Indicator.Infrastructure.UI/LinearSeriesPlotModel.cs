@@ -32,7 +32,7 @@ namespace Digital_Indicator.Infrastructure.UI
             this.Series.Add(GetDiameterPointsLineSeries());
 
             this.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
-            this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.65, });
+            this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.60, });
         }
 
         private string nominalDiameter;
@@ -83,8 +83,8 @@ namespace Digital_Indicator.Infrastructure.UI
         public void AddDataPoint(string diameterToAdd)
         {
             diameterPoints.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(diameterToAdd)));
-            diameterReferenceNominal.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(nominalDiameter)));
             diameterReferenceUpperLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(upperLimitDiameter)));
+            diameterReferenceNominal.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(nominalDiameter)));
             diameterReferenceLowerLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(lowerLimitDiameter)));
         }
 

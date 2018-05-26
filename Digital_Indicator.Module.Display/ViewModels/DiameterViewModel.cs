@@ -84,12 +84,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
-            RealTimeModel.NominalDiameter = _filamentService.NominalDiameter;
             RealTimeModel.UpperLimitDiameter = _filamentService.UpperLimit;
+            RealTimeModel.NominalDiameter = _filamentService.NominalDiameter;
             RealTimeModel.LowerLimitDiameter = _filamentService.LowerLimit;
-
-            HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
+            
             HistoricalModel.UpperLimitDiameter = _filamentService.UpperLimit;
+            HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
             HistoricalModel.LowerLimitDiameter = _filamentService.LowerLimit;
         }
 
