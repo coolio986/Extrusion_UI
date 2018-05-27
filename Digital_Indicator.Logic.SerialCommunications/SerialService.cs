@@ -72,8 +72,11 @@ namespace Digital_Indicator.Logic.SerialCommunications
             serialPort.Read(buf, 0, buf.Length);
 
             string buildString = string.Empty;
+            
 
-            buildString = System.Text.Encoding.ASCII.GetString(buf).TrimEnd('\r', '\n').Insert(4, ".");
+            buildString = System.Text.Encoding.ASCII.GetString(buf).TrimEnd('\r', '\n');
+
+            //Console.WriteLine(buildString);
 
             try
             {

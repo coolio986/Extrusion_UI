@@ -87,7 +87,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RealTimeModel.UpperLimitDiameter = _filamentService.UpperLimit;
             RealTimeModel.NominalDiameter = _filamentService.NominalDiameter;
             RealTimeModel.LowerLimitDiameter = _filamentService.LowerLimit;
-            
+
             HistoricalModel.UpperLimitDiameter = _filamentService.UpperLimit;
             HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
             HistoricalModel.LowerLimitDiameter = _filamentService.LowerLimit;
@@ -104,7 +104,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.CaptureStarted = true;
             SetupRealTimeView();
             SetupHistoricalView();
-            StartHistoricalTimer();
+            //StartHistoricalTimer();
         }
 
         private void StopCapture_Click()
@@ -126,7 +126,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 NominalDiameter = _filamentService.NominalDiameter,
                 LowerLimitDiameter = _filamentService.LowerLimit,
             };
-            
         }
 
         private void SetupHistoricalView()
@@ -143,21 +142,22 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StartHistoricalTimer()
         {
             //acts as a timer
-            //Task.Factory.StartNew(() =>
-            //{
-            //    while (IsStarted)
-            //    {
-            //        //Update plot on main UI thread, prevents cross thread violations
-            //        //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            //        //{
-            //        //    HistoricalModel.InvalidatePlot(true);
-            //        //}));
+            Task.Factory.StartNew(() =>
+            {
+                while (_filamentService.CaptureStarted)
+                {
+                    //Update plot on main UI thread, prevents cross thread violations
+                    //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                    //{
+                    //    HistoricalModel.InvalidatePlot(true);
+                    //}));
+                    
+                    //HistoricalModel.InvalidatePlot(true);
 
-            //        //HistoricalModel.InvalidatePlot(true);
 
-            //        Thread.Sleep(5000);
-            //    }
-            //});
+                    Thread.Sleep(5000);
+                }
+            });
         }
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
@@ -170,7 +170,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             if (_filamentService.CaptureStarted)
             {
                 UpdateRealTimePlot();
-                UpdateHistoricalPlot();
+                //UpdateHistoricalPlot();
             }
         }
 
@@ -178,8 +178,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             if (RealTimeModel != null)
             {
+                
                 RealTimeModel.AddDataPoint(Diameter);
                 HistoricalModel.AddDataPoint(Diameter);
+                UpdateHistoricalPlot();
 
                 if (RealTimeModel.Axes.Count > 1)
                 {
@@ -201,7 +203,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             }
         }
 
-        
+
     }
 }
 
