@@ -122,7 +122,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                     //Console.WriteLine(bytes[11].ToString());
                 }
 
-                Console.Write(System.Text.Encoding.ASCII.GetString(buf));
+                //Console.Write(System.Text.Encoding.ASCII.GetString(buf));
 
                 try
                 {
@@ -132,9 +132,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
                         buildNumber = buildNumber.Insert(buildNumber.Length - bytes[11], ".");
                         double diameter = Convert.ToDouble(buildNumber);
 
-                        if (diameter <= 1.61)
+                        if (diameter <= 1.62)
                         {
-
+                            Console.Write(System.Text.Encoding.ASCII.GetString(buf));
                         }
 
                         if (previousDiameter == null)
