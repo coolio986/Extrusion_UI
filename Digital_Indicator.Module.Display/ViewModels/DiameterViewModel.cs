@@ -11,12 +11,13 @@ using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Module.Display.Views;
 using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.Logic.FileOperations;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class DiameterViewModel : BindableBase
     {
-        //private ISerialService _serialService;
+        private IXmlService _xmlService;
         private IFilamentService _filamentService;
         public DelegateCommand ResetGraph { get; set; }
         public DelegateCommand StartCapture { get; set; }
@@ -62,8 +63,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
         Stopwatch stopWatch;
         long previousMillis;
 
-        public DiameterViewModel(IFilamentService filamentService)
+        public DiameterViewModel(IFilamentService filamentService, IXmlService xmlService)
         {
+            _xmlService = xmlService;
             _filamentService = filamentService;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;

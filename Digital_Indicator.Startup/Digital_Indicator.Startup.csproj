@@ -103,6 +103,10 @@
       <Project>{fdd57cac-b228-496a-8bc7-496f742013c0}</Project>
       <Name>Digital_Indicator.Logic.Filament</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.FileOperations\Digital_Indicator.Logic.FileOperations.csproj">
+      <Project>{8035395e-ce20-45cc-8669-f1cbb8cb31bb}</Project>
+      <Name>Digital_Indicator.Logic.FileOperations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Logic.Navigation\Digital_Indicator.Logic.Navigation.csproj">
       <Project>{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}</Project>
       <Name>Digital_Indicator.Logic.Navigation</Name>
