@@ -186,7 +186,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 if (RealTimeModel.Axes.Count > 1)
                 {
                     RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
-                    RealTimeModel.InvalidatePlot(true);
+                    Task.Factory.StartNew(() =>
+                    {
+                        RealTimeModel.InvalidatePlot(true);
+                    });
+                    
                 }
             }
         }

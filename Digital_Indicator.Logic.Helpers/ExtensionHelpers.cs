@@ -17,5 +17,12 @@ namespace Digital_Indicator.Logic.Helpers
         {
             return (double)Convert.ChangeType(value, typeof(double));
         }
+
+        public static string Reverse(this string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
     }
 }

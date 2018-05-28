@@ -46,5 +46,11 @@
     <Compile Include="SerialPortClass.cs" />
     <Compile Include="SerialService.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj">
+      <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
+      <Name>Digital_Indicator.Logic.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

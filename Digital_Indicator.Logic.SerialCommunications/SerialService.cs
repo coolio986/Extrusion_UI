@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
@@ -7,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Digital_Indicator.Logic.Helpers;
 
 namespace Digital_Indicator.Logic.SerialCommunications
 {
@@ -15,6 +17,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
         private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
+        private double? previousDiameter;
+        private long previousMillis;
+        private Stopwatch stopWatch;
 
         public SerialService()
         {
@@ -22,6 +27,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
             if (!SimulationModeActive)
                 serialPort = new SerialPort();
+
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
         }
 
         private string portName;
@@ -71,25 +79,74 @@ namespace Digital_Indicator.Logic.SerialCommunications
             byte[] buf = new byte[serialPort.BytesToRead];
             serialPort.Read(buf, 0, buf.Length);
 
-            string buildString = string.Empty;
-            
+            bool dataValid = false;
 
-            buildString = System.Text.Encoding.ASCII.GetString(buf).TrimEnd('\r', '\n');
-
-            //Console.WriteLine(buildString);
-
-            try
+            if (buf.Length == 54) //buffer must be exactly 54 in length 
             {
-                double diameter = Convert.ToDouble(buildString);
-                DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
-
-            }
-            catch
-            {
-
+                for (int i = 0; i <= 15; i++)
+                {
+                    if (buf[i] != 49)
+                    {
+                        dataValid = false; //if first 15 array indexes are not 49 (1111), then data not valid
+                        break;
+                    }
+                    else
+                        dataValid = true;
+                }
             }
 
-            
+
+            if (dataValid)
+            {
+                string asciiConvertedBytes = string.Empty;
+                asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
+
+                byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
+
+                for (int i = 0; i < 13; ++i)
+                {
+                    bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
+                }
+
+
+                string buildNumber = string.Empty;
+                for (int i = 5; i <= 10; i++)
+                {
+                    buildNumber += bytes[i].ToString();
+                }
+
+
+                if (bytes[11] > 3)
+                {
+                    Console.Write(System.Text.Encoding.ASCII.GetString(buf));
+                    Console.WriteLine(bytes[11].ToString());
+                }
+
+                try
+                {
+
+                    if (bytes[11] == 3)
+                    {
+                        buildNumber = buildNumber.Insert(buildNumber.Length - bytes[11], ".");
+                        double diameter = Convert.ToDouble(buildNumber);
+
+                        if (previousDiameter == null)
+                            previousDiameter = diameter;
+
+                        if ((Math.Abs((double)previousDiameter - diameter)) > 3)
+                        {
+                            Console.WriteLine(System.Text.Encoding.ASCII.GetString(buf) + " " + diameter);
+                            return;
+                        }
+                        previousDiameter = diameter;
+                        //Console.WriteLine(stopWatch.ElapsedMilliseconds - previousMillis);
+
+                        DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
+                    }
+                }
+                catch { }
+            }
+            previousMillis = stopWatch.ElapsedMilliseconds;
         }
 
         private void RunSimulation()
