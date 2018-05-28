@@ -1,4 +1,5 @@
 ﻿using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.Logic.FileOperations;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -7,11 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class SettingsViewModel : BindableBase
     {
         IFilamentService _filamentService;
+        IXmlService _xmlService;
         private DelegateCommand closeSettingsView;
         public DelegateCommand CloseSettingsView
         {
@@ -49,9 +52,16 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.SpoolNumber = value; }
         }
 
-        public SettingsViewModel(IFilamentService filamentService)
+        public SettingsViewModel(IFilamentService filamentService, IXmlService xmlService)
         {
             _filamentService = filamentService;
+            _xmlService = xmlService;
+
+            FilamentDiameter = _xmlService.XmlSettings["nominalDiameter"];
+            UpperLimit = _xmlService.XmlSettings["upperLimit"];
+            LowerLimit = _xmlService.XmlSettings["lowerLimit"];
+            SpoolNumber = xmlService.XmlSettings["spoolNumber"];
+            FilamentDescription = _xmlService.XmlSettings["materialDescription"];
         }
     }
 }
