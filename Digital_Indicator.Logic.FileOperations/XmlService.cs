@@ -32,11 +32,36 @@ namespace Digital_Indicator.Logic.FileOperations
         {
             string settingsData = _fileService.ReadFile(_fileService.EnvironmentDirectory + @"\persistence.xml");
             XDocument settingsDoc = XDocument.Parse(settingsData);
-            foreach(XElement element in settingsDoc.Descendants("settings").Nodes())
-            {
-                XmlSettings.Add(settingsDoc.Root.Name.LocalName + "." + element.Name.LocalName, element.Value);
-            }
 
+            foreach (XElement element in settingsDoc.Nodes())
+            {
+                Process(element, 0); // recurse to get all xml document elements
+            }
+        }
+
+        private void Process(XElement element, int depth)
+        {
+            if (!element.HasElements)
+            {
+                // element is child with no descendants
+                // ignore element
+            }
+            else
+            {
+                // element is parent with children
+
+                depth++;
+
+                foreach (var child in element.Elements())
+                {
+                    string dictKey = element.Name.LocalName + "." + child.Name.LocalName;
+                    if (!XmlSettings.ContainsKey(dictKey))
+                        XmlSettings.Add(dictKey, child.Value);
+                    Process(child, depth);
+                }
+
+                depth--;
+            }
         }
     }
 }
