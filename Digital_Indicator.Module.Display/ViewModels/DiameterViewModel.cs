@@ -108,6 +108,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             HistoricalModel.UpperLimitDiameter = _filamentService.UpperLimit;
             HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
             HistoricalModel.LowerLimitDiameter = _filamentService.LowerLimit;
+
+            RaisePropertyChanged("SpoolNumber");
+            RaisePropertyChanged("BatchNumber");
         }
 
         private void ResetGraph_Click()

@@ -72,14 +72,14 @@ namespace Digital_Indicator.Logic.Filament
         public string SpoolNumber
         {
             get { return spoolNumber; }
-            set { spoolNumber = value; }
+            set { spoolNumber = value; OnPropertyChanged(); }
         }
 
         private string batchNumber;
         public string BatchNumber
         {
             get { return batchNumber; }
-            set { batchNumber = value; }
+            set { batchNumber = value; OnPropertyChanged(); }
         }
 
         private bool captureStarted;
