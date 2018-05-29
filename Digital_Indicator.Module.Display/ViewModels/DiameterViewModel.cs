@@ -53,6 +53,21 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return _filamentService.LowestValue; }
         }
 
+        public string SpoolNumber
+        {
+            get { return _filamentService.SpoolNumber; }
+        }
+
+        public string BatchNumber
+        {
+            get { return _filamentService.BatchNumber; }
+        }
+
+        public bool CaptureStarted
+        {
+            get { return _filamentService.CaptureStarted; }
+        }
+
         private object settingsView;
         public object SettingsView
         {
@@ -104,6 +119,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StartCapture_Click()
         {
             _filamentService.CaptureStarted = true;
+            RaisePropertyChanged("CaptureStarted");
             SetupRealTimeView();
             SetupHistoricalView();
             //StartHistoricalTimer();
@@ -112,6 +128,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void StopCapture_Click()
         {
             _filamentService.CaptureStarted = false;
+            RaisePropertyChanged("CaptureStarted");
         }
 
         private void Settings_Click()
