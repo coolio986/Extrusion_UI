@@ -124,12 +124,12 @@ namespace Digital_Indicator.Logic.Filament
 
         private void BuildXmlData()
         {
-            NominalDiameter = _xmlService.XmlSettings["settings.nominalDiameter"];
-            UpperLimit = _xmlService.XmlSettings["settings.upperLimit"];
-            LowerLimit = _xmlService.XmlSettings["settings.lowerLimit"];
-            SpoolNumber = _xmlService.XmlSettings["settings.spoolNumber"];
-            Description = _xmlService.XmlSettings["settings.materialDescription"];
-            BatchNumber = _xmlService.XmlSettings["settings.batchNumber"];
+            NominalDiameter = _xmlService.XmlSettings["filamentData.nominalDiameter"];
+            UpperLimit = _xmlService.XmlSettings["filamentData.upperLimit"];
+            LowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
+            SpoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
+            Description = _xmlService.XmlSettings["filamentData.materialDescription"];
+            BatchNumber = _xmlService.XmlSettings["filamentData.batchNumber"];
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

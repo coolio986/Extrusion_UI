@@ -12,7 +12,8 @@ namespace Digital_Indicator.Logic.FileOperations
         IFileService _fileService;
 
         public Dictionary<string, string> XmlSettings { get; set; }
-        
+
+        private XDocument persistentXml;
 
         public XmlService(IFileService fileService)
         {
@@ -25,15 +26,31 @@ namespace Digital_Indicator.Logic.FileOperations
 
         public void SaveSettings()
         {
+            if (persistentXml == null)
+                return;
+
+            foreach (KeyValuePair<string, string> kvp in XmlSettings) //flat XML for now
+            {
+                if (kvp.Key.Contains("."))
+                {
+                    string parentNode = kvp.Key.Substring(0, kvp.Key.IndexOf("."));
+                    XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+
+                    if (element != null)
+                        element.Value = kvp.Value;
+                }
+
+            }
+            _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\persistence.xml", GetXmlData());
 
         }
 
         private void BuildXmlSettings()
         {
             string settingsData = _fileService.ReadFile(_fileService.EnvironmentDirectory + @"\persistence.xml");
-            XDocument settingsDoc = XDocument.Parse(settingsData);
+            persistentXml = XDocument.Parse(settingsData);
 
-            foreach (XElement element in settingsDoc.Nodes())
+            foreach (XElement element in persistentXml.Nodes())
             {
                 Process(element, 0); // recurse to get all xml document elements
             }
@@ -54,6 +71,12 @@ namespace Digital_Indicator.Logic.FileOperations
 
                 foreach (var child in element.Elements())
                 {
+                    if (child.HasElements)
+                    {
+                        Process(child, depth);
+                        continue;
+                    }
+
                     string dictKey = element.Name.LocalName + "." + child.Name.LocalName;
                     if (!XmlSettings.ContainsKey(dictKey))
                         XmlSettings.Add(dictKey, child.Value);
@@ -62,6 +85,11 @@ namespace Digital_Indicator.Logic.FileOperations
 
                 depth--;
             }
+        }
+
+        private string GetXmlData()
+        {
+            return persistentXml.Declaration.ToString() + "\r\n" + persistentXml.ToString();
         }
     }
 }

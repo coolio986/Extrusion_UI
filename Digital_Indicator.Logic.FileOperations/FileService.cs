@@ -30,7 +30,7 @@ namespace Digital_Indicator.Logic.FileOperations
 
         public void WriteFile(string filename, string filedata)
         {
-
+            File.WriteAllText(filename, filedata);
         }
 
         private void CheckEnvironment()
@@ -51,8 +51,9 @@ namespace Digital_Indicator.Logic.FileOperations
             {
                 if (oe.Message.ToLower().Contains("root element is missing."))
                 {
-                    var doc = new XDocument(new XDeclaration("1.0", "", ""), new XElement("settings"));
-                    XElement settings = doc.Element("settings");
+                    var doc = new XDocument(new XDeclaration("1.0", "", ""), new XElement("persistenceData"));
+                    doc.Element("persistenceData").Add(new XElement("filamentData"));
+                    XElement settings = doc.Element("persistenceData").Element("filamentData");
                     settings.Add(new XElement("previousBatchNumber", "0"));
                     settings.Add(new XElement("materialDescription", ""));
                     settings.Add(new XElement("nominalDiameter", "1.75"));
