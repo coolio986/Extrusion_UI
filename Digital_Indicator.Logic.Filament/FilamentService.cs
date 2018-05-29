@@ -1,4 +1,5 @@
-﻿using Digital_Indicator.Logic.Helpers;
+﻿using Digital_Indicator.Logic.FileOperations;
+using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Logic.SerialCommunications;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace Digital_Indicator.Logic.Filament
         public event EventHandler DiameterChanged;
 
         public event EventHandler PropertyChanged;
+
+        private IXmlService _xmlService;
 
         private string description;
         public string Description
@@ -72,6 +75,13 @@ namespace Digital_Indicator.Logic.Filament
             set { spoolNumber = value; }
         }
 
+        private string batchNumber;
+        public string BatchNumber
+        {
+            get { return batchNumber; }
+            set { batchNumber = value; }
+        }
+
         private bool captureStarted;
         public bool CaptureStarted
         {
@@ -87,9 +97,13 @@ namespace Digital_Indicator.Logic.Filament
             }
         }
 
-        public FilamentService(ISerialService serialService)
+        public FilamentService(ISerialService serialService, IXmlService xmlService)
         {
             serialService.DiameterChanged += SerialService_DiameterChanged;
+
+            _xmlService = xmlService;
+
+            BuildXmlData();
         }
 
         private void SerialService_DiameterChanged(object sender, EventArgs e)
@@ -99,13 +113,23 @@ namespace Digital_Indicator.Logic.Filament
 
             if (captureStarted)
                 UpdateHighsAndLows();
-           
+
         }
 
         private void UpdateHighsAndLows()
         {
             HighestValue = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
             LowestValue = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+        }
+
+        private void BuildXmlData()
+        {
+            NominalDiameter = _xmlService.XmlSettings["settings.nominalDiameter"];
+            UpperLimit = _xmlService.XmlSettings["settings.upperLimit"];
+            LowerLimit = _xmlService.XmlSettings["settings.lowerLimit"];
+            SpoolNumber = _xmlService.XmlSettings["settings.spoolNumber"];
+            Description = _xmlService.XmlSettings["settings.materialDescription"];
+            BatchNumber = _xmlService.XmlSettings["settings.batchNumber"];
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

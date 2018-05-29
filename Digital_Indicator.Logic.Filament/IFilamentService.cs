@@ -16,6 +16,7 @@ namespace Digital_Indicator.Logic.Filament
         string HighestValue { get; set; }
         string LowestValue { get; set; }
         string SpoolNumber { get; set; }
+        string BatchNumber { get; set; }
 
         event EventHandler DiameterChanged;
         event EventHandler PropertyChanged;

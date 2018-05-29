@@ -52,16 +52,20 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.SpoolNumber = value; }
         }
 
+        public string BatchNumber
+        {
+            get { return _filamentService.BatchNumber; }
+            set { _filamentService.BatchNumber = value; }
+        }
+
         public SettingsViewModel(IFilamentService filamentService, IXmlService xmlService)
         {
             _filamentService = filamentService;
             _xmlService = xmlService;
 
-            FilamentDiameter = _xmlService.XmlSettings["settings.nominalDiameter"];
-            UpperLimit = _xmlService.XmlSettings["settings.upperLimit"];
-            LowerLimit = _xmlService.XmlSettings["settings.lowerLimit"];
-            SpoolNumber = xmlService.XmlSettings["settings.spoolNumber"];
-            FilamentDescription = _xmlService.XmlSettings["settings.materialDescription"];
+
+
+                
         }
     }
 }

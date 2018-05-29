@@ -23,7 +23,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public SerialService()
         {
-            SimulationModeActive = false;
+            SimulationModeActive = true;
 
             if (!SimulationModeActive)
                 serialPort = new SerialPort();
@@ -162,17 +162,21 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
                 while (true)
                 {
-                    double diameter = GetRandomNumber(1.65, 1.85);
+                    double diameter = GetRandomNumber(1.70, 1.80);
                     DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
-                    Thread.Sleep(50);
+                    Thread.Sleep(150);
                 }
             });
         }
 
         private double GetRandomNumber(double minimum, double maximum)
         {
+            //Random random = new Random();
+            //return random.NextDouble() * (maximum - minimum) + minimum;
+
             Random random = new Random();
-            return random.NextDouble() * (maximum - minimum) + minimum;
+            int r = random.Next((int)(minimum * 100), (int)(maximum * 100)); //+1 as end is excluded.
+            return (Double)r / 100.00;
         }
 
         public List<SerialPortClass> GetSerialPortList()
