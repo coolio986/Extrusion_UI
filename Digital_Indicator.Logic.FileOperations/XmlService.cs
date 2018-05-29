@@ -34,7 +34,7 @@ namespace Digital_Indicator.Logic.FileOperations
             XDocument settingsDoc = XDocument.Parse(settingsData);
             foreach(XElement element in settingsDoc.Descendants("settings").Nodes())
             {
-                XmlSettings.Add(element.Name.LocalName, element.Value);
+                XmlSettings.Add(settingsDoc.Root.Name.LocalName + "." + element.Name.LocalName, element.Value);
             }
 
         }

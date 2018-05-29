@@ -57,11 +57,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService = filamentService;
             _xmlService = xmlService;
 
-            FilamentDiameter = _xmlService.XmlSettings["nominalDiameter"];
-            UpperLimit = _xmlService.XmlSettings["upperLimit"];
-            LowerLimit = _xmlService.XmlSettings["lowerLimit"];
-            SpoolNumber = xmlService.XmlSettings["spoolNumber"];
-            FilamentDescription = _xmlService.XmlSettings["materialDescription"];
+            FilamentDiameter = _xmlService.XmlSettings["settings.nominalDiameter"];
+            UpperLimit = _xmlService.XmlSettings["settings.upperLimit"];
+            LowerLimit = _xmlService.XmlSettings["settings.lowerLimit"];
+            SpoolNumber = xmlService.XmlSettings["settings.spoolNumber"];
+            FilamentDescription = _xmlService.XmlSettings["settings.materialDescription"];
         }
     }
 }

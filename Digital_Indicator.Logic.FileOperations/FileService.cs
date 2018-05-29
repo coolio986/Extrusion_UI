@@ -59,6 +59,7 @@ namespace Digital_Indicator.Logic.FileOperations
                     settings.Add(new XElement("upperLimit", "1.80"));
                     settings.Add(new XElement("lowerLimit", "1.70"));
                     settings.Add(new XElement("spoolNumber", "0"));
+                    settings.Add(new XElement("batchNumber", "0"));
                     doc.Save(EnvironmentDirectory + @"\persistence.xml");
                 }
                 else
