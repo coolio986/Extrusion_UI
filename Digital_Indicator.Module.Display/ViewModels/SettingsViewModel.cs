@@ -1,5 +1,4 @@
 ﻿using Digital_Indicator.Logic.Filament;
-using Digital_Indicator.Logic.FileOperations;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -14,7 +13,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
     public class SettingsViewModel : BindableBase
     {
         IFilamentService _filamentService;
-        IXmlService _xmlService;
         private DelegateCommand closeSettingsView;
         public DelegateCommand CloseSettingsView
         {
@@ -58,13 +56,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
-        public SettingsViewModel(IFilamentService filamentService, IXmlService xmlService)
+        public SettingsViewModel(IFilamentService filamentService)
         {
             _filamentService = filamentService;
-            _xmlService = xmlService;
-
-
-
                 
         }
     }

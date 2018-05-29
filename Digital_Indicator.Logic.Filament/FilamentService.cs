@@ -37,21 +37,36 @@ namespace Digital_Indicator.Logic.Filament
         public string NominalDiameter
         {
             get { return nominalDiameter; }
-            set { nominalDiameter = value; OnPropertyChanged(); }
+            set
+            {
+                nominalDiameter = value;
+                OnPropertyChanged();
+                SaveXmlData();
+            }
         }
 
         private string upperLimit;
         public string UpperLimit
         {
             get { return upperLimit; }
-            set { upperLimit = value; OnPropertyChanged(); }
+            set
+            {
+                upperLimit = value;
+                OnPropertyChanged();
+                SaveXmlData();
+            }
         }
 
         private string lowerLimit;
         public string LowerLimit
         {
             get { return lowerLimit; }
-            set { lowerLimit = value; OnPropertyChanged(); }
+            set
+            {
+                lowerLimit = value;
+                OnPropertyChanged();
+                SaveXmlData();
+            }
         }
 
         private string highestValue;
@@ -72,14 +87,24 @@ namespace Digital_Indicator.Logic.Filament
         public string SpoolNumber
         {
             get { return spoolNumber; }
-            set { spoolNumber = value; OnPropertyChanged(); }
+            set
+            {
+                spoolNumber = value;
+                OnPropertyChanged();
+                SaveXmlData();
+            }
         }
 
         private string batchNumber;
         public string BatchNumber
         {
             get { return batchNumber; }
-            set { batchNumber = value; OnPropertyChanged(); }
+            set
+            {
+                batchNumber = value;
+                OnPropertyChanged();
+                SaveXmlData();
+            }
         }
 
         private bool captureStarted;
@@ -124,12 +149,24 @@ namespace Digital_Indicator.Logic.Filament
 
         private void BuildXmlData()
         {
-            NominalDiameter = _xmlService.XmlSettings["filamentData.nominalDiameter"];
-            UpperLimit = _xmlService.XmlSettings["filamentData.upperLimit"];
-            LowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
-            SpoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
-            Description = _xmlService.XmlSettings["filamentData.materialDescription"];
-            BatchNumber = _xmlService.XmlSettings["filamentData.batchNumber"];
+            nominalDiameter = _xmlService.XmlSettings["filamentData.nominalDiameter"];
+            upperLimit = _xmlService.XmlSettings["filamentData.upperLimit"];
+            lowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
+            spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
+            description = _xmlService.XmlSettings["filamentData.materialDescription"];
+            batchNumber = _xmlService.XmlSettings["filamentData.batchNumber"];
+        }
+
+        private void SaveXmlData()
+        {
+            _xmlService.XmlSettings["filamentData.nominalDiameter"] = nominalDiameter;
+            _xmlService.XmlSettings["filamentData.upperLimit"] = upperLimit;
+            _xmlService.XmlSettings["filamentData.lowerLimit"] = lowerLimit;
+            _xmlService.XmlSettings["filamentData.spoolNumber"] = spoolNumber;
+            _xmlService.XmlSettings["filamentData.materialDescription"] = description;
+            _xmlService.XmlSettings["filamentData.batchNumber"] = batchNumber;
+
+            _xmlService.SaveSettings();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
