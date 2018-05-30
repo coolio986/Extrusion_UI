@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Digital_Indicator.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace Digital_Indicator.Logic.Filament
         event EventHandler PropertyChanged;
 
         bool CaptureStarted { get; set; }
+
+        void SaveHistoricalData(List<DataListXY> dataPoints);
         
     }
 }

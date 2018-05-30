@@ -88,6 +88,17 @@ namespace Digital_Indicator.Infrastructure.UI
             diameterReferenceLowerLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(lowerLimitDiameter)));
         }
 
+        public List<DataListXY> GetDataPoints()
+        {
+            List<DataListXY> dataList = new List<DataListXY>();
+            foreach(DataPoint dataPoint in diameterPoints)
+            {
+                dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));
+            }
+            return dataList;
+        }
+
+
         private LineSeries GetDiameterPointsLineSeries()
         {
             var lineSeries = new LineSeries();

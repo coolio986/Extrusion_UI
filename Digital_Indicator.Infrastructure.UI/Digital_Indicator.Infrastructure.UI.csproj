@@ -58,5 +58,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj">
+      <Project>{14852aa5-9b8d-4202-a2e3-d5f9e7004a49}</Project>
+      <Name>Digital_Indicator.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

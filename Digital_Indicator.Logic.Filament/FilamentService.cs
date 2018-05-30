@@ -1,4 +1,5 @@
-﻿using Digital_Indicator.Logic.FileOperations;
+﻿using Digital_Indicator.Infrastructure;
+using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Logic.SerialCommunications;
 using System;
@@ -18,6 +19,7 @@ namespace Digital_Indicator.Logic.Filament
         public event EventHandler PropertyChanged;
 
         private IXmlService _xmlService;
+        private ICsvService _csvService;
 
         private string description;
         public string Description
@@ -123,11 +125,12 @@ namespace Digital_Indicator.Logic.Filament
             }
         }
 
-        public FilamentService(ISerialService serialService, IXmlService xmlService)
+        public FilamentService(ISerialService serialService, IXmlService xmlService, ICsvService csvService)
         {
             serialService.DiameterChanged += SerialService_DiameterChanged;
 
             _xmlService = xmlService;
+            _csvService = csvService;
 
             BuildXmlData();
         }
@@ -139,7 +142,6 @@ namespace Digital_Indicator.Logic.Filament
 
             if (captureStarted)
                 UpdateHighsAndLows();
-
         }
 
         private void UpdateHighsAndLows()
@@ -173,6 +175,11 @@ namespace Digital_Indicator.Logic.Filament
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void SaveHistoricalData(List<DataListXY> dataPoints)
+        {
+
         }
     }
 }

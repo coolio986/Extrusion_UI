@@ -14,5 +14,10 @@ namespace Digital_Indicator.Logic.FileOperations
         {
             _fileService = fileService;
         }
+
+        public void SaveSettings()
+        {
+
+        }
     }
 }

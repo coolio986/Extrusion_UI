@@ -8,5 +8,7 @@ namespace Digital_Indicator.Logic.FileOperations
 {
     public interface ICsvService
     {
+
+        void SaveSettings();
     }
 }

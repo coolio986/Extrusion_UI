@@ -12,6 +12,8 @@ using Digital_Indicator.Module.Display.Views;
 using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
+using System.Collections.Generic;
+using Digital_Indicator.Infrastructure;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -87,7 +89,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
             SetupRealTimeView();
             SetupHistoricalView();
-            StartHistoricalTimer();
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
@@ -130,8 +131,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void StopCapture_Click()
         {
+            _filamentService.SaveHistoricalData(historicalModel.GetDataPoints());
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
+
         }
 
         private void Settings_Click()
@@ -161,27 +164,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             };
         }
 
-        private void StartHistoricalTimer()
-        {
-            //acts as a timer
-            Task.Factory.StartNew(() =>
-            {
-                while (_filamentService.CaptureStarted)
-                {
-                    //Update plot on main UI thread, prevents cross thread violations
-                    //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-                    //{
-                    //    HistoricalModel.InvalidatePlot(true);
-                    //}));
-                    
-                    //HistoricalModel.InvalidatePlot(true);
-
-
-                    Thread.Sleep(5000);
-                }
-            });
-        }
-
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged("Diameter");
@@ -200,7 +182,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             if (RealTimeModel != null)
             {
-                
+
                 RealTimeModel.AddDataPoint(Diameter);
                 HistoricalModel.AddDataPoint(Diameter);
                 UpdateHistoricalPlot();
@@ -212,7 +194,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
                     {
                         RealTimeModel.InvalidatePlot(true);
                     });
-                    
+
                 }
             }
         }

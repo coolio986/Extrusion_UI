@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FDD57CAC-B228-496A-8BC7-496F742013C0}</ProjectGuid>
+    <ProjectGuid>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Digital_Indicator.Logic.Filament</RootNamespace>
-    <AssemblyName>Digital_Indicator.Logic.Filament</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <RootNamespace>Digital_Indicator.Infrastructure</RootNamespace>
+    <AssemblyName>Digital_Indicator.Infrastructure</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,29 +41,14 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilamentService.cs" />
-    <Compile Include="IFilamentService.cs" />
+    <Compile Include="DataListXY.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj">
-      <Project>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</Project>
-      <Name>Digital_Indicator.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Digital_Indicator.Logic.FileOperations\Digital_Indicator.Logic.FileOperations.csproj">
-      <Project>{8035395E-CE20-45CC-8669-F1CBB8CB31BB}</Project>
-      <Name>Digital_Indicator.Logic.FileOperations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj">
-      <Project>{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}</Project>
-      <Name>Digital_Indicator.Logic.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Digital_Indicator.Logic.SerialCommunications\Digital_Indicator.Logic.SerialCommunications.csproj">
-      <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
-      <Name>Digital_Indicator.Logic.SerialCommunications</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
