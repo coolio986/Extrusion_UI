@@ -131,7 +131,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void StopCapture_Click()
         {
-            _filamentService.SaveHistoricalData(historicalModel.GetDataPoints());
+            _filamentService.SaveHistoricalData(realTimeModel.GetDataPoints());
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
 
