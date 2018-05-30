@@ -118,6 +118,7 @@ namespace Digital_Indicator.Logic.Filament
                 {
                     highestValue = nominalDiameter;
                     lowestValue = nominalDiameter;
+                    SpoolNumber = (spoolNumber.GetInteger() + 1).ToString();
                 }
             }
         }

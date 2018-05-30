@@ -59,7 +59,13 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public SettingsViewModel(IFilamentService filamentService)
         {
             _filamentService = filamentService;
+            _filamentService.PropertyChanged += _filamentService_PropertyChanged;
                 
+        }
+
+        private void _filamentService_PropertyChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("SpoolNumber");
         }
     }
 }
