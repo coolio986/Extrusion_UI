@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Digital_Indicator.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,6 @@ namespace Digital_Indicator.Logic.FileOperations
 {
     public interface ICsvService
     {
-
-        void SaveSettings();
+        void SaveSettings(List<DataListXY> dataList, string spoolNumber, string description);
     }
 }

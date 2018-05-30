@@ -50,5 +50,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlService.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj">
+      <Project>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</Project>
+      <Name>Digital_Indicator.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

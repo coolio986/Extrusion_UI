@@ -179,7 +179,7 @@ namespace Digital_Indicator.Logic.Filament
 
         public void SaveHistoricalData(List<DataListXY> dataPoints)
         {
-
+            _csvService.SaveSettings(dataPoints, spoolNumber, description);
         }
     }
 }
