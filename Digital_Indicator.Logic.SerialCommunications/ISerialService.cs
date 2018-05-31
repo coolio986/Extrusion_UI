@@ -14,6 +14,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         event EventHandler DiameterChanged;
 
-        bool IsSimulationModeActive();
+        bool IsSimulationModeActive { get; set; }
     }
 }

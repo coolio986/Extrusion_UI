@@ -21,6 +21,7 @@ namespace Digital_Indicator.Logic.Filament
 
         private IXmlService _xmlService;
         private ICsvService _csvService;
+        private ISerialService _serialService;
 
         private string description;
         public string Description
@@ -134,9 +135,16 @@ namespace Digital_Indicator.Logic.Filament
             }
         }
 
+        public bool IsSimulationModeActive
+        {
+            get { return _serialService.IsSimulationModeActive; }
+            set { _serialService.IsSimulationModeActive = value; }
+        }
+
         public FilamentService(ISerialService serialService, IXmlService xmlService, ICsvService csvService)
         {
-            serialService.DiameterChanged += SerialService_DiameterChanged;
+            _serialService = serialService;
+            _serialService.DiameterChanged += SerialService_DiameterChanged;
 
             _xmlService = xmlService;
             _csvService = csvService;

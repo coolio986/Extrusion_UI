@@ -17,7 +17,7 @@ namespace Digital_Indicator.Startup
         {
             base.OnStartup(e);
 
-            var bootstrapper = new Bootstrapper();
+            var bootstrapper = new Bootstrapper(e.Args);
             bootstrapper.Run();
         }
     }

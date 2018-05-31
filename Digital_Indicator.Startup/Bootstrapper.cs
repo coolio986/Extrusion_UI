@@ -13,6 +13,13 @@ namespace Digital_Indicator.Startup
 {
     class Bootstrapper : UnityBootstrapper
     {
+        string[] startArgs;
+
+        public Bootstrapper(string[] args)
+        {
+            startArgs = args;
+        }
+
         protected override DependencyObject CreateShell()
         {
             return Container.Resolve<MainWindow>();
@@ -49,13 +56,30 @@ namespace Digital_Indicator.Startup
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());
 
+            StartFilamentService();
+
+        }
+
+        private void StartFilamentService()
+        {
+            bool simulation = false;
+
+            foreach (string arg in startArgs)
+            {
+                simulation = arg.Contains("-s");
+                if (simulation)
+                    break;
+            }
+            IFilamentService filamentService = Container.Resolve<IFilamentService>();
+
+            filamentService.IsSimulationModeActive = simulation;
         }
 
         //protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
         //{
-            //var behaviors = base.ConfigureDefaultRegionBehaviors();
-            //behaviors.AddIfMissing(DependentViewRegionBehavior.BehaviorKey, typeof(DependentViewRegionBehavior));
-            //return behaviors;
+        //var behaviors = base.ConfigureDefaultRegionBehaviors();
+        //behaviors.AddIfMissing(DependentViewRegionBehavior.BehaviorKey, typeof(DependentViewRegionBehavior));
+        //return behaviors;
         //}
     }
 }

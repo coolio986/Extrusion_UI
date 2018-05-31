@@ -23,6 +23,7 @@ namespace Digital_Indicator.Logic.Filament
         event EventHandler PropertyChanged;
 
         bool CaptureStarted { get; set; }
+        bool IsSimulationModeActive { get; set; }
 
         void SaveHistoricalData(List<DataListXY> dataPoints);
         

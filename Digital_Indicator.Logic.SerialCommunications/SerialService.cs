@@ -23,9 +23,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public SerialService()
         {
-            SimulationModeActive = true;
-
-            if (!SimulationModeActive)
+            if (!IsSimulationModeActive)
                 serialPort = new SerialPort();
 
             stopWatch = new Stopwatch();
@@ -45,7 +43,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
         }
 
-        private bool SimulationModeActive { get; set; }
+        public bool IsSimulationModeActive { get; set; }
 
         public void BindHandlers()
         {
@@ -58,7 +56,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void ConnectToSerialPort(string portName)
         {
-            if (!SimulationModeActive)
+            if (!IsSimulationModeActive)
             {
                 PortName = portName;
                 serialPort.Open();
@@ -204,11 +202,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
 
             return ListOfSerialPortClass;
-        }
-
-        public bool IsSimulationModeActive()
-        {
-            return SimulationModeActive;
         }
     }
 }

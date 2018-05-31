@@ -44,13 +44,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void NextScreen_Click()
         {
-            if (serialPortSelection == null && _serialService.IsSimulationModeActive())
+            if (serialPortSelection == null && _serialService.IsSimulationModeActive)
                 SerialPortSelection = new SerialPortClass() { SerialPort_PortName = "", };
 
             SetSerialPort();
 
             _naviService.NavigateTo("DiameterView");
         }
-
     }
 }
