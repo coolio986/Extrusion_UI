@@ -1,6 +1,4 @@
-﻿using Digital_Indicator.Logic.SerialCommunications;
-using OxyPlot;
-using OxyPlot.Axes;
+﻿using OxyPlot.Axes;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -11,9 +9,6 @@ using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Module.Display.Views;
 using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
-using Digital_Indicator.Logic.FileOperations;
-using System.Collections.Generic;
-using Digital_Indicator.Infrastructure;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -76,26 +71,18 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref settingsView, value); }
         }
 
-        Stopwatch stopWatch;
-        long previousMillis;
-
         public DiameterViewModel(IFilamentService filamentService)
         {
             _filamentService = filamentService;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
-            SetupRealTimeView();
-            SetupHistoricalView();
+            SetupPlots();
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
-
-            stopWatch = new Stopwatch(); //For timing historical plot
-            stopWatch.Start();
-            previousMillis = stopWatch.ElapsedMilliseconds;
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
@@ -122,8 +109,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService.CaptureStarted = true;
             RaisePropertyChanged("CaptureStarted");
-            SetupRealTimeView();
-            SetupHistoricalView();
+            SetupPlots();
         }
 
         private void StopCapture_Click()
@@ -138,26 +124,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             SettingsView = new SettingsView();
         }
 
-        private void SetupRealTimeView()
+        private void SetupPlots()
         {
-            RealTimeModel = new LinearSeriesPlotModel()
-            {
-                Title = "RealTime Diameter",
-                UpperLimitDiameter = _filamentService.UpperLimit,
-                NominalDiameter = _filamentService.NominalDiameter,
-                LowerLimitDiameter = _filamentService.LowerLimit,
-            };
-        }
-
-        private void SetupHistoricalView()
-        {
-            HistoricalModel = new LinearSeriesPlotModel()
-            {
-                Title = "Historical Diameter",
-                UpperLimitDiameter = _filamentService.UpperLimit,
-                NominalDiameter = _filamentService.NominalDiameter,
-                LowerLimitDiameter = _filamentService.LowerLimit,
-            };
+            LinearSeriesPlotModel.CreatePlots(_filamentService.UpperLimit, _filamentService.NominalDiameter, _filamentService.LowerLimit);
+            RealTimeModel = LinearSeriesPlotModel.GetPlot("RealTimeModel");
+            HistoricalModel = LinearSeriesPlotModel.GetPlot("HistoricalModel");
         }
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
@@ -169,43 +140,18 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
             if (_filamentService.CaptureStarted)
             {
-                UpdateRealTimePlot();
+                UpdatePlots();
             }
         }
 
-        private void UpdateRealTimePlot()
+        private void UpdatePlots()
         {
-            if (RealTimeModel != null)
+            if (RealTimeModel != null && HistoricalModel != null)
             {
                 RealTimeModel.AddDataPoint(Diameter);
                 HistoricalModel.AddDataPoint(Diameter);
-                UpdateHistoricalPlot();
-
-                if (RealTimeModel.Axes.Count > 1)
-                {
-                    RealTimeModel.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
-                    Task.Factory.StartNew(() =>
-                    {
-                        RealTimeModel.InvalidatePlot(true);
-                    });
-
-                }
             }
         }
-
-        private void UpdateHistoricalPlot()
-        {
-            if (stopWatch.ElapsedMilliseconds >= previousMillis + 5000)
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    HistoricalModel.InvalidatePlot(true);
-                    previousMillis = stopWatch.ElapsedMilliseconds;
-                });
-            }
-        }
-
-
     }
 }
 

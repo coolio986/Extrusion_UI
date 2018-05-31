@@ -3,6 +3,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,24 @@ namespace Digital_Indicator.Infrastructure.UI
         private LineSeries UpperLimitDiameterLineSeries;
         private LineSeries LowerLimitDiameterLineSeries;
 
+        private Stopwatch updateTime;
+        private long previousMillis;
+
+        private bool updateSlow;
+        public bool UpdateSlow
+        {
+            get { return updateSlow; }
+            set
+            {
+                updateSlow = value;
+                if (value)
+                {
+                    updateTime.Start();
+                    previousMillis = updateTime.ElapsedMilliseconds;
+                }
+            }
+        }
+
         public LinearSeriesPlotModel()
         {
             lineSeries = new LineSeries();
@@ -28,6 +47,8 @@ namespace Digital_Indicator.Infrastructure.UI
             diameterReferenceNominal = new List<DataPoint>();
             diameterReferenceUpperLimit = new List<DataPoint>();
             diameterReferenceLowerLimit = new List<DataPoint>();
+
+            updateTime = new Stopwatch();
 
             this.Series.Add(GetDiameterPointsLineSeries());
 
@@ -86,18 +107,40 @@ namespace Digital_Indicator.Infrastructure.UI
             diameterReferenceUpperLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(upperLimitDiameter)));
             diameterReferenceNominal.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(nominalDiameter)));
             diameterReferenceLowerLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(lowerLimitDiameter)));
+
+            if (UpdateSlow)
+            {
+                if (updateTime.ElapsedMilliseconds >= previousMillis + 5000)
+                {
+                    Task.Factory.StartNew(() =>
+                    {
+                        this.InvalidatePlot(true);
+                        previousMillis = updateTime.ElapsedMilliseconds;
+                    });
+                }
+            }
+            else
+            {
+                if (this.Axes.Count > 1)
+                {
+                    this.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
+                    Task.Factory.StartNew(() =>
+                    {
+                        this.InvalidatePlot(true);
+                    });
+                }
+            }
         }
 
         public List<DataListXY> GetDataPoints()
         {
             List<DataListXY> dataList = new List<DataListXY>();
-            foreach(DataPoint dataPoint in diameterPoints)
+            foreach (DataPoint dataPoint in diameterPoints)
             {
                 dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));
             }
             return dataList;
         }
-
 
         private LineSeries GetDiameterPointsLineSeries()
         {
@@ -141,6 +184,37 @@ namespace Digital_Indicator.Infrastructure.UI
             lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
 
             return lineSeries;
+        }
+
+        static Dictionary<string, LinearSeriesPlotModel> plotModelDict;
+
+        public static LinearSeriesPlotModel GetPlot(string plotName)
+        {
+            return plotModelDict[plotName];
+        }
+        public static void CreatePlots(string upperLimit, string nominalDiameter, string lowerLimit)
+        {
+            plotModelDict = new Dictionary<string, LinearSeriesPlotModel>();
+            plotModelDict.Add("HistoricalModel",
+             new LinearSeriesPlotModel()
+             {
+                 Title = "Historical Diameter",
+                 UpperLimitDiameter = upperLimit,
+                 NominalDiameter = nominalDiameter,
+                 LowerLimitDiameter = lowerLimit,
+                 UpdateSlow = true,
+             }
+            );
+
+            plotModelDict.Add("RealTimeModel",
+             new LinearSeriesPlotModel()
+             {
+                 Title = "RealTime Diameter",
+                 UpperLimitDiameter = upperLimit,
+                 NominalDiameter = nominalDiameter,
+                 LowerLimitDiameter = lowerLimit,
+             }
+            );
         }
     }
 
