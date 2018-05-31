@@ -1,4 +1,5 @@
 ﻿using Digital_Indicator.Infrastructure;
+using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Logic.SerialCommunications;
@@ -43,6 +44,7 @@ namespace Digital_Indicator.Logic.Filament
             {
                 nominalDiameter = value;
                 OnPropertyChanged();
+                UpdatePlots();
                 SaveXmlData();
             }
         }
@@ -55,6 +57,7 @@ namespace Digital_Indicator.Logic.Filament
             {
                 upperLimit = value;
                 OnPropertyChanged();
+                UpdatePlots();
                 SaveXmlData();
             }
         }
@@ -67,6 +70,7 @@ namespace Digital_Indicator.Logic.Filament
             {
                 lowerLimit = value;
                 OnPropertyChanged();
+                UpdatePlots();
                 SaveXmlData();
             }
         }
@@ -93,6 +97,7 @@ namespace Digital_Indicator.Logic.Filament
             {
                 spoolNumber = value;
                 OnPropertyChanged();
+                UpdatePlots();
                 SaveXmlData();
             }
         }
@@ -105,6 +110,7 @@ namespace Digital_Indicator.Logic.Filament
             {
                 batchNumber = value;
                 OnPropertyChanged();
+                UpdatePlots();
                 SaveXmlData();
             }
         }
@@ -121,7 +127,10 @@ namespace Digital_Indicator.Logic.Filament
                     highestValue = nominalDiameter;
                     lowestValue = nominalDiameter;
                     SpoolNumber = (spoolNumber.GetInteger() + 1).ToString();
+                    SetupPlots();
                 }
+                else
+                    SaveHistoricalData(LinearSeriesPlotModel.GetPlot("HistoricalModel").GetDataPoints());
             }
         }
 
@@ -133,11 +142,21 @@ namespace Digital_Indicator.Logic.Filament
             _csvService = csvService;
 
             BuildXmlData();
+            SetupPlots();
+        }
+
+        private void SetupPlots()
+        {
+            LinearSeriesPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
         }
 
         private void SerialService_DiameterChanged(object sender, EventArgs e)
         {
             ActualDiameter = sender.ToString();
+
+            if (captureStarted)
+                LinearSeriesPlotModel.GetPlots().Select(x => { x.AddDataPoint(actualDiameter); return x; }).ToList();
+
             DiameterChanged?.Invoke(sender, e);
 
             if (captureStarted)
@@ -148,6 +167,18 @@ namespace Digital_Indicator.Logic.Filament
         {
             HighestValue = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
             LowestValue = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+        }
+
+        private void UpdatePlots()
+        {
+            var test = LinearSeriesPlotModel.GetPlots();
+            LinearSeriesPlotModel.GetPlots().Select(x =>
+            {
+                x.UpperLimitDiameter = upperLimit;
+                x.NominalDiameter = nominalDiameter;
+                x.LowerLimitDiameter = lowerLimit;
+                return x;
+            }).ToList();
         }
 
         private void BuildXmlData()

@@ -87,14 +87,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
-            RealTimeModel.UpperLimitDiameter = _filamentService.UpperLimit;
-            RealTimeModel.NominalDiameter = _filamentService.NominalDiameter;
-            RealTimeModel.LowerLimitDiameter = _filamentService.LowerLimit;
-
-            HistoricalModel.UpperLimitDiameter = _filamentService.UpperLimit;
-            HistoricalModel.NominalDiameter = _filamentService.NominalDiameter;
-            HistoricalModel.LowerLimitDiameter = _filamentService.LowerLimit;
-
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
         }
@@ -109,12 +101,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService.CaptureStarted = true;
             RaisePropertyChanged("CaptureStarted");
-            SetupPlots();
+            RaisePropertyChanged("RealTimeModel");
         }
 
         private void StopCapture_Click()
         {
-            _filamentService.SaveHistoricalData(realTimeModel.GetDataPoints());
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
         }
@@ -126,7 +117,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void SetupPlots()
         {
-            LinearSeriesPlotModel.CreatePlots(_filamentService.UpperLimit, _filamentService.NominalDiameter, _filamentService.LowerLimit);
             RealTimeModel = LinearSeriesPlotModel.GetPlot("RealTimeModel");
             HistoricalModel = LinearSeriesPlotModel.GetPlot("HistoricalModel");
         }
@@ -136,21 +126,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("Diameter");
             RaisePropertyChanged("HighestValue");
             RaisePropertyChanged("LowestValue");
-
-
-            if (_filamentService.CaptureStarted)
-            {
-                UpdatePlots();
-            }
-        }
-
-        private void UpdatePlots()
-        {
-            if (RealTimeModel != null && HistoricalModel != null)
-            {
-                RealTimeModel.AddDataPoint(Diameter);
-                HistoricalModel.AddDataPoint(Diameter);
-            }
         }
     }
 }

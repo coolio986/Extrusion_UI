@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure.UI\Digital_Indicator.Infrastructure.UI.csproj">
+      <Project>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</Project>
+      <Name>Digital_Indicator.Infrastructure.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj">
       <Project>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</Project>
       <Name>Digital_Indicator.Infrastructure</Name>
@@ -61,6 +68,9 @@
       <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
       <Name>Digital_Indicator.Logic.SerialCommunications</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

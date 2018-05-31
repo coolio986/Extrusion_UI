@@ -192,30 +192,51 @@ namespace Digital_Indicator.Infrastructure.UI
         {
             return plotModelDict[plotName];
         }
+
+        public static List<LinearSeriesPlotModel> GetPlots()
+        {
+            return plotModelDict.Select(x => { return x.Value; }).ToList();
+        }
         public static void CreatePlots(string upperLimit, string nominalDiameter, string lowerLimit)
         {
-            plotModelDict = new Dictionary<string, LinearSeriesPlotModel>();
-            plotModelDict.Add("HistoricalModel",
-             new LinearSeriesPlotModel()
-             {
-                 Title = "Historical Diameter",
-                 UpperLimitDiameter = upperLimit,
-                 NominalDiameter = nominalDiameter,
-                 LowerLimitDiameter = lowerLimit,
-                 UpdateSlow = true,
-             }
-            );
+            if (plotModelDict != null)
+            {
+                plotModelDict.Select(x =>
+                {
+                    x.Value.diameterPoints.Clear();
+                    x.Value.diameterReferenceNominal.Clear();
+                    x.Value.diameterReferenceUpperLimit.Clear();
+                    x.Value.diameterReferenceLowerLimit.Clear();
+                    x.Value.InvalidatePlot(true);
+                    return x;
+                }).ToList();
+            }
+            else
+            {
+                plotModelDict = new Dictionary<string, LinearSeriesPlotModel>();
 
-            plotModelDict.Add("RealTimeModel",
-             new LinearSeriesPlotModel()
-             {
-                 Title = "RealTime Diameter",
-                 UpperLimitDiameter = upperLimit,
-                 NominalDiameter = nominalDiameter,
-                 LowerLimitDiameter = lowerLimit,
-             }
-            );
+                //plotModelDict = new Dictionary<string, LinearSeriesPlotModel>();
+                plotModelDict.Add("HistoricalModel",
+                 new LinearSeriesPlotModel()
+                 {
+                     Title = "Historical Diameter",
+                     UpperLimitDiameter = upperLimit,
+                     NominalDiameter = nominalDiameter,
+                     LowerLimitDiameter = lowerLimit,
+                     UpdateSlow = true,
+                 }
+                );
+
+                plotModelDict.Add("RealTimeModel",
+                 new LinearSeriesPlotModel()
+                 {
+                     Title = "RealTime Diameter",
+                     UpperLimitDiameter = upperLimit,
+                     NominalDiameter = nominalDiameter,
+                     LowerLimitDiameter = lowerLimit,
+                 }
+                );
+            }
         }
     }
-
 }
