@@ -15,23 +15,19 @@ namespace Digital_Indicator.Module.Display.ViewModels
     public class DiameterViewModel : BindableBase
     {
         private IFilamentService _filamentService;
-        public DelegateCommand ResetGraph { get; set; }
-        public DelegateCommand StartCapture { get; set; }
-        public DelegateCommand StopCapture { get; set; }
-        public DelegateCommand Settings { get; set; }
+        public DelegateCommand ResetGraph { get; private set; }
+        public DelegateCommand StartCapture { get; private set; }
+        public DelegateCommand StopCapture { get; private set; }
+        public DelegateCommand Settings { get; private set; }
 
-        private LinearSeriesPlotModel realTimeModel;
         public LinearSeriesPlotModel RealTimeModel
         {
-            get { return realTimeModel; }
-            private set { SetProperty(ref realTimeModel, value); }
+            get { return LinearSeriesPlotModel.GetPlot("RealTimeModel"); }
         }
 
-        private LinearSeriesPlotModel historicalModel;
         public LinearSeriesPlotModel HistoricalModel
         {
-            get { return historicalModel; }
-            set { SetProperty(ref historicalModel, value); }
+            get { return LinearSeriesPlotModel.GetPlot("HistoricalModel"); }
         }
 
         public string Diameter
@@ -77,8 +73,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
-            SetupPlots();
-
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
@@ -89,6 +83,13 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
+        }
+
+        private void _filamentService_DiameterChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("Diameter");
+            RaisePropertyChanged("HighestValue");
+            RaisePropertyChanged("LowestValue");
         }
 
         private void ResetGraph_Click()
@@ -113,19 +114,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void Settings_Click()
         {
             SettingsView = new SettingsView();
-        }
-
-        private void SetupPlots()
-        {
-            RealTimeModel = LinearSeriesPlotModel.GetPlot("RealTimeModel");
-            HistoricalModel = LinearSeriesPlotModel.GetPlot("HistoricalModel");
-        }
-
-        private void _filamentService_DiameterChanged(object sender, EventArgs e)
-        {
-            RaisePropertyChanged("Diameter");
-            RaisePropertyChanged("HighestValue");
-            RaisePropertyChanged("LowestValue");
         }
     }
 }
