@@ -64,7 +64,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public object SettingsView
         {
             get { return settingsView; }
-            set { SetProperty(ref settingsView, value); }
+            private set { SetProperty(ref settingsView, value); }
         }
 
         public DiameterViewModel(IFilamentService filamentService)
