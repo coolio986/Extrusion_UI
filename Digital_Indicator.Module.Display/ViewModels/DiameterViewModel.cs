@@ -19,7 +19,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class DiameterViewModel : BindableBase
     {
-        private IXmlService _xmlService;
         private IFilamentService _filamentService;
         public DelegateCommand ResetGraph { get; set; }
         public DelegateCommand StartCapture { get; set; }
@@ -80,9 +79,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
         Stopwatch stopWatch;
         long previousMillis;
 
-        public DiameterViewModel(IFilamentService filamentService, IXmlService xmlService)
+        public DiameterViewModel(IFilamentService filamentService)
         {
-            _xmlService = xmlService;
             _filamentService = filamentService;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
@@ -126,7 +124,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("CaptureStarted");
             SetupRealTimeView();
             SetupHistoricalView();
-            //StartHistoricalTimer();
         }
 
         private void StopCapture_Click()
@@ -134,7 +131,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.SaveHistoricalData(realTimeModel.GetDataPoints());
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
-
         }
 
         private void Settings_Click()
@@ -174,7 +170,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             if (_filamentService.CaptureStarted)
             {
                 UpdateRealTimePlot();
-                //UpdateHistoricalPlot();
             }
         }
 
@@ -182,7 +177,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             if (RealTimeModel != null)
             {
-
                 RealTimeModel.AddDataPoint(Diameter);
                 HistoricalModel.AddDataPoint(Diameter);
                 UpdateHistoricalPlot();
