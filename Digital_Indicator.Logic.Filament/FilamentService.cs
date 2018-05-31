@@ -171,7 +171,6 @@ namespace Digital_Indicator.Logic.Filament
 
         private void UpdatePlots()
         {
-            var test = LinearSeriesPlotModel.GetPlots();
             LinearSeriesPlotModel.GetPlots().Select(x =>
             {
                 x.UpperLimitDiameter = upperLimit;
