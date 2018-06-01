@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace Digital_Indicator.Infrastructure.UI
 {
@@ -32,11 +33,6 @@ namespace Digital_Indicator.Infrastructure.UI
             set
             {
                 updateSlow = value;
-                if (value)
-                {
-                    updateTime.Start();
-                    previousMillis = updateTime.ElapsedMilliseconds;
-                }
             }
         }
 
@@ -49,6 +45,7 @@ namespace Digital_Indicator.Infrastructure.UI
             diameterReferenceLowerLimit = new List<DataPoint>();
 
             updateTime = new Stopwatch();
+            updateTime.Start();
 
             this.Series.Add(GetDiameterPointsLineSeries());
 
@@ -112,29 +109,39 @@ namespace Digital_Indicator.Infrastructure.UI
             {
                 if (updateTime.ElapsedMilliseconds >= previousMillis + 5000)
                 {
-                    Task.Factory.StartNew(() =>
+
+                    Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
                     {
+
                         this.InvalidatePlot(true);
                         previousMillis = updateTime.ElapsedMilliseconds;
-                    });
+
+                    }), DispatcherPriority.SystemIdle);
                 }
             }
             else
             {
-                if (this.Axes.Count > 1)
+                if (updateTime.ElapsedMilliseconds >= previousMillis + 15)
                 {
-                    this.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
-                    Task.Factory.StartNew(() =>
+                    if (this.Axes.Count > 1)
                     {
-                        this.InvalidatePlot(true);
-                    });
+                        Dispatcher.CurrentDispatcher.Invoke(new Action(() =>
+                        {
+                            this.Axes[0].Zoom(DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(-5000)), DateTimeAxis.ToDouble(DateTime.Now.AddMilliseconds(200)));
+
+                            this.InvalidatePlot(true);
+
+                            previousMillis = updateTime.ElapsedMilliseconds;
+
+                        }), DispatcherPriority.Send);
+                    }
                 }
             }
         }
 
-        public List<DataListXY> GetDataPoints()
+        public HashSet<DataListXY> GetDataPoints()
         {
-            List<DataListXY> dataList = new List<DataListXY>();
+            HashSet<DataListXY> dataList = new HashSet<DataListXY>();
             foreach (DataPoint dataPoint in diameterPoints)
             {
                 dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));

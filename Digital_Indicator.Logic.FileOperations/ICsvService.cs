@@ -9,6 +9,6 @@ namespace Digital_Indicator.Logic.FileOperations
 {
     public interface ICsvService
     {
-        void SaveSettings(List<DataListXY> dataList, string spoolNumber, string description);
+        void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string description);
     }
 }

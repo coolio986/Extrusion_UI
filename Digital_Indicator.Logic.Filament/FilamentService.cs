@@ -235,7 +235,7 @@ namespace Digital_Indicator.Logic.Filament
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void SaveHistoricalData(List<DataListXY> dataPoints)
+        public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
         {
             _csvService.SaveSettings(dataPoints, spoolNumber, description);
         }

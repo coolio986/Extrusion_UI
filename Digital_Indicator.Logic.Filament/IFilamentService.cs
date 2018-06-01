@@ -27,7 +27,7 @@ namespace Digital_Indicator.Logic.Filament
         bool CaptureStarted { get; set; }
         bool IsSimulationModeActive { get; set; }
 
-        void SaveHistoricalData(List<DataListXY> dataPoints);
+        void SaveHistoricalData(HashSet<DataListXY> dataPoints);
         
     }
 }

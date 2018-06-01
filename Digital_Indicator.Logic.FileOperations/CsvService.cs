@@ -18,21 +18,23 @@ namespace Digital_Indicator.Logic.FileOperations
             _fileService = fileService;
         }
 
-        public void SaveSettings(List<DataListXY> dataList, string spoolNumber, string description)
+        public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string description)
         {
-            string csvString = string.Empty;
-            csvString += "Timestamp, Diameter,\r\n";
+            StringBuilder stringBuilderCsv = new StringBuilder();
+            stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
 
             foreach (DataListXY list in dataList)
             {
-                csvString += list.X.ToString() + "," + list.Y.ToString() + ",\r\n";
+                stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
             }
+
+            string csvString = stringBuilderCsv.ToString();
             csvString = csvString.TrimEnd(','); //remove trailing comma
 
             string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") + 
                 "_" + description + "_" + "Spool" + spoolNumber + ".csv";
 
-            _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString);
+            _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
         }
     }
 }

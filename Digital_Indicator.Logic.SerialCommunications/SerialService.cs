@@ -162,7 +162,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
 
                     DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-                    Thread.Sleep(10);
+                    Thread.Sleep(1);
                 }
             });
         }
