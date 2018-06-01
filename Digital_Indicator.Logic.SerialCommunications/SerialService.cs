@@ -74,29 +74,22 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            byte[] buf = new byte[serialPort.BytesToRead];
-            serialPort.Read(buf, 0, buf.Length);
+
+            var dataIn = serialPort.ReadLine();
+
+            string asciiConvertedBytes = string.Empty;
+
+            asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
 
             bool dataValid = false;
 
-            if (buf.Length == 54) //buffer must be exactly 54 in length 
-            {
-                for (int i = 0; i <= 15; i++)
-                {
-                    if (buf[i] != 49)
-                    {
-                        dataValid = false; //if first 15 array indexes are not 49 (1111), then data not valid
-                        break;
-                    }
-                    else
-                        dataValid = true;
-                }
-            }
+            dataValid = asciiConvertedBytes.Length == 52;
+
 
             if (dataValid)
             {
-                string asciiConvertedBytes = string.Empty;
-                asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
+                //string asciiConvertedBytes = string.Empty;
+                //asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
 
                 byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
 
@@ -144,6 +137,82 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 catch { }
             }
             previousMillis = stopWatch.ElapsedMilliseconds;
+
+
+
+
+
+            //byte[] buf = new byte[serialPort.BytesToRead];
+            //serialPort.Read(buf, 0, buf.Length);
+
+            //bool dataValid = false;
+
+            //if (buf.Length == 54) //buffer must be exactly 54 in length 
+            //{
+            //    for (int i = 0; i <= 15; i++)
+            //    {
+            //        if (buf[i] != 49)
+            //        {
+            //            dataValid = false; //if first 15 array indexes are not 49 (1111), then data not valid
+            //            break;
+            //        }
+            //        else
+            //            dataValid = true;
+            //    }
+            //}
+
+            //if (dataValid)
+            //{
+            //    string asciiConvertedBytes = string.Empty;
+            //    asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
+
+
+            //    byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
+
+            //    for (int i = 0; i < 13; ++i)
+            //    {
+            //        bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
+            //    }
+
+
+            //    string diameterStringBuilder = string.Empty;
+            //    for (int i = 5; i <= 10; i++)
+            //    {
+            //        diameterStringBuilder += bytes[i].ToString();
+            //    }
+
+            //    try
+            //    {
+            //        //bytes[11] is the decmial position from right
+            //        diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
+
+            //        double diameter = 0;
+
+            //        if (Double.TryParse(diameterStringBuilder, out diameter))
+            //        {
+            //            Convert.ToDouble(diameterStringBuilder);
+
+            //            if (previousDiameter == null)
+            //                previousDiameter = diameter;
+
+            //            previousDiameter = diameter;
+
+            //            string formatString = "0.";
+            //            for (int i = 0; i < bytes[11]; i++)
+            //            {
+            //                formatString += "0";
+            //            }
+
+            //            DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+            //        }
+            //        else
+            //        {
+
+            //        }
+            //    }
+            //    catch { }
+            //}
+            //previousMillis = stopWatch.ElapsedMilliseconds;
         }
 
         private void RunSimulation()
@@ -159,7 +228,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
                     {
                         formatString += "0";
                     }
-
 
                     DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                     Thread.Sleep(1);
