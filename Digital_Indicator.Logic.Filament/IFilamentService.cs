@@ -19,6 +19,8 @@ namespace Digital_Indicator.Logic.Filament
         string SpoolNumber { get; set; }
         string BatchNumber { get; set; }
 
+        Dictionary<string, string> FilamentServiceVariables { get; }
+
         event EventHandler DiameterChanged;
         event EventHandler PropertyChanged;
 

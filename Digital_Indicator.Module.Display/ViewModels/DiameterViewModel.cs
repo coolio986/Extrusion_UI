@@ -9,12 +9,13 @@ using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Module.Display.Views;
 using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
+using System.Windows.Threading;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class DiameterViewModel : BindableBase
     {
-        private IFilamentService _filamentService;
+        public IFilamentService _filamentService { get; }
         public DelegateCommand ResetGraph { get; private set; }
         public DelegateCommand StartCapture { get; private set; }
         public DelegateCommand StopCapture { get; private set; }
@@ -87,9 +88,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
-            RaisePropertyChanged("Diameter");
-            RaisePropertyChanged("HighestValue");
-            RaisePropertyChanged("LowestValue");
+            //RaisePropertyChanged("Diameter");
+            //RaisePropertyChanged("HighestValue");
+            //RaisePropertyChanged("LowestValue");
         }
 
         private void ResetGraph_Click()

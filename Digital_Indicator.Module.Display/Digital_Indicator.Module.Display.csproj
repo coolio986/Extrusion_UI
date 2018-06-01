@@ -70,6 +70,7 @@
     <Compile Include="Views\DiameterView.xaml.cs">
       <DependentUpon>DiameterView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\HighSpeedTextBlockBehavior.cs" />
     <Compile Include="Views\SerialPortSelectionView.xaml.cs">
       <DependentUpon>SerialPortSelectionView.xaml</DependentUpon>
     </Compile>

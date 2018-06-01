@@ -106,46 +106,39 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 }
 
 
-                string buildNumber = string.Empty;
+                string diameterStringBuilder = string.Empty;
                 for (int i = 5; i <= 10; i++)
                 {
-                    buildNumber += bytes[i].ToString();
+                    diameterStringBuilder += bytes[i].ToString();
                 }
-
-
-                if (bytes[11] > 2)
-                {
-                    //Console.Write(System.Text.Encoding.ASCII.GetString(buf));
-                    //Console.WriteLine(bytes[11].ToString());
-                }
-
-                //Console.Write(System.Text.Encoding.ASCII.GetString(buf));
 
                 try
                 {
+                    //bytes[11] is the decmial position from right
+                    diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
 
-                    if (bytes[11] == 2)
+                    double diameter = 0;
+
+                    if (Double.TryParse(diameterStringBuilder, out diameter))
                     {
-                        buildNumber = buildNumber.Insert(buildNumber.Length - bytes[11], ".");
-                        double diameter = Convert.ToDouble(buildNumber);
-
-                        //if (diameter <= 1.62)
-                        //{
-                        //    Console.Write(System.Text.Encoding.ASCII.GetString(buf));
-                        //}
+                        Convert.ToDouble(diameterStringBuilder);
 
                         if (previousDiameter == null)
                             previousDiameter = diameter;
 
-                        //if ((Math.Abs((double)previousDiameter - diameter)) > 3)
-                        //{
-                        //    //Console.WriteLine(System.Text.Encoding.ASCII.GetString(buf) + " " + diameter);
-                        //    return;
-                        //}
                         previousDiameter = diameter;
-                        //Console.WriteLine(stopWatch.ElapsedMilliseconds - previousMillis);
 
-                        DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
+                        string formatString = "0.";
+                        for (int i = 0; i < bytes[11]; i++)
+                        {
+                            formatString += "0";
+                        }
+
+                        DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                    }
+                    else
+                    {
+
                     }
                 }
                 catch { }
@@ -159,21 +152,30 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
                 while (true)
                 {
-                    double diameter = GetRandomNumber(1.70, 1.80);
-                    DiameterChanged?.Invoke(diameter.ToString("0.00"), null);
-                    Thread.Sleep(150);
+                    double diameter = GetRandomNumber(1.7000, 1.8000, 4);
+
+                    string formatString = "0.";
+                    for (int i = 0; i < 4; i++)
+                    {
+                        formatString += "0";
+                    }
+
+
+                    DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                    Thread.Sleep(10);
                 }
             });
         }
 
-        private double GetRandomNumber(double minimum, double maximum)
+        private double GetRandomNumber(double minimum, double maximum, int decimalPlaces)
         {
             //Random random = new Random();
             //return random.NextDouble() * (maximum - minimum) + minimum;
+            int dPlaces = (int)Math.Pow(10, decimalPlaces);
 
             Random random = new Random();
-            int r = random.Next((int)(minimum * 100), (int)(maximum * 100)); //+1 as end is excluded.
-            return (Double)r / 100.00;
+            int r = random.Next((int)(minimum * dPlaces), (int)(maximum * dPlaces)); //+1 as end is excluded.
+            return (Double)r / dPlaces;
         }
 
         public List<SerialPortClass> GetSerialPortList()

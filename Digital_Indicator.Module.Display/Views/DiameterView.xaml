@@ -142,29 +142,41 @@
             </Border>
         </Grid>
         <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
-            <Grid MaxWidth="250" HorizontalAlignment="Left">
+            <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="180"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Diameter"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding Diameter}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Left"  />
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Left" >
+                    <i:Interaction.Behaviors>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
+                    </i:Interaction.Behaviors>
+                </TextBlock>
             </Grid>
-            <Grid MaxWidth="250" HorizontalAlignment="Left">
+            <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="180"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Highest Value" FontSize="26" HorizontalAlignment="Left"/>
-                <Label Content="{Binding HighestValue}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  >
+                    <i:Interaction.Behaviors>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" />
+                    </i:Interaction.Behaviors>
+                </TextBlock>
             </Grid>
-            <Grid MaxWidth="250" HorizontalAlignment="Left">
+            <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="180"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Lowest Value" FontSize="26" HorizontalAlignment="Left"/>
-                <Label Content="{Binding LowestValue}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  >
+                    <i:Interaction.Behaviors>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" />
+                    </i:Interaction.Behaviors>
+                </TextBlock>
             </Grid>
         </StackPanel>
         <StackPanel Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Grid.RowSpan="2">

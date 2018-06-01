@@ -19,6 +19,8 @@ namespace Digital_Indicator.Logic.Filament
 
         public event EventHandler PropertyChanged;
 
+        public Dictionary<string, string> FilamentServiceVariables { get; private set; }
+
         private IXmlService _xmlService;
         private ICsvService _csvService;
         private ISerialService _serialService;
@@ -34,7 +36,11 @@ namespace Digital_Indicator.Logic.Filament
         public string ActualDiameter
         {
             get { return actualDiameter; }
-            set { actualDiameter = value; }
+            set
+            {
+                actualDiameter = value;
+                FilamentServiceVariables["ActualDiameter"] = actualDiameter;
+            }
         }
 
         private string nominalDiameter;
@@ -70,6 +76,7 @@ namespace Digital_Indicator.Logic.Filament
             set
             {
                 lowerLimit = value;
+
                 OnPropertyChanged();
                 UpdatePlots();
                 SaveXmlData();
@@ -80,14 +87,22 @@ namespace Digital_Indicator.Logic.Filament
         public string HighestValue
         {
             get { return highestValue; }
-            set { highestValue = value; }
+            set
+            {
+                highestValue = value;
+                FilamentServiceVariables["HighestValue"] = highestValue;
+            }
         }
 
         private string lowestValue;
         public string LowestValue
         {
             get { return lowestValue; }
-            set { lowestValue = value; }
+            set
+            {
+                lowestValue = value;
+                FilamentServiceVariables["LowestValue"] = lowestValue;
+            }
         }
 
         private string spoolNumber;
@@ -151,6 +166,11 @@ namespace Digital_Indicator.Logic.Filament
 
             BuildXmlData();
             SetupPlots();
+
+            FilamentServiceVariables = new Dictionary<string, string>();
+            FilamentServiceVariables.Add("ActualDiameter", actualDiameter);
+            FilamentServiceVariables.Add("HighestValue", highestValue);
+            FilamentServiceVariables.Add("LowestValue", lowestValue);
         }
 
         private void SetupPlots()
