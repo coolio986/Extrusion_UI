@@ -93,7 +93,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 }
             }
 
-
             if (dataValid)
             {
                 string asciiConvertedBytes = string.Empty;
@@ -114,7 +113,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 }
 
 
-                if (bytes[11] > 3)
+                if (bytes[11] > 2)
                 {
                     //Console.Write(System.Text.Encoding.ASCII.GetString(buf));
                     //Console.WriteLine(bytes[11].ToString());
@@ -125,24 +124,24 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 try
                 {
 
-                    if (bytes[11] == 3)
+                    if (bytes[11] == 2)
                     {
                         buildNumber = buildNumber.Insert(buildNumber.Length - bytes[11], ".");
                         double diameter = Convert.ToDouble(buildNumber);
 
-                        if (diameter <= 1.62)
-                        {
-                            Console.Write(System.Text.Encoding.ASCII.GetString(buf));
-                        }
+                        //if (diameter <= 1.62)
+                        //{
+                        //    Console.Write(System.Text.Encoding.ASCII.GetString(buf));
+                        //}
 
                         if (previousDiameter == null)
                             previousDiameter = diameter;
 
-                        if ((Math.Abs((double)previousDiameter - diameter)) > 3)
-                        {
-                            //Console.WriteLine(System.Text.Encoding.ASCII.GetString(buf) + " " + diameter);
-                            return;
-                        }
+                        //if ((Math.Abs((double)previousDiameter - diameter)) > 3)
+                        //{
+                        //    //Console.WriteLine(System.Text.Encoding.ASCII.GetString(buf) + " " + diameter);
+                        //    return;
+                        //}
                         previousDiameter = diameter;
                         //Console.WriteLine(stopWatch.ElapsedMilliseconds - previousMillis);
 
