@@ -17,17 +17,11 @@ namespace Digital_Indicator.Logic.SerialCommunications
         private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
-        private double? previousDiameter;
-        private long previousMillis;
-        private Stopwatch stopWatch;
 
         public SerialService()
         {
             if (!IsSimulationModeActive)
                 serialPort = new SerialPort();
-
-            stopWatch = new Stopwatch();
-            stopWatch.Start();
         }
 
         private string portName;
@@ -74,145 +68,48 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-
-            var dataIn = serialPort.ReadLine();
+            string dataIn = serialPort.ReadLine();
 
             string asciiConvertedBytes = string.Empty;
 
             asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
 
-            bool dataValid = false;
-
-            dataValid = asciiConvertedBytes.Length == 52;
-
-
-            if (dataValid)
+            if (asciiConvertedBytes.Length == 52) //if data is valid
             {
-                //string asciiConvertedBytes = string.Empty;
-                //asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
-
                 byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
 
-                for (int i = 0; i < 13; ++i)
+                for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
                 {
                     bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
                 }
 
-
                 string diameterStringBuilder = string.Empty;
-                for (int i = 5; i <= 10; i++)
+                for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
                 {
                     diameterStringBuilder += bytes[i].ToString();
                 }
 
-                try
+                try //if anything fails, skip it and wait for the next serial event
                 {
                     //bytes[11] is the decmial position from right
                     diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
 
                     double diameter = 0;
 
-                    if (Double.TryParse(diameterStringBuilder, out diameter))
+                    if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
                     {
-                        Convert.ToDouble(diameterStringBuilder);
-
-                        if (previousDiameter == null)
-                            previousDiameter = diameter;
-
-                        previousDiameter = diameter;
-
                         string formatString = "0.";
-                        for (int i = 0; i < bytes[11]; i++)
+                        for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
                         {
                             formatString += "0";
                         }
 
                         DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                     }
-                    else
-                    {
-
-                    }
+                    
                 }
                 catch { }
             }
-            previousMillis = stopWatch.ElapsedMilliseconds;
-
-
-
-
-
-            //byte[] buf = new byte[serialPort.BytesToRead];
-            //serialPort.Read(buf, 0, buf.Length);
-
-            //bool dataValid = false;
-
-            //if (buf.Length == 54) //buffer must be exactly 54 in length 
-            //{
-            //    for (int i = 0; i <= 15; i++)
-            //    {
-            //        if (buf[i] != 49)
-            //        {
-            //            dataValid = false; //if first 15 array indexes are not 49 (1111), then data not valid
-            //            break;
-            //        }
-            //        else
-            //            dataValid = true;
-            //    }
-            //}
-
-            //if (dataValid)
-            //{
-            //    string asciiConvertedBytes = string.Empty;
-            //    asciiConvertedBytes = System.Text.Encoding.ASCII.GetString(buf).Replace("\r", "").Replace("\n", "");
-
-
-            //    byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
-
-            //    for (int i = 0; i < 13; ++i)
-            //    {
-            //        bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
-            //    }
-
-
-            //    string diameterStringBuilder = string.Empty;
-            //    for (int i = 5; i <= 10; i++)
-            //    {
-            //        diameterStringBuilder += bytes[i].ToString();
-            //    }
-
-            //    try
-            //    {
-            //        //bytes[11] is the decmial position from right
-            //        diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
-
-            //        double diameter = 0;
-
-            //        if (Double.TryParse(diameterStringBuilder, out diameter))
-            //        {
-            //            Convert.ToDouble(diameterStringBuilder);
-
-            //            if (previousDiameter == null)
-            //                previousDiameter = diameter;
-
-            //            previousDiameter = diameter;
-
-            //            string formatString = "0.";
-            //            for (int i = 0; i < bytes[11]; i++)
-            //            {
-            //                formatString += "0";
-            //            }
-
-            //            DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-            //        }
-            //        else
-            //        {
-
-            //        }
-            //    }
-            //    catch { }
-            //}
-            //previousMillis = stopWatch.ElapsedMilliseconds;
         }
 
         private void RunSimulation()
@@ -237,8 +134,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         private double GetRandomNumber(double minimum, double maximum, int decimalPlaces)
         {
-            //Random random = new Random();
-            //return random.NextDouble() * (maximum - minimum) + minimum;
             int dPlaces = (int)Math.Pow(10, decimalPlaces);
 
             Random random = new Random();
