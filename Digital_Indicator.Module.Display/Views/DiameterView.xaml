@@ -96,8 +96,11 @@
         <ei:DataTrigger Binding="{Binding SettingsView}" Comparison="NotEqual" Value="null">
             <ei:ControlStoryboardAction x:Name="ControlStoryboardAction_SlideOut" Storyboard="{StaticResource Storyboard_Slide_Settings_Out}"/>
         </ei:DataTrigger>
+        <ei:DataTrigger Binding="{Binding Content, Source={x:Reference contentPresenter}}" Comparison="NotEqual" Value="null">
+            <ei:ChangePropertyAction TargetName="Popup1" PropertyName="IsOpen" Value="True"/>
+        </ei:DataTrigger>
     </i:Interaction.Triggers>
-    <Grid>
+    <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -120,7 +123,8 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.ColumnSpan="9" Grid.RowSpan="9" Panel.ZIndex="1000" Width="300" HorizontalAlignment="Left">
+
+        <Popup x:Name="Popup1" VerticalOffset="0" HorizontalOffset="0" Placement="Relative" PlacementTarget="{Binding ElementName=mainGrid}" PlacementRectangle="0, 0, 300, 1000" >
             <ContentPresenter x:Name="contentPresenter" Content="{Binding SettingsView}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" >
                 <ContentPresenter.RenderTransform>
                     <TransformGroup>
@@ -131,12 +135,27 @@
                     </TransformGroup>
                 </ContentPresenter.RenderTransform>
             </ContentPresenter>
+        </Popup>
+        
+        
+        <!--<Grid Grid.ColumnSpan="9" Grid.RowSpan="9" Panel.ZIndex="-1000" Width="300" HorizontalAlignment="Left" x:Name="settingsGrid">
+            <ContentPresenter x:Name="contentPresenter" Content="{Binding SettingsView}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" >
+                <ContentPresenter.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </ContentPresenter.RenderTransform>
+            </ContentPresenter>
+            
 
-        </Grid>
+        </Grid>-->
         <Grid Grid.RowSpan="2">
             <Border BorderThickness="0,0,1,0" BorderBrush="#FFA6A6A6">
                 <StackPanel >
-                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" >
+                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" x:Name="settingButton">
                         <fa:ImageAwesome Icon="Cog" Margin="0,2" />
                     </Button>
                 </StackPanel>
@@ -198,26 +217,15 @@
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
             </Grid>
         </StackPanel>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3">
-            <WindowsFormsHost>
-                <zed:ZedGraphControl  x:Name="zgraphHistorical">
-                
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphHistoricalModel">
+            <!--Placeholder for zedgraph -->
 
-                </zed:ZedGraphControl>
-            </WindowsFormsHost>
         </Grid>
-        <!--<oxy:PlotView Model="{Binding HistoricalModel}" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3"/>-->
-        <!--<oxy:PlotView Model="{Binding RealTimeModel}" x:Name="realtimemodel" Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3"/>-->
+        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphRealTimeModel" >
+            <!--Placeholder for zedgraph -->
 
-        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3">
-            <WindowsFormsHost>
-                <zed:ZedGraphControl  x:Name="zgraphRealTime">
-
-
-                </zed:ZedGraphControl>
-            </WindowsFormsHost>
         </Grid>
-        
+
         <Grid Grid.Column="8" Margin="0,0,20,0" Grid.Row="0" Grid.RowSpan="2">
             <StackPanel>
                 <ToggleButton Content="Start Capture" Command="{Binding StartCapture}" VerticalAlignment="Bottom"  MinHeight="45" Margin="0,0,0,10" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" />

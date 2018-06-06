@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Fil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Infrastructure", "Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj", "{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.WindowForms.ZedGraphUserControl", "Digital_Indicator.WindowForms.ZedGraphUserControl\Digital_Indicator.WindowForms.ZedGraphUserControl.csproj", "{4304C760-7374-4C33-90D9-032D798E1254}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4304C760-7374-4C33-90D9-032D798E1254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4304C760-7374-4C33-90D9-032D798E1254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4304C760-7374-4C33-90D9-032D798E1254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4304C760-7374-4C33-90D9-032D798E1254}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,8 +9,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -35,6 +38,9 @@ namespace Digital_Indicator.Module.Display.Views
         Stopwatch historicalTimer;
         long previousMillis;
 
+        ZedGraphControl zgraphHistorical = new ZedGraphUserControl().ZedGraph;
+        ZedGraphControl zgraphRealTime = new ZedGraphUserControl().ZedGraph;
+
         bool historicalUpdateInProgress;
         bool realTimeUpdateInProgress;
 
@@ -46,7 +52,6 @@ namespace Digital_Indicator.Module.Display.Views
             historicalTimer = new Stopwatch();
 
             _filamentService = filamentService;
-
 
             listHistorical = new PointPairList();
             listRealTime = new PointPairList();
@@ -66,6 +71,11 @@ namespace Digital_Indicator.Module.Display.Views
             previousMillis = 5000;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             ResetGraph.Click += ResetGraph_Click;
+
+            zedGraphHistoricalModel.Children.Add(new WindowsFormsHost() { Child = zgraphHistorical, });
+            zedGraphRealTimeModel.Children.Add(new WindowsFormsHost() { Child = zgraphRealTime, });
+
+
         }
 
         private void ResetGraph_Click(object sender, RoutedEventArgs e)
@@ -79,7 +89,7 @@ namespace Digital_Indicator.Module.Display.Views
             double y1;
 
             x = new XDate(DateTime.Now);
-            y1 = Convert.ToDouble(_filamentService.ActualDiameter);
+            y1 = Convert.ToDouble(_filamentService.FilamentServiceVariables["ActualDiameter"]);
             listHistorical.Add(x, y1);
             listRealTime.Add(x, y1);
             listNominalDiameter.Add(x, 1.75);
@@ -116,7 +126,7 @@ namespace Digital_Indicator.Module.Display.Views
 
             Dispatcher.BeginInvoke(new Action(() =>
             {
-                textBlockDiameter.Text = _filamentService.ActualDiameter;
+                textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"];
                 this.InvalidateVisual();
             }));
         }
@@ -149,8 +159,12 @@ namespace Digital_Indicator.Module.Display.Views
             // symbols, and "Porsche" in the legend
             historicalPane.AddCurve("Diameter", listHistorical, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
             historicalPane.AddCurve("NominalDiameter", listNominalDiameter, System.Drawing.Color.FromArgb(64, 191, 67), SymbolType.None).Line.Width = 2.0F;
-            historicalPane.AddCurve("UpperLimit", listUpperLimit, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
-            historicalPane.AddCurve("LowerLimit", listLowerLimit, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+            //historicalPane.AddCurve("UpperLimit", listUpperLimit, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+            //historicalPane.AddCurve("LowerLimit", listLowerLimit, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+
+
+            
+
 
             // Generate a blue curve with circle
             // symbols, and "Piper" in the legend

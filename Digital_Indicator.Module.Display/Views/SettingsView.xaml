@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:local="clr-namespace:Digital_Indicator.Module.Display.Views"
+             xmlns:helpers="clr-namespace:Digital_Indicator.Logic.Helpers"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Name="userControl" x:Class="Digital_Indicator.Module.Display.Views.SettingsView"
              mc:Ignorable="d" 
@@ -30,6 +31,9 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Click" SourceName="button">
             <ei:ControlStoryboardAction Storyboard="{StaticResource Storyboard_Slide_Settings_In}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Click" SourceName="button" SourceObject="{Binding ElementName=button}">
+            <ei:ChangePropertyAction TargetObject="{Binding ElementName=userControl}" PropertyName="Content" Value="null"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
     <UserControl.RenderTransform>
@@ -58,7 +62,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
-            <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35">
+            <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35" >
                 <fa:ImageAwesome Icon="ArrowLeft" />
             </Button>
         </Grid>

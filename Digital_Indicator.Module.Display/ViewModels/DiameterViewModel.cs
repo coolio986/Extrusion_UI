@@ -33,17 +33,17 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         public string Diameter
         {
-            get { return _filamentService.ActualDiameter; }
+            get { return _filamentService.FilamentServiceVariables["ActualDiameter"]; }
         }
 
         public string HighestValue
         {
-            get { return _filamentService.HighestValue; }
+            get { return _filamentService.FilamentServiceVariables["HighestValue"]; }
         }
 
         public string LowestValue
         {
-            get { return _filamentService.LowestValue; }
+            get { return _filamentService.FilamentServiceVariables["LowestValue"]; }
         }
 
         public string SpoolNumber

@@ -32,16 +32,16 @@ namespace Digital_Indicator.Logic.Filament
             set { description = value; }
         }
 
-        private string actualDiameter;
-        public string ActualDiameter
-        {
-            get { return actualDiameter; }
-            set
-            {
-                actualDiameter = value;
-                FilamentServiceVariables["ActualDiameter"] = actualDiameter;
-            }
-        }
+        //private string actualDiameter;
+        //public string ActualDiameter
+        //{
+        //    get { return actualDiameter; }
+        //    set
+        //    {
+        //        actualDiameter = value;
+        //        FilamentServiceVariables["ActualDiameter"] = actualDiameter;
+        //    }
+        //}
 
         private string nominalDiameter;
         public string NominalDiameter
@@ -83,27 +83,27 @@ namespace Digital_Indicator.Logic.Filament
             }
         }
 
-        private string highestValue;
-        public string HighestValue
-        {
-            get { return highestValue; }
-            set
-            {
-                highestValue = value;
-                FilamentServiceVariables["HighestValue"] = highestValue;
-            }
-        }
+        //private string highestValue;
+        //public string HighestValue
+        //{
+        //    get { return highestValue; }
+        //    set
+        //    {
+        //        highestValue = value;
+        //        FilamentServiceVariables["HighestValue"] = highestValue;
+        //    }
+        //}
 
-        private string lowestValue;
-        public string LowestValue
-        {
-            get { return lowestValue; }
-            set
-            {
-                lowestValue = value;
-                FilamentServiceVariables["LowestValue"] = lowestValue;
-            }
-        }
+        //private string lowestValue;
+        //public string LowestValue
+        //{
+        //    get { return lowestValue; }
+        //    set
+        //    {
+        //        lowestValue = value;
+        //        FilamentServiceVariables["LowestValue"] = lowestValue;
+        //    }
+        //}
 
         private string spoolNumber;
         public string SpoolNumber
@@ -140,8 +140,8 @@ namespace Digital_Indicator.Logic.Filament
                 captureStarted = value;
                 if (captureStarted)
                 {
-                    highestValue = nominalDiameter;
-                    lowestValue = nominalDiameter;
+                    FilamentServiceVariables["HighestValue"] = nominalDiameter;
+                    FilamentServiceVariables["LowestValue"] = nominalDiameter;
                     SpoolNumber = (spoolNumber.GetInteger() + 1).ToString();
                     SetupPlots();
                 }
@@ -168,9 +168,9 @@ namespace Digital_Indicator.Logic.Filament
             SetupPlots();
 
             FilamentServiceVariables = new Dictionary<string, string>();
-            FilamentServiceVariables.Add("ActualDiameter", actualDiameter);
-            FilamentServiceVariables.Add("HighestValue", highestValue);
-            FilamentServiceVariables.Add("LowestValue", lowestValue);
+            FilamentServiceVariables.Add("ActualDiameter", "");
+            FilamentServiceVariables.Add("HighestValue", "");
+            FilamentServiceVariables.Add("LowestValue", "");
         }
 
         private void SetupPlots()
@@ -180,10 +180,11 @@ namespace Digital_Indicator.Logic.Filament
 
         private void SerialService_DiameterChanged(object sender, EventArgs e)
         {
-            ActualDiameter = sender.ToString();
+            //ActualDiameter = sender.ToString();
+            FilamentServiceVariables["ActualDiameter"] = sender.ToString();
 
             if (captureStarted)
-                LinearSeriesPlotModel.GetPlots().Select(x => { x.AddDataPoint(actualDiameter); return x; }).ToList();
+                LinearSeriesPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables["ActualDiameter"]); return x; }).ToList();
 
             DiameterChanged?.Invoke(sender, e);
 
@@ -193,8 +194,11 @@ namespace Digital_Indicator.Logic.Filament
 
         private void UpdateHighsAndLows()
         {
-            HighestValue = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
-            LowestValue = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+            string actualDiameter = FilamentServiceVariables["ActualDiameter"];
+            string highestValue = FilamentServiceVariables["HighestValue"];
+            string lowestValue = FilamentServiceVariables["LowestValue"];
+            FilamentServiceVariables["HighestValue"] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
+            FilamentServiceVariables["LowestValue"] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
         }
 
         private void UpdatePlots()
