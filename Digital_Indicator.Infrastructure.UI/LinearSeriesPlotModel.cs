@@ -51,6 +51,8 @@ namespace Digital_Indicator.Infrastructure.UI
 
             this.Axes.Add(new DateTimeAxis { Position = AxisPosition.Bottom, StringFormat = "hh:mm:ss" });
             this.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Minimum = 1.60, });
+
+            
         }
 
         private string nominalDiameter;
@@ -104,6 +106,8 @@ namespace Digital_Indicator.Infrastructure.UI
             diameterReferenceUpperLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(upperLimitDiameter)));
             diameterReferenceNominal.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(nominalDiameter)));
             diameterReferenceLowerLimit.Add(new DataPoint(DateTimeAxis.ToDouble(DateTime.Now), Convert.ToDouble(lowerLimitDiameter)));
+            
+            
 
             if (UpdateSlow)
             {
@@ -156,17 +160,21 @@ namespace Digital_Indicator.Infrastructure.UI
             lineSeries.StrokeThickness = 2;
             lineSeries.ItemsSource = diameterPoints;
             lineSeries.Color = OxyColor.FromRgb(0, 153, 255);
+            
 
             return lineSeries;
         }
 
         private LineSeries GetNominalDiameterLineSeries()
         {
+            
             var lineSeries = new LineSeries();
             lineSeries.Title = nominalDiameter;
             lineSeries.StrokeThickness = 2;
             lineSeries.ItemsSource = diameterReferenceNominal;
             lineSeries.Color = OxyColor.FromRgb(64, 191, 67);
+            lineSeries.LineStyle = LineStyle.Dash;
+            lineSeries.MinimumSegmentLength = 200;
 
             return lineSeries;
         }
@@ -178,6 +186,9 @@ namespace Digital_Indicator.Infrastructure.UI
             lineSeries.StrokeThickness = 1;
             lineSeries.ItemsSource = diameterReferenceUpperLimit;
             lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
+            lineSeries.LineStyle = LineStyle.Dash;
+            lineSeries.MinimumSegmentLength = 200;
+            lineSeries.BrokenLineStyle = LineStyle.Dash;
 
             return lineSeries;
         }
@@ -189,6 +200,8 @@ namespace Digital_Indicator.Infrastructure.UI
             lineSeries.StrokeThickness = 1;
             lineSeries.ItemsSource = diameterReferenceLowerLimit;
             lineSeries.Color = OxyColor.FromRgb(255, 0, 0);
+            lineSeries.LineStyle = LineStyle.Dash;
+            lineSeries.MinimumSegmentLength = 200;
 
             return lineSeries;
         }
