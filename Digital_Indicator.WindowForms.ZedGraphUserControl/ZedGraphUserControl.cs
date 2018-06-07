@@ -138,7 +138,7 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
             upperLimitList.Add(new XDate(DateTime.Now), Convert.ToDouble(upperLimitDiameter));
             lowerLimitList.Add(new XDate(DateTime.Now), Convert.ToDouble(lowerLimitDiameter));
 
-            if (counter == 5000 && IsHistorical)
+            if (IsHistorical)
             {
                 double[] dlbtime = new double[diameterList.Count];
                 double[] dbldiameter = new double[diameterList.Count];
