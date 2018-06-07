@@ -11,6 +11,7 @@ namespace Digital_Indicator.Logic.Navigation
 
         void NavigateTo(string screenName);
         void NavigateToRegion(string region, string screenName);
-        event EventHandler ControlRemoved;
+        void ClearRegion(string region);
+        event EventHandler RegionCleared;
     }
 }

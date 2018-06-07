@@ -127,7 +127,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                     }
 
                     DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-                    Thread.Sleep(50);
+                    Thread.Sleep(2);
                 }
             });
         }

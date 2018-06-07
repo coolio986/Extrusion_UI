@@ -71,7 +71,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void CloseView_Click()
         {
-            _navigationService.NavigateToRegion("SettingsRegion", "");
+            _navigationService.ClearRegion("SettingsRegion");
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)

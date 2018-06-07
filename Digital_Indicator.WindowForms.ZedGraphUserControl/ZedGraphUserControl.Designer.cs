@@ -1,4 +1,6 @@
-﻿namespace Digital_Indicator.WindowForms.ZedGraphUserControl
+﻿using ZedGraph;
+
+namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 {
     partial class ZedGraphUserControl
     {
@@ -43,11 +45,14 @@
             this.zedGraphControl1.ScrollMinX = 0D;
             this.zedGraphControl1.ScrollMinY = 0D;
             this.zedGraphControl1.ScrollMinY2 = 0D;
-            this.zedGraphControl1.Size = new System.Drawing.Size(846, 295);
+            //this.zedGraphControl1.Size = new System.Drawing.Size(846, 295);
+            this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zedGraphControl1.TabIndex = 0;
             this.zedGraphControl1.GraphPane.XAxis.Title.Text = "Time";
             this.zedGraphControl1.GraphPane.YAxis.Title.Text = "Diameter";
-            
+            this.zedGraphControl1.GraphPane.XAxis.Scale.Format = "HH:mm:ss";
+            this.zedGraphControl1.GraphPane.XAxis.Type = AxisType.Date;
+
             // 
             // ZedGraphUserControl
             // 

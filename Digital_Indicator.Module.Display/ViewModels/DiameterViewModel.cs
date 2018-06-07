@@ -1,5 +1,4 @@
-﻿using OxyPlot.Axes;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Diagnostics;
@@ -11,6 +10,7 @@ using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
 using System.Windows.Threading;
 using Digital_Indicator.Logic.Navigation;
+using Digital_Indicator.WindowForms.ZedGraphUserControl;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -23,16 +23,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand Settings { get; private set; }
 
         private INavigationService _navigationService;
-
-        public LinearSeriesPlotModel RealTimeModel
-        {
-            get { return LinearSeriesPlotModel.GetPlot("RealTimeModel"); }
-        }
-
-        public LinearSeriesPlotModel HistoricalModel
-        {
-            get { return LinearSeriesPlotModel.GetPlot("HistoricalModel"); }
-        }
 
         public string Diameter
         {
@@ -75,8 +65,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService = filamentService;
             _navigationService = navigationService;
-            _navigationService.ControlRemoved += _navigationService_ControlRemoved;
-            _filamentService.DiameterChanged += _filamentService_DiameterChanged;
+            _navigationService.RegionCleared += _navigationService_RegionCleared;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
@@ -85,9 +74,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             Settings = new DelegateCommand(Settings_Click);
         }
 
-        private void _navigationService_ControlRemoved(object sender, EventArgs e)
+        private void _navigationService_RegionCleared(object sender, EventArgs e)
         {
-           if (sender.ToString() == "SettingsRegion")
+            if (sender.ToString() == "SettingsRegion")
             {
 
             }
@@ -99,17 +88,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("BatchNumber");
         }
 
-        private void _filamentService_DiameterChanged(object sender, EventArgs e)
-        {
-            //RaisePropertyChanged("Diameter");
-            //RaisePropertyChanged("HighestValue");
-            //RaisePropertyChanged("LowestValue");
-        }
-
         private void ResetGraph_Click()
         {
-            HistoricalModel.ResetAllAxes();
-            HistoricalModel.InvalidatePlot(true);
+            ZedGraphPlotModel.GetPlot("HistoricalModel").ZoomOutAll();
         }
 
         private void StartCapture_Click()

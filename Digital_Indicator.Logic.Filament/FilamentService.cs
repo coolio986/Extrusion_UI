@@ -3,6 +3,7 @@ using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Logic.SerialCommunications;
+using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,16 +33,6 @@ namespace Digital_Indicator.Logic.Filament
             set { description = value; }
         }
 
-        //private string actualDiameter;
-        //public string ActualDiameter
-        //{
-        //    get { return actualDiameter; }
-        //    set
-        //    {
-        //        actualDiameter = value;
-        //        FilamentServiceVariables["ActualDiameter"] = actualDiameter;
-        //    }
-        //}
 
         private string nominalDiameter;
         public string NominalDiameter
@@ -82,28 +73,6 @@ namespace Digital_Indicator.Logic.Filament
                 SaveXmlData();
             }
         }
-
-        //private string highestValue;
-        //public string HighestValue
-        //{
-        //    get { return highestValue; }
-        //    set
-        //    {
-        //        highestValue = value;
-        //        FilamentServiceVariables["HighestValue"] = highestValue;
-        //    }
-        //}
-
-        //private string lowestValue;
-        //public string LowestValue
-        //{
-        //    get { return lowestValue; }
-        //    set
-        //    {
-        //        lowestValue = value;
-        //        FilamentServiceVariables["LowestValue"] = lowestValue;
-        //    }
-        //}
 
         private string spoolNumber;
         public string SpoolNumber
@@ -146,7 +115,7 @@ namespace Digital_Indicator.Logic.Filament
                     SetupPlots();
                 }
                 else
-                    SaveHistoricalData(LinearSeriesPlotModel.GetPlot("HistoricalModel").GetDataPoints());
+                    SaveHistoricalData(ZedGraphPlotModel.GetPlot("HistoricalModel").GetDataPoints());
             }
         }
 
@@ -175,7 +144,9 @@ namespace Digital_Indicator.Logic.Filament
 
         private void SetupPlots()
         {
-            LinearSeriesPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
+            ZedGraphPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
+            ZedGraphPlotModel.GetPlot("HistoricalModel").ZedGraph.GraphPane.XAxis.Scale.Min = new ZedGraph.XDate(DateTime.Now.AddMilliseconds(-100));
+
         }
 
         private void SerialService_DiameterChanged(object sender, EventArgs e)
@@ -184,7 +155,7 @@ namespace Digital_Indicator.Logic.Filament
             FilamentServiceVariables["ActualDiameter"] = sender.ToString();
 
             if (captureStarted)
-                LinearSeriesPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables["ActualDiameter"]); return x; }).ToList();
+                ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables["ActualDiameter"]); return x; }).ToList();
 
             DiameterChanged?.Invoke(sender, e);
 
@@ -203,7 +174,7 @@ namespace Digital_Indicator.Logic.Filament
 
         private void UpdatePlots()
         {
-            LinearSeriesPlotModel.GetPlots().Select(x =>
+            ZedGraphPlotModel.GetPlots().Select(x =>
             {
                 x.UpperLimitDiameter = upperLimit;
                 x.NominalDiameter = nominalDiameter;

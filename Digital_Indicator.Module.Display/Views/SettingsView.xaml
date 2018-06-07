@@ -10,7 +10,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Name="settingsViewUserControl" x:Class="Digital_Indicator.Module.Display.Views.SettingsView"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
-             Width="296" 
+             Width="300" 
              prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
     <UserControl.Resources>
         <Storyboard x:Key="Storyboard_Slide_Settings_In">

@@ -27,11 +27,6 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                 plotModelDict.Select(x =>
                 {
                     x.Value.ClearPlots();
-                    //        x.Value.diameterPoints.Clear();
-                    //        x.Value.diameterReferenceNominal.Clear();
-                    //        x.Value.diameterReferenceUpperLimit.Clear();
-                    //        x.Value.diameterReferenceLowerLimit.Clear();
-                    //        x.Value.InvalidatePlot(true);
                     return x;
                 }).ToList();
             }
@@ -42,17 +37,17 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                 plotModelDict.Add("HistoricalModel",
                  new ZedGraphUserControl()
                  {
-                     //         Title = "Historical Diameter",
+                     Title = "Historical Diameter",
                      UpperLimitDiameter = upperLimit,
                      NominalDiameter = nominalDiameter,
                      LowerLimitDiameter = lowerLimit,
-                     //         UpdateSlow = true,
+                     IsHistorical = true,
                  });
 
                 plotModelDict.Add("RealTimeModel",
                  new ZedGraphUserControl()
                  {
-                     //         Title = "RealTime Diameter",
+                     Title = "RealTime Diameter",
                      UpperLimitDiameter = upperLimit,
                      NominalDiameter = nominalDiameter,
                      LowerLimitDiameter = lowerLimit,

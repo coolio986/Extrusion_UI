@@ -8,8 +8,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Digital_Indicator.WindowForms.ZedGraphUserControl</RootNamespace>
     <AssemblyName>Digital_Indicator.WindowForms.ZedGraphUserControl</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,6 +59,12 @@
     <EmbeddedResource Include="ZedGraphUserControl.resx">
       <DependentUpon>ZedGraphUserControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure\Digital_Indicator.Infrastructure.csproj">
+      <Project>{14852aa5-9b8d-4202-a2e3-d5f9e7004a49}</Project>
+      <Name>Digital_Indicator.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
