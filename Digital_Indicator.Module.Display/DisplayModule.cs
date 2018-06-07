@@ -25,6 +25,7 @@ namespace Digital_Indicator.Module.Display
         {
             _container.RegisterTypeForNavigation<DiameterView>();
             _container.RegisterTypeForNavigation<SerialPortSelectionView>();
+            _container.RegisterTypeForNavigation<SettingsView>();
 
             //_naviService.NavigateTo("DiameterView");
 

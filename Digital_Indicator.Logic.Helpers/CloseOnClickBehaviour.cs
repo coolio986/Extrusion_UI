@@ -55,10 +55,15 @@ namespace Digital_Indicator.Logic.Helpers
                 return;
 
             var win = Window.GetWindow(button);
+            
             if (win == null)
                 return;
 
-            win.Close();
+
+           Window item = button.FindName("settingsViewUserControl") as Window;
+            
+
+            //win.Close();
         }
 
     }

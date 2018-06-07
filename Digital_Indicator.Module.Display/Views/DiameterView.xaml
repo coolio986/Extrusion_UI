@@ -9,26 +9,12 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
-             x:Name="userControl" x:Class="Digital_Indicator.Module.Display.Views.DiameterView"
+             x:Name="diameterView" x:Class="Digital_Indicator.Module.Display.Views.DiameterView"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"  >
     <UserControl.Resources>
-        <Storyboard x:Key="Storyboard_Slide_Settings_Out">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentPresenter">
-                <EasingDoubleKeyFrame KeyTime="0" Value="-300">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <ExponentialEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
-                    <EasingDoubleKeyFrame.EasingFunction>
-                        <CircleEase EasingMode="EaseInOut"/>
-                    </EasingDoubleKeyFrame.EasingFunction>
-                </EasingDoubleKeyFrame>
-            </DoubleAnimationUsingKeyFrames>
 
-        </Storyboard>
         <Style x:Key="FocusVisual">
             <Setter Property="Control.Template">
                 <Setter.Value>
@@ -89,17 +75,6 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <UserControl.Triggers>
-        <EventTrigger RoutedEvent="FrameworkElement.Loaded" SourceName="contentPresenter"/>
-    </UserControl.Triggers>
-    <i:Interaction.Triggers>
-        <ei:DataTrigger Binding="{Binding SettingsView}" Comparison="NotEqual" Value="null">
-            <ei:ControlStoryboardAction x:Name="ControlStoryboardAction_SlideOut" Storyboard="{StaticResource Storyboard_Slide_Settings_Out}"/>
-        </ei:DataTrigger>
-        <ei:DataTrigger Binding="{Binding Content, Source={x:Reference contentPresenter}}" Comparison="NotEqual" Value="null">
-            <ei:ChangePropertyAction TargetName="Popup1" PropertyName="IsOpen" Value="True"/>
-        </ei:DataTrigger>
-    </i:Interaction.Triggers>
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -124,36 +99,15 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Popup x:Name="Popup1" VerticalOffset="0" HorizontalOffset="0" Placement="Relative" PlacementTarget="{Binding ElementName=mainGrid}" PlacementRectangle="0, 0, 300, 1000" >
-            <ContentPresenter x:Name="contentPresenter" Content="{Binding SettingsView}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" >
-                <ContentPresenter.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </ContentPresenter.RenderTransform>
-            </ContentPresenter>
-        </Popup>
-        
-        
-        <!--<Grid Grid.ColumnSpan="9" Grid.RowSpan="9" Panel.ZIndex="-1000" Width="300" HorizontalAlignment="Left" x:Name="settingsGrid">
-            <ContentPresenter x:Name="contentPresenter" Content="{Binding SettingsView}" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" >
-                <ContentPresenter.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform/>
-                    </TransformGroup>
-                </ContentPresenter.RenderTransform>
-            </ContentPresenter>
-            
 
-        </Grid>-->
+
+        <Grid Grid.ColumnSpan="9" Grid.RowSpan="9" Panel.ZIndex="1000" Width="300" HorizontalAlignment="Left" x:Name="settingsGrid">
+            <ContentControl x:Name="contentControl" prism:RegionManager.RegionName="SettingsRegion" />
+
+
+        </Grid>
         <Grid Grid.RowSpan="2">
-            <Border BorderThickness="0,0,1,0" BorderBrush="#FFA6A6A6">
+            <Border BorderThickness="0,0,0,0" BorderBrush="#FFA6A6A6">
                 <StackPanel >
                     <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" x:Name="settingButton">
                         <fa:ImageAwesome Icon="Cog" Margin="0,2" />
@@ -217,11 +171,11 @@
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
             </Grid>
         </StackPanel>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphHistoricalModel">
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphRealTimeModel" >
+        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="3" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right">
             <!--Placeholder for zedgraph -->
 
         </Grid>

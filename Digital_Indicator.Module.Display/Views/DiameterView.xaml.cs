@@ -1,4 +1,5 @@
 ﻿using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
+
 using System.Windows.Forms.Integration;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ZedGraph;
 
 namespace Digital_Indicator.Module.Display.Views
@@ -28,6 +23,7 @@ namespace Digital_Indicator.Module.Display.Views
     public partial class DiameterView : UserControl
     {
         IFilamentService _filamentService;
+        INavigationService _navigationService;
         PointPairList listHistorical;
         PointPairList listRealTime;
         PointPairList listNominalDiameter;
@@ -38,6 +34,9 @@ namespace Digital_Indicator.Module.Display.Views
         Stopwatch historicalTimer;
         long previousMillis;
 
+        Window mainWindow;
+
+
         ZedGraphControl zgraphHistorical = new ZedGraphUserControl().ZedGraph;
         ZedGraphControl zgraphRealTime = new ZedGraphUserControl().ZedGraph;
 
@@ -45,14 +44,15 @@ namespace Digital_Indicator.Module.Display.Views
         bool realTimeUpdateInProgress;
 
 
-        public DiameterView(IFilamentService filamentService)
+        public DiameterView(IFilamentService filamentService, INavigationService navigationService)
         {
             InitializeComponent();
 
             historicalTimer = new Stopwatch();
 
             _filamentService = filamentService;
-
+            _navigationService = navigationService;
+            _navigationService.ControlRemoved += _navigationService_ControlRemoved;
             listHistorical = new PointPairList();
             listRealTime = new PointPairList();
             listNominalDiameter = new PointPairList();
@@ -75,7 +75,37 @@ namespace Digital_Indicator.Module.Display.Views
             zedGraphHistoricalModel.Children.Add(new WindowsFormsHost() { Child = zgraphHistorical, });
             zedGraphRealTimeModel.Children.Add(new WindowsFormsHost() { Child = zgraphRealTime, });
 
+            settingButton.Click += SettingButton_Click;
 
+            this.LayoutUpdated += DiameterView_LayoutUpdated;
+
+           
+        }
+
+        
+
+        private void _navigationService_ControlRemoved(object sender, EventArgs e)
+        {
+            if (sender.ToString() == "SettingsRegion")
+            {
+                zedGraphHistoricalModel.Width = this.ActualWidth;
+            }
+        }
+
+        private void DiameterView_LayoutUpdated(object sender, EventArgs e)
+        {
+            mainWindow = Window.GetWindow(this);
+
+            if (mainWindow != null)
+            {
+                zedGraphHistoricalModel.Width = mainWindow.ActualWidth;
+                this.LayoutUpdated -= DiameterView_LayoutUpdated;
+            }
+        }
+
+        private void SettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            zedGraphHistoricalModel.Width = mainWindow.ActualWidth - 320;
         }
 
         private void ResetGraph_Click(object sender, RoutedEventArgs e)
@@ -163,7 +193,7 @@ namespace Digital_Indicator.Module.Display.Views
             //historicalPane.AddCurve("LowerLimit", listLowerLimit, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
 
 
-            
+
 
 
             // Generate a blue curve with circle

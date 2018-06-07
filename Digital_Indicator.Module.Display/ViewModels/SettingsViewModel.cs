@@ -1,4 +1,5 @@
 ﻿using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.Logic.Navigation;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -13,6 +14,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
     public class SettingsViewModel : BindableBase
     {
         IFilamentService _filamentService;
+        INavigationService _navigationService;
         private DelegateCommand closeSettingsView;
         public DelegateCommand CloseSettingsView
         {
@@ -56,11 +58,20 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
-        public SettingsViewModel(IFilamentService filamentService)
+        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService)
         {
             _filamentService = filamentService;
+            _navigationService = navigationService;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
-                
+
+            CloseSettingsView = new DelegateCommand(CloseView_Click);
+
+
+        }
+
+        private void CloseView_Click()
+        {
+            _navigationService.NavigateToRegion("SettingsRegion", "");
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)

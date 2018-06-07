@@ -10,6 +10,7 @@ using Digital_Indicator.Module.Display.Views;
 using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
 using System.Windows.Threading;
+using Digital_Indicator.Logic.Navigation;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -20,6 +21,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand StartCapture { get; private set; }
         public DelegateCommand StopCapture { get; private set; }
         public DelegateCommand Settings { get; private set; }
+
+        private INavigationService _navigationService;
 
         public LinearSeriesPlotModel RealTimeModel
         {
@@ -65,12 +68,14 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public object SettingsView
         {
             get { return settingsView; }
-            private set { SetProperty(ref settingsView, value); }
+            private set { settingsView = value; RaisePropertyChanged(); }
         }
 
-        public DiameterViewModel(IFilamentService filamentService)
+        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService)
         {
             _filamentService = filamentService;
+            _navigationService = navigationService;
+            _navigationService.ControlRemoved += _navigationService_ControlRemoved;
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
@@ -78,6 +83,14 @@ namespace Digital_Indicator.Module.Display.ViewModels
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
+        }
+
+        private void _navigationService_ControlRemoved(object sender, EventArgs e)
+        {
+           if (sender.ToString() == "SettingsRegion")
+            {
+
+            }
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
@@ -114,7 +127,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void Settings_Click()
         {
-            SettingsView = new SettingsView();
+            //SettingsView = new SettingsView();
+            _navigationService.NavigateToRegion("SettingsRegion", "SettingsView");
         }
     }
 }

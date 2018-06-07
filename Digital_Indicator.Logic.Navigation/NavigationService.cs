@@ -14,6 +14,8 @@ namespace Digital_Indicator.Logic.Navigation
         private readonly IUnityContainer _container;
         private readonly IRegionManager _regionManager;
 
+        public event EventHandler ControlRemoved;
+
         public NavigationService(IUnityContainer container, IRegionManager regionManager)
         {
             _container = container;
@@ -23,6 +25,16 @@ namespace Digital_Indicator.Logic.Navigation
         public void NavigateTo(string screenName)
         {
             _regionManager.RequestNavigate("ContentRegion", screenName);
+        }
+
+        public void NavigateToRegion(string region, string screenName)
+        {
+            _regionManager.RequestNavigate(region, screenName);
+            if (screenName == "")
+            {
+                _regionManager.Regions[region].RemoveAll();
+                ControlRemoved?.Invoke(region, null);
+            }
         }
     }
 }
