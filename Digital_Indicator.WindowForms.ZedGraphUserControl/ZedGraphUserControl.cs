@@ -16,60 +16,46 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
     {
         public ZedGraphControl ZedGraph { get; set; }
 
-        private PointPairList diameterList;
-        private PointPairList nominalDiameterList;
-        private PointPairList upperLimitList;
-        private PointPairList lowerLimitList;
+        //private PointPairList diameterList;
+        //private PointPairList nominalDiameterList;
+        //private PointPairList upperLimitList;
+        //private PointPairList lowerLimitList;
+
+        private HashSet<DataListXY> diameterList;
+        private HashSet<DataListXY> nominalDiameterList;
+        private HashSet<DataListXY> upperLimitList;
+        private HashSet<DataListXY> lowerLimitList;
+
+        LineObj nominalLine;
+        LineObj upperLimitLine;
+        LineObj lowerLimitLine;
 
         private LineItem diameterCurve;
 
         private FilteredPointList filteredDiameter;
 
-        int counter;
+        public bool IsZoomed { get; private set; }
+
 
         private string nominalDiameter;
         public string NominalDiameter
         {
             get { return nominalDiameter; }
-            set
-            {
-                //if (NominalDiameterLineSeries != null)
-                //    this.Series.Remove(NominalDiameterLineSeries);
-
-                nominalDiameter = value;
-                //NominalDiameterLineSeries = GetNominalDiameterLineSeries();
-                //this.Series.Add(NominalDiameterLineSeries);
-            }
+            set { nominalDiameter = value; }
         }
 
         private string upperLimitDiameter;
         public string UpperLimitDiameter
         {
             get { return upperLimitDiameter; }
-            set
-            {
-                //if (UpperLimitDiameterLineSeries != null)
-                //    this.Series.Remove(UpperLimitDiameterLineSeries);
-
-                upperLimitDiameter = value;
-                //UpperLimitDiameterLineSeries = GetUpperLimitDiameterLineSeries();
-                //this.Series.Add(UpperLimitDiameterLineSeries);
-            }
+            set { upperLimitDiameter = value; }
         }
 
         private string lowerLimitDiameter;
         public string LowerLimitDiameter
         {
             get { return lowerLimitDiameter; }
-            set
-            {
-                //if (LowerLimitDiameterLineSeries != null)
-                //    this.Series.Remove(LowerLimitDiameterLineSeries);
-
-                lowerLimitDiameter = value;
-                //LowerLimitDiameterLineSeries = GetLowerLimitDiameterLineSeries();
-                //this.Series.Add(LowerLimitDiameterLineSeries);
-            }
+            set { lowerLimitDiameter = value; }
         }
 
         public string Title
@@ -84,17 +70,32 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
         {
             InitializeComponent();
             ZedGraph = this.zedGraphControl1;
-            diameterList = new PointPairList();
-            nominalDiameterList = new PointPairList();
-            upperLimitList = new PointPairList();
-            lowerLimitList = new PointPairList();
 
-            AddDiameter();
+            diameterList = new HashSet<DataListXY>();
+            nominalDiameterList = new HashSet<DataListXY>();
+            upperLimitList = new HashSet<DataListXY>();
+            lowerLimitList = new HashSet<DataListXY>();
+
+            //add static reference lines
             AddNominalDiameter();
             AddUpperLimit();
             AddLowerLimit();
 
-            counter = 0;
+
+            this.zedGraphControl1.ZoomEvent += ZedGraphControl1_ZoomEvent;
+            
+        }
+
+        private void ZedGraphControl1_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
+        {
+
+            IsZoomed = true;
+            // The maximum number of point to displayed is based on the width of the graphpane, and the visible range of the X axis
+            filteredDiameter.SetBounds(sender.GraphPane.XAxis.Scale.Min, sender.GraphPane.XAxis.Scale.Max, (int)this.zedGraphControl1.GraphPane.Rect.Width);
+
+            // This refreshes the graph when the button is released after a panning operation
+            if (newState.Type == ZoomState.StateType.Pan)
+                sender.Invalidate();
         }
 
         public void ClearPlots()
@@ -105,81 +106,120 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
             nominalDiameterList.Clear();
         }
 
-        private void AddDiameter()
-        {
-            if (diameterList != null && !IsHistorical)
-            {
-                diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", diameterList, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
-            }
-        }
-
         private void AddNominalDiameter()
         {
             if (diameterList != null)
-                this.zedGraphControl1.GraphPane.AddCurve("Nominal Diameter", nominalDiameterList, System.Drawing.Color.FromArgb(64, 191, 67), SymbolType.None).Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.AddCurve("Nominal Diameter", new double[0], new double[0], System.Drawing.Color.FromArgb(64, 191, 67), SymbolType.None).Line.Width = 2.0F;
         }
 
         private void AddUpperLimit()
         {
             if (upperLimitList != null)
-                this.zedGraphControl1.GraphPane.AddCurve("Upper Limit", upperLimitList, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.AddCurve("Upper Limit", new double[0], new double[0], System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
         }
 
         private void AddLowerLimit()
         {
             if (lowerLimitList != null)
-                this.zedGraphControl1.GraphPane.AddCurve("Lower Limit", lowerLimitList, System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.AddCurve("Lower Limit", new double[0], new double[0],  System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
         }
 
         public void AddDataPoint(string diameter)
         {
-            diameterList.Add(new XDate(DateTime.Now), Convert.ToDouble(diameter));
-            nominalDiameterList.Add(new XDate(DateTime.Now), Convert.ToDouble(nominalDiameter));
-            upperLimitList.Add(new XDate(DateTime.Now), Convert.ToDouble(upperLimitDiameter));
-            lowerLimitList.Add(new XDate(DateTime.Now), Convert.ToDouble(lowerLimitDiameter));
+            diameterList.Add(new DataListXY(new XDate(DateTime.Now), Convert.ToDouble(diameter)));
+
+            double[] dblTime = new double[diameterList.Count];
+            double[] dblDiameter = new double[diameterList.Count];
+
+            int index = 0;
+            foreach (DataListXY item in diameterList.ToList())
+            {
+                dblTime[index] = item.X;
+                dblDiameter[index] = item.Y;
+                index++;
+            }
 
             if (IsHistorical)
             {
-                double[] dlbtime = new double[diameterList.Count];
-                double[] dbldiameter = new double[diameterList.Count];
-
-                for (int i = 0; i < diameterList.Count; i++)
+                if (!IsZoomed)
                 {
-                    dlbtime[i] = diameterList[i].X;
-                    dbldiameter[i] = diameterList[i].Y;
+                    filteredDiameter = new FilteredPointList(dblTime, dblDiameter);
+                    filteredDiameter.SetBounds(this.zedGraphControl1.GraphPane.XAxis.Scale.Min, this.zedGraphControl1.GraphPane.XAxis.Scale.Max, (int)this.zedGraphControl1.GraphPane.Rect.Width);
+
+                    this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
+
+                    diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", filteredDiameter, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
+
+                    //***********************//
+                    //Adding the reference lines here updates the visual faster than adding them in a function
+                    this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
+                    upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(upperLimitDiameter));
+                    upperLimitLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+
+                    this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
+                    lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(lowerLimitDiameter));
+                    lowerLimitLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+
+                    this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
+                    nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(nominalDiameter));
+                    nominalLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                    //***********************//
+
                 }
-                filteredDiameter = new FilteredPointList(dlbtime, dbldiameter);
-                filteredDiameter.SetBounds(0, 1e20, 5000);
+            }
+            else
+            {
+                filteredDiameter = new FilteredPointList(dblTime, dblDiameter);
+                filteredDiameter.SetBounds(new XDate(DateTime.Now.AddMilliseconds(-5000)), new XDate(DateTime.Now.AddMilliseconds(2)), (int)this.zedGraphControl1.GraphPane.Rect.Width);
 
                 this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
 
                 diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", filteredDiameter, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
 
-                counter = 0;
+
+                //***********************//
+                //Adding the reference lines here updates the visual faster than adding them in a function
+                this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
+                upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
+                upperLimitLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+
+                this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
+                lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
+                lowerLimitLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+
+                this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
+                nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
+                nominalLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                //***********************//
+
             }
-
-
-            //ZedGraph.AxisChange();
-            //ZedGraph.Invalidate();
-            //ZedGraph.Refresh();
-            //this.zedGraphControl1.Invalidate();
-
-            counter++;
         }
 
         public void ZoomOutAll()
         {
             this.zedGraphControl1.ZoomOutAll(this.zedGraphControl1.GraphPane);
+            this.zedGraphControl1.Refresh();
+            IsZoomed = false;
         }
 
         public HashSet<DataListXY> GetDataPoints()
         {
-            HashSet<DataListXY> dataList = new HashSet<DataListXY>();
-            foreach (PointPair dataPoint in diameterList)
-            {
-                dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));
-            }
-            return dataList;
+
+            return diameterList;
+            //HashSet<DataListXY> dataList = new HashSet<DataListXY>();
+            //foreach (PointPair dataPoint in diameterList)
+            //{
+            //    dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));
+            //}
+            //return dataList;
         }
+
+        
     }
 }

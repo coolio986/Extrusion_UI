@@ -139,9 +139,12 @@ namespace Digital_Indicator.Module.Display.Views
                 //updateInProgress = true;
                 Dispatcher.Invoke(new Action(() =>
                     {
-                        zgraphHistorical.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(100));
-                        zgraphHistorical.ZedGraph.AxisChange();
-                        zgraphHistorical.ZedGraph.Refresh();
+                        if (!zgraphHistorical.IsZoomed)
+                        {
+                            zgraphHistorical.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(100));
+                            zgraphHistorical.ZedGraph.AxisChange();
+                            zgraphHistorical.ZedGraph.Refresh();
+                        }
 
                     }));
                 previousHistoricalMillis = timer.ElapsedMilliseconds;
