@@ -14,28 +14,15 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 {
     public partial class ZedGraphUserControl : UserControl
     {
-        public ZedGraphControl ZedGraph { get; set; }
-
-        //private PointPairList diameterList;
-        //private PointPairList nominalDiameterList;
-        //private PointPairList upperLimitList;
-        //private PointPairList lowerLimitList;
-
         private HashSet<DataListXY> diameterList;
-        private HashSet<DataListXY> nominalDiameterList;
-        private HashSet<DataListXY> upperLimitList;
-        private HashSet<DataListXY> lowerLimitList;
-
-        LineObj nominalLine;
-        LineObj upperLimitLine;
-        LineObj lowerLimitLine;
-
+        private LineObj nominalLine;
+        private LineObj upperLimitLine;
+        private LineObj lowerLimitLine;
         private LineItem diameterCurve;
-
         private FilteredPointList filteredDiameter;
 
+        public ZedGraphControl ZedGraph { get; set; }
         public bool IsZoomed { get; private set; }
-
 
         private string nominalDiameter;
         public string NominalDiameter
@@ -72,18 +59,13 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
             ZedGraph = this.zedGraphControl1;
 
             diameterList = new HashSet<DataListXY>();
-            nominalDiameterList = new HashSet<DataListXY>();
-            upperLimitList = new HashSet<DataListXY>();
-            lowerLimitList = new HashSet<DataListXY>();
 
             //add static reference lines
             AddNominalDiameter();
             AddUpperLimit();
             AddLowerLimit();
 
-
             this.zedGraphControl1.ZoomEvent += ZedGraphControl1_ZoomEvent;
-            
         }
 
         private void ZedGraphControl1_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
@@ -101,9 +83,6 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
         public void ClearPlots()
         {
             diameterList.Clear();
-            upperLimitList.Clear();
-            lowerLimitList.Clear();
-            nominalDiameterList.Clear();
         }
 
         private void AddNominalDiameter()
@@ -114,14 +93,12 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 
         private void AddUpperLimit()
         {
-            if (upperLimitList != null)
-                this.zedGraphControl1.GraphPane.AddCurve("Upper Limit", new double[0], new double[0], System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+            this.zedGraphControl1.GraphPane.AddCurve("Upper Limit", new double[0], new double[0], System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
         }
 
         private void AddLowerLimit()
         {
-            if (lowerLimitList != null)
-                this.zedGraphControl1.GraphPane.AddCurve("Lower Limit", new double[0], new double[0],  System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
+            this.zedGraphControl1.GraphPane.AddCurve("Lower Limit", new double[0], new double[0], System.Drawing.Color.FromArgb(255, 0, 0), SymbolType.None).Line.Width = 2.0F;
         }
 
         public void AddDataPoint(string diameter)
@@ -210,16 +187,7 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 
         public HashSet<DataListXY> GetDataPoints()
         {
-
             return diameterList;
-            //HashSet<DataListXY> dataList = new HashSet<DataListXY>();
-            //foreach (PointPair dataPoint in diameterList)
-            //{
-            //    dataList.Add(new DataListXY(dataPoint.X, dataPoint.Y));
-            //}
-            //return dataList;
         }
-
-        
     }
 }

@@ -60,15 +60,18 @@ namespace Digital_Indicator.Module.Display.Views
 
         private void DiameterView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (settingsWindowOpen && zedGraphHistoricalModel.Width != this.ActualWidth - 320)
+            if (this.ActualWidth - 320 > 0)
             {
-                zedGraphHistoricalModel.Width = this.ActualWidth - 320;
-                zedGraphRealTimeModel.Width = this.ActualWidth - 320;
-            }
-            else if (zedGraphHistoricalModel.Width != this.ActualWidth)
-            {
-                zedGraphHistoricalModel.Width = this.ActualWidth;
-                zedGraphRealTimeModel.Width = this.ActualWidth;
+                if (settingsWindowOpen && zedGraphHistoricalModel.Width != this.ActualWidth - 320)
+                {
+                    zedGraphHistoricalModel.Width = this.ActualWidth - 320;
+                    zedGraphRealTimeModel.Width = this.ActualWidth - 320;
+                }
+                else if (zedGraphHistoricalModel.Width != this.ActualWidth)
+                {
+                    zedGraphHistoricalModel.Width = this.ActualWidth;
+                    zedGraphRealTimeModel.Width = this.ActualWidth;
+                }
             }
         }
 

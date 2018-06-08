@@ -65,21 +65,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService = filamentService;
             _navigationService = navigationService;
-            _navigationService.RegionCleared += _navigationService_RegionCleared;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
-        }
-
-        private void _navigationService_RegionCleared(object sender, EventArgs e)
-        {
-            if (sender.ToString() == "SettingsRegion")
-            {
-
-            }
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
@@ -108,7 +99,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void Settings_Click()
         {
-            //SettingsView = new SettingsView();
             _navigationService.NavigateToRegion("SettingsRegion", "SettingsView");
         }
     }
