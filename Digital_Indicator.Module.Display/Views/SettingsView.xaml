@@ -29,9 +29,9 @@
         </Storyboard>
     </UserControl.Resources>
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Click" SourceName="button">
-            <ei:ControlStoryboardAction Storyboard="{StaticResource Storyboard_Slide_Settings_In}" IsEnabled="False"/>
-        </i:EventTrigger>
+        <ei:StoryboardCompletedTrigger Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
+            <ei:CallMethodAction MethodName="CloseSettings" TargetObject="{Binding}"/>
+        </ei:StoryboardCompletedTrigger>
     </i:Interaction.Triggers>
     <UserControl.RenderTransform>
         <TransformGroup>
@@ -61,6 +61,12 @@
         <Grid Grid.ColumnSpan="2">
             <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35" helpers:CloseOnClickBehaviour.IsEnabled="True">
                 <fa:ImageAwesome Icon="ArrowLeft" />
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click" >
+                        <BeginStoryboard  Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
             </Button>
         </Grid>
         <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />

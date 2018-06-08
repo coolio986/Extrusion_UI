@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
+using System.Windows.Media.Animation;
 using ZedGraph;
 
 namespace Digital_Indicator.Module.Display.Views
@@ -49,7 +50,7 @@ namespace Digital_Indicator.Module.Display.Views
             zedGraphHistoricalModel.Children.Add(new WindowsFormsHost() { Child = zgraphHistorical });
             zedGraphRealTimeModel.Children.Add(new WindowsFormsHost() { Child = zgraphRealTime });
 
-            settingButton.Click += SettingButton_Click;
+            settingsButton.Click += SettingButton_Click;
 
             this.LayoutUpdated += DiameterView_LayoutUpdated;
             this.SizeChanged += DiameterView_SizeChanged;
@@ -79,8 +80,26 @@ namespace Digital_Indicator.Module.Display.Views
         {
             if (sender.ToString() == "SettingsRegion")
             {
-                zedGraphHistoricalModel.Width = this.ActualWidth;
-                zedGraphRealTimeModel.Width = this.ActualWidth;
+                //zedGraphHistoricalModel.Width = this.ActualWidth;
+                //zedGraphRealTimeModel.Width = this.ActualWidth;
+
+                Storyboard sb = new Storyboard();
+
+                DoubleAnimation doubleAnimationHistorical = new DoubleAnimation(zedGraphHistoricalModel.Width, this.ActualWidth, new Duration(TimeSpan.FromMilliseconds(200)));
+                DoubleAnimation doubleAnimationRealTime = new DoubleAnimation(zedGraphRealTimeModel.Width, this.ActualWidth, new Duration(TimeSpan.FromMilliseconds(200)));
+                CircleEase ease = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+                doubleAnimationHistorical.EasingFunction = ease;
+                doubleAnimationRealTime.EasingFunction = ease;
+                sb.Children.Add(doubleAnimationHistorical);
+                sb.Children.Add(doubleAnimationRealTime);
+                Storyboard.SetTarget(doubleAnimationHistorical, zedGraphHistoricalModel);
+                Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
+                Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath("(Width)"));
+                Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+                sb.Begin();
+
+
+
                 settingsWindowOpen = false;
             }
         }
@@ -101,9 +120,24 @@ namespace Digital_Indicator.Module.Display.Views
 
         private void SettingButton_Click(object sender, RoutedEventArgs e)
         {
+            Storyboard sb = new Storyboard();
+
+            DoubleAnimation doubleAnimationHistorical = new DoubleAnimation(zedGraphHistoricalModel.Width, this.ActualWidth - 320, new Duration(TimeSpan.FromMilliseconds(200)));
+            DoubleAnimation doubleAnimationRealTime = new DoubleAnimation(zedGraphRealTimeModel.Width, this.ActualWidth - 320, new Duration(TimeSpan.FromMilliseconds(200)));
+            CircleEase ease = new CircleEase() { EasingMode = EasingMode.EaseInOut };
+            doubleAnimationHistorical.EasingFunction = ease;
+            doubleAnimationRealTime.EasingFunction = ease;
+            sb.Children.Add(doubleAnimationHistorical);
+            sb.Children.Add(doubleAnimationRealTime);
+            Storyboard.SetTarget(doubleAnimationHistorical, zedGraphHistoricalModel);
+            Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
+            Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath( "(Width)"));
+            Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+            sb.Begin();
+
             settingsWindowOpen = true;
-            zedGraphHistoricalModel.Width = this.ActualWidth - 320;
-            zedGraphRealTimeModel.Width = this.ActualWidth - 320;
+            //zedGraphHistoricalModel.Width = this.ActualWidth - 320;
+            //zedGraphRealTimeModel.Width = this.ActualWidth - 320;
         }
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)

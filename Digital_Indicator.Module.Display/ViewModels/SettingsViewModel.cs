@@ -71,12 +71,17 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void CloseView_Click()
         {
-            _navigationService.ClearRegion("SettingsRegion");
+            
         }
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged("SpoolNumber");
+        }
+
+        public void CloseSettings()
+        {
+            _navigationService.ClearRegion("SettingsRegion");
         }
     }
 }

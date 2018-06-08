@@ -74,6 +74,20 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Storyboard x:Key="StoryboardSlideSettingsOut">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="contentControl">
+                <EasingDoubleKeyFrame KeyTime="0" Value="-300">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </UserControl.Resources>
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
@@ -103,15 +117,30 @@
 
 
         <Grid Grid.ColumnSpan="9" Grid.RowSpan="10" Panel.ZIndex="1000" Width="300" HorizontalAlignment="Left" x:Name="settingsGrid">
-            <ContentControl x:Name="contentControl" prism:RegionManager.RegionName="SettingsRegion" />
+            <ContentControl x:Name="contentControl" prism:RegionManager.RegionName="SettingsRegion" RenderTransformOrigin="0.5,0.5" >
+                <ContentControl.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </ContentControl.RenderTransform>
+            </ContentControl>
 
 
         </Grid>
         <Grid Grid.RowSpan="2">
             <Border BorderThickness="0,0,0,0" BorderBrush="#FFA6A6A6">
                 <StackPanel >
-                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" x:Name="settingButton">
+                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" x:Name="settingsButton" >
                         <fa:ImageAwesome Icon="Cog" Margin="0,2" />
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click" >
+                                <BeginStoryboard  Storyboard="{StaticResource StoryboardSlideSettingsOut}">
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
                     </Button>
                 </StackPanel>
             </Border>
