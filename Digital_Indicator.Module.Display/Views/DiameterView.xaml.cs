@@ -143,7 +143,6 @@ namespace Digital_Indicator.Module.Display.Views
                         zgraphHistorical.ZedGraph.AxisChange();
                         zgraphHistorical.ZedGraph.Refresh();
 
-                        Console.WriteLine("fired");
                     }));
                 previousHistoricalMillis = timer.ElapsedMilliseconds;
                 //updateInProgress = false;
