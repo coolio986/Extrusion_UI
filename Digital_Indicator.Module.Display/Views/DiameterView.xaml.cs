@@ -20,11 +20,13 @@ namespace Digital_Indicator.Module.Display.Views
         Stopwatch timer;
         long previousHistoricalMillis;
         long previousRealTimeMillis;
+        long previousScanMillis;
 
         ZedGraphUserControl zgraphHistorical;
         ZedGraphUserControl zgraphRealTime;
 
         bool settingsWindowOpen;
+        bool updateInProgress;
 
         public DiameterView(IFilamentService filamentService, INavigationService navigationService)
         {
@@ -53,6 +55,8 @@ namespace Digital_Indicator.Module.Display.Views
             this.SizeChanged += DiameterView_SizeChanged;
 
         }
+
+
 
         private void DiameterView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -102,35 +106,50 @@ namespace Digital_Indicator.Module.Display.Views
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
 
-
-
-            Dispatcher.BeginInvoke(new Action(() =>
+            if (timer.ElapsedMilliseconds >= previousScanMillis + 1 && !updateInProgress)
             {
-                if (_filamentService.CaptureStarted)
+                updateInProgress = true;
+                Dispatcher.Invoke(new Action(() =>
                 {
-                    if (timer.ElapsedMilliseconds >= previousHistoricalMillis + 5000)
-                    {
+                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"];
+                    this.InvalidateVisual();
 
+                }));
+                previousScanMillis = timer.ElapsedMilliseconds;
+                updateInProgress = false;
+            }
+
+            if (timer.ElapsedMilliseconds >= previousRealTimeMillis + 10 && _filamentService.CaptureStarted && !updateInProgress)
+            {
+                updateInProgress = true;
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Min = new XDate(DateTime.Now.AddMilliseconds(-5000));
+                    zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(2));
+                    zgraphRealTime.ZedGraph.AxisChange();
+                    zgraphRealTime.ZedGraph.Refresh();
+
+                }));
+                previousRealTimeMillis = timer.ElapsedMilliseconds;
+                updateInProgress = false;
+            }
+
+            if (timer.ElapsedMilliseconds >= previousHistoricalMillis + 5000 && _filamentService.CaptureStarted && !updateInProgress)
+            {
+                //updateInProgress = true;
+                Dispatcher.Invoke(new Action(() =>
+                    {
                         zgraphHistorical.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(100));
+                        zgraphHistorical.ZedGraph.AxisChange();
                         zgraphHistorical.ZedGraph.Refresh();
-                        previousHistoricalMillis = timer.ElapsedMilliseconds;
-                    }
 
-                    if (timer.ElapsedMilliseconds >= previousRealTimeMillis + 20)
-                    {
-                        zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Min = new XDate(DateTime.Now.AddMilliseconds(-5000));
-                        zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(2));
-                        zgraphRealTime.ZedGraph.Refresh();
-                        previousRealTimeMillis = timer.ElapsedMilliseconds;
-                    }
-                }
-
-                textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"];
-                this.InvalidateVisual();
-            }));
-
-
+                        Console.WriteLine("fired");
+                    }));
+                previousHistoricalMillis = timer.ElapsedMilliseconds;
+                //updateInProgress = false;
+            }
         }
     }
 }
+
 

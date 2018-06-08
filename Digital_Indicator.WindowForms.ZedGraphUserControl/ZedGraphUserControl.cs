@@ -156,11 +156,13 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                 diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", filteredDiameter, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
 
                 counter = 0;
-
             }
 
 
-            ZedGraph.AxisChange();
+            //ZedGraph.AxisChange();
+            //ZedGraph.Invalidate();
+            //ZedGraph.Refresh();
+            //this.zedGraphControl1.Invalidate();
 
             counter++;
         }
