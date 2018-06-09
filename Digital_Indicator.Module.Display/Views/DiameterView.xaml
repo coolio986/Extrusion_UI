@@ -200,6 +200,15 @@
                 <Label Content="Batch Number"  FontSize="26" HorizontalAlignment="Left" />
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
             </Grid>
+            <Grid MinHeight="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                
+                
+            </Grid>
         </StackPanel>
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
             <!--Placeholder for zedgraph -->
@@ -210,15 +219,21 @@
 
         </Grid>
 
-        <Grid Grid.Column="8" Margin="0,0,20,0" Grid.Row="0" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <ToggleButton Content="Start Capture" Command="{Binding StartCapture}" Margin="0,0,0,2" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" />
-            <Button Content="Stop Capture" Command="{Binding StopCapture}" Margin="0,0,0,2" Grid.Row="1" />
-            <Button Content="Reset Graph" Command="{Binding ResetGraph}" Margin="0,0,0,2" Grid.Row="2" />
+        <Grid Grid.Column="7"  Grid.Row="0" Grid.ColumnSpan="2" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  />
+            <Button Content="Stop Capture" Command="{Binding StopCapture}" Grid.Column="1" Margin="0,0,10,15"  />
+        </Grid>
+        <Grid Grid.Column="7"  Grid.Row="1" Grid.ColumnSpan="2"  >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Reset Graph" Command="{Binding ResetGraph}" Grid.Row="2" Grid.Column="1" Margin="0,5,7,10"/>
         </Grid>
     </Grid>
 </UserControl>
