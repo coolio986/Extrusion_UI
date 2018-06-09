@@ -1,5 +1,4 @@
 ﻿using Digital_Indicator.Infrastructure;
-using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Helpers;
 using Digital_Indicator.Logic.SerialCommunications;

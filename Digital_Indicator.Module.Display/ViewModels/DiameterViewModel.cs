@@ -1,14 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Mvvm;
 using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
-using Digital_Indicator.Logic.Helpers;
-using Digital_Indicator.Module.Display.Views;
-using Digital_Indicator.Infrastructure.UI;
 using Digital_Indicator.Logic.Filament;
-using System.Windows.Threading;
 using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.WindowForms.ZedGraphUserControl;
 
