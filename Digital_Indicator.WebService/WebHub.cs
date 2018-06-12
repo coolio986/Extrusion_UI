@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Digital_Indicator.WebService
+namespace Digital_Indicator.Logic.WebService
 {
     [HubName("WebServiceHub")]
     public class WebHub : Hub

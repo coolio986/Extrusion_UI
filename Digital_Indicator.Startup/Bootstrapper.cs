@@ -8,7 +8,7 @@ using Prism.Regions;
 using Digital_Indicator.Logic.SerialCommunications;
 using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
-using Digital_Indicator.WebService;
+using Digital_Indicator.Logic.WebService;
 
 namespace Digital_Indicator.Startup
 {
@@ -56,7 +56,7 @@ namespace Digital_Indicator.Startup
             Container.RegisterType<IFileService, FileService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IWebService, WebService.WebService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IWebService, Logic.WebService.WebService>(new ContainerControlledLifetimeManager());
 
             StartFilamentService();
             StartWebService();

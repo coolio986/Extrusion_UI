@@ -130,9 +130,9 @@
       <Project>{17d124ea-f1e0-4a24-810f-81151c48638b}</Project>
       <Name>Digital_Indicator.Module.Display</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Digital_Indicator.WebService\Digital_Indicator.WebService.csproj">
+    <ProjectReference Include="..\Digital_Indicator.WebService\Digital_Indicator.Logic.WebService.csproj">
       <Project>{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}</Project>
-      <Name>Digital_Indicator.WebService</Name>
+      <Name>Digital_Indicator.Logic.WebService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

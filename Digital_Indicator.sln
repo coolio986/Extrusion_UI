@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.WindowForms.ZedGraphUserControl", "Digital_Indicator.WindowForms.ZedGraphUserControl\Digital_Indicator.WindowForms.ZedGraphUserControl.csproj", "{4304C760-7374-4C33-90D9-032D798E1254}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.WebService", "Digital_Indicator.WebService\Digital_Indicator.WebService.csproj", "{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.WebService", "Digital_Indicator.WebService\Digital_Indicator.Logic.WebService.csproj", "{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

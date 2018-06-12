@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Digital_Indicator.WebService
+namespace Digital_Indicator.Logic.WebService
 {
     class Startup
     {
