@@ -8,6 +8,7 @@ using Prism.Regions;
 using Digital_Indicator.Logic.SerialCommunications;
 using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
+using Digital_Indicator.WebService;
 
 namespace Digital_Indicator.Startup
 {
@@ -55,8 +56,10 @@ namespace Digital_Indicator.Startup
             Container.RegisterType<IFileService, FileService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IWebService, WebService.WebService>(new ContainerControlledLifetimeManager());
 
             StartFilamentService();
+            StartWebService();
 
         }
 
@@ -73,6 +76,13 @@ namespace Digital_Indicator.Startup
             IFilamentService filamentService = Container.Resolve<IFilamentService>();
 
             filamentService.IsSimulationModeActive = simulation;
+        }
+
+        private void StartWebService()
+        {
+            IWebService filamentService = Container.Resolve<IWebService>();
+
+
         }
 
         //protected override IRegionBehaviorFactory ConfigureDefaultRegionBehaviors()
