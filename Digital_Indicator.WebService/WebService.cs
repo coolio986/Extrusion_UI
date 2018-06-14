@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Digital_Indicator.Logic.WebService
 {
@@ -26,8 +27,13 @@ namespace Digital_Indicator.Logic.WebService
 
         private void StartWeb()
         {
-            string url = @"http://localhost:8080/";
-            var server = WebApp.Start<Startup>(url);
+
+            StartOptions options = new StartOptions();
+            options.Urls.Add("http://localhost:8080");
+            //options.Urls.Add("http://192.168.2.53:8080");
+            options.Urls.Add("http://+:8080");
+
+            var server = WebApp.Start<Startup>(options);
 
             //keep webserver alive.
             Task.Factory.StartNew(() =>
@@ -36,6 +42,7 @@ namespace Digital_Indicator.Logic.WebService
                 {
                     //Console.WriteLine(string.Format("Server running at {0}", url));
                     //   Console.ReadLine();
+                    Thread.Sleep(1);
                 }
             });
         }

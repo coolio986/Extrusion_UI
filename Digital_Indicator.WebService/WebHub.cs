@@ -17,6 +17,7 @@ namespace Digital_Indicator.Logic.WebService
         IFilamentService _filamentService;
 
         IHubContext hubContext;
+        bool transmissionInProgress = false;
 
         public WebHub()
         {
@@ -28,15 +29,24 @@ namespace Digital_Indicator.Logic.WebService
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(() =>
+            if (!transmissionInProgress)
             {
+                transmissionInProgress = true;
+                Task.Factory.StartNew(() =>
+                {
                 //run async so main thread isn't blocked, also keep capturing if there is a communication error
                 try
-                {
-                    hubContext.Clients.All.ReceiveData(_filamentService.FilamentServiceVariables);
-                }
-                catch { }
-            });
+                    {
+                        hubContext.Clients.All.ReceiveData(_filamentService.FilamentServiceVariables.ToList());
+                        Thread.Sleep(50);
+                        transmissionInProgress = false;
+                    }
+                    catch (Exception oe)
+                    {
+                        transmissionInProgress = false;
+                    }
+                });
+            }
         }
 
         public void Send(object obj)

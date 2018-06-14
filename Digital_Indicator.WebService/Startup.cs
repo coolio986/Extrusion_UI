@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Cors;
+﻿using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Cors;
 using Microsoft.Owin.Hosting;
 using Owin;
 using System;
@@ -15,7 +16,6 @@ namespace Digital_Indicator.Logic.WebService
         {
             app.UseCors(CorsOptions.AllowAll);
             app.MapSignalR();
-
         }
     }
 }
