@@ -31,7 +31,7 @@ namespace Digital_Indicator.Logic.FileOperations
 
             foreach (KeyValuePair<string, string> kvp in XmlSettings) //flat XML for now
             {
-                if (kvp.Key.Contains("."))
+                if (kvp.Key.Contains(".") && kvp.Value != null)
                 {
                     string parentNode = kvp.Key.Substring(0, kvp.Key.IndexOf("."));
                     XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));

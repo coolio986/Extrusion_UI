@@ -17,7 +17,10 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 
         public static List<ZedGraphUserControl> GetPlots()
         {
-            return plotModelDict.Select(x => { return x.Value; }).ToList();
+            if (plotModelDict != null)
+                return plotModelDict.Select(x => { return x.Value; }).ToList();
+
+            return null;
         }
 
         public static void CreatePlots(string upperLimit, string nominalDiameter, string lowerLimit)

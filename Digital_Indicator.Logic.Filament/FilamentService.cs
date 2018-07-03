@@ -40,9 +40,11 @@ namespace Digital_Indicator.Logic.Filament
             set
             {
                 nominalDiameter = value;
+
                 OnPropertyChanged();
                 UpdatePlots();
                 SaveXmlData();
+                SetFilamentVariables();
             }
         }
 
@@ -56,6 +58,7 @@ namespace Digital_Indicator.Logic.Filament
                 OnPropertyChanged();
                 UpdatePlots();
                 SaveXmlData();
+                SetFilamentVariables();
             }
         }
 
@@ -70,6 +73,7 @@ namespace Digital_Indicator.Logic.Filament
                 OnPropertyChanged();
                 UpdatePlots();
                 SaveXmlData();
+                SetFilamentVariables();
             }
         }
 
@@ -132,13 +136,16 @@ namespace Digital_Indicator.Logic.Filament
             _xmlService = xmlService;
             _csvService = csvService;
 
-            BuildXmlData();
-            SetupPlots();
-
             FilamentServiceVariables = new Dictionary<string, string>();
             FilamentServiceVariables.Add("ActualDiameter", "");
             FilamentServiceVariables.Add("HighestValue", "");
             FilamentServiceVariables.Add("LowestValue", "");
+            FilamentServiceVariables.Add("NominalValue", "");
+            FilamentServiceVariables.Add("UpperLimit", "");
+            FilamentServiceVariables.Add("LowerLimit", "");
+
+            BuildXmlData();
+            SetupPlots();
         }
 
         private void SetupPlots()
@@ -173,13 +180,16 @@ namespace Digital_Indicator.Logic.Filament
 
         private void UpdatePlots()
         {
-            ZedGraphPlotModel.GetPlots().Select(x =>
-            {
-                x.UpperLimitDiameter = upperLimit;
-                x.NominalDiameter = nominalDiameter;
-                x.LowerLimitDiameter = lowerLimit;
-                return x;
-            }).ToList();
+            var zedGraphPlotModel = ZedGraphPlotModel.GetPlots();
+
+            if (zedGraphPlotModel != null)
+                zedGraphPlotModel.Select(x =>
+                {
+                    x.UpperLimitDiameter = upperLimit;
+                    x.NominalDiameter = nominalDiameter;
+                    x.LowerLimitDiameter = lowerLimit;
+                    return x;
+                }).ToList();
         }
 
         private void BuildXmlData()
@@ -190,6 +200,8 @@ namespace Digital_Indicator.Logic.Filament
             spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
             description = _xmlService.XmlSettings["filamentData.materialDescription"];
             batchNumber = _xmlService.XmlSettings["filamentData.batchNumber"];
+
+            SetFilamentVariables();
         }
 
         private void SaveXmlData()
@@ -202,6 +214,14 @@ namespace Digital_Indicator.Logic.Filament
             _xmlService.XmlSettings["filamentData.batchNumber"] = batchNumber;
 
             _xmlService.SaveSettings();
+        }
+
+        private void SetFilamentVariables()
+        {
+            FilamentServiceVariables["UpperLimit"] = upperLimit.ToString();
+            FilamentServiceVariables["LowerLimit"] = lowerLimit.ToString();
+            FilamentServiceVariables["NominalDiameter"] = nominalDiameter.ToString();
+
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
