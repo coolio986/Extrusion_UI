@@ -144,6 +144,7 @@ namespace Digital_Indicator.Module.Display.Views
         private void Storyboard_Completed(object sender, EventArgs e)
         {
             var width = this.zedGraphHistoricalModel.Width;
+            plotStoryboard.Completed -= Storyboard_Completed;
             plotStoryboard.Stop();
             this.zedGraphHistoricalModel.Width = width;
             this.zedGraphRealTimeModel.Width = width;
