@@ -64,6 +64,8 @@ namespace Digital_Indicator.Logic.SerialCommunications
         private void SetPort()
         {
             serialPort.PortName = portName;
+            serialPort.DtrEnable = true;
+            serialPort.RtsEnable = true;
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
