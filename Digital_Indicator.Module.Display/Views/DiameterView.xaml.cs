@@ -23,6 +23,8 @@ namespace Digital_Indicator.Module.Display.Views
         long previousRealTimeMillis;
         long previousScanMillis;
 
+        Storyboard plotStoryboard;
+
         ZedGraphUserControl zgraphHistorical;
         ZedGraphUserControl zgraphRealTime;
 
@@ -65,6 +67,7 @@ namespace Digital_Indicator.Module.Display.Views
             {
                 if (settingsWindowOpen && zedGraphHistoricalModel.Width != this.ActualWidth - 320)
                 {
+                    
                     zedGraphHistoricalModel.Width = this.ActualWidth - 320;
                     zedGraphRealTimeModel.Width = this.ActualWidth - 320;
                 }
@@ -96,9 +99,11 @@ namespace Digital_Indicator.Module.Display.Views
                 Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
                 Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath("(Width)"));
                 Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+
+                sb.Completed += Storyboard_Completed;
+                plotStoryboard = sb;
+
                 sb.Begin();
-
-
 
                 settingsWindowOpen = false;
             }
@@ -131,13 +136,24 @@ namespace Digital_Indicator.Module.Display.Views
             sb.Children.Add(doubleAnimationRealTime);
             Storyboard.SetTarget(doubleAnimationHistorical, zedGraphHistoricalModel);
             Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
-            Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath( "(Width)"));
+            Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath("(Width)"));
             Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+
+            sb.Completed += Storyboard_Completed;
+            plotStoryboard = sb;
             sb.Begin();
+            
 
             settingsWindowOpen = true;
-            //zedGraphHistoricalModel.Width = this.ActualWidth - 320;
-            //zedGraphRealTimeModel.Width = this.ActualWidth - 320;
+            
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            var width = this.zedGraphHistoricalModel.Width;
+            plotStoryboard.Stop();
+            this.zedGraphHistoricalModel.Width = width;
+            this.zedGraphRealTimeModel.Width = width;
         }
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
