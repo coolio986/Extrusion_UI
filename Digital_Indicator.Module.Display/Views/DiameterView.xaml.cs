@@ -59,8 +59,6 @@ namespace Digital_Indicator.Module.Display.Views
 
         }
 
-
-
         private void DiameterView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.ActualWidth - 320 > 0)
@@ -83,9 +81,6 @@ namespace Digital_Indicator.Module.Display.Views
         {
             if (sender.ToString() == "SettingsRegion")
             {
-                //zedGraphHistoricalModel.Width = this.ActualWidth;
-                //zedGraphRealTimeModel.Width = this.ActualWidth;
-
                 Storyboard sb = new Storyboard();
 
                 DoubleAnimation doubleAnimationHistorical = new DoubleAnimation(zedGraphHistoricalModel.Width, this.ActualWidth, new Duration(TimeSpan.FromMilliseconds(200)));
@@ -142,10 +137,8 @@ namespace Digital_Indicator.Module.Display.Views
             sb.Completed += Storyboard_Completed;
             plotStoryboard = sb;
             sb.Begin();
-            
 
             settingsWindowOpen = true;
-            
         }
 
         private void Storyboard_Completed(object sender, EventArgs e)
