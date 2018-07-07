@@ -132,8 +132,20 @@
         <Grid Grid.RowSpan="2">
             <Border BorderThickness="0,0,0,0" BorderBrush="#FFA6A6A6">
                 <StackPanel >
-                    <Button MaxHeight="30" Margin="10,10,10,0" Command="{Binding Settings}" x:Name="settingsButton" >
-                        <fa:ImageAwesome Icon="Cog" Margin="0,2" />
+                    <Button MaxHeight="60" Margin="10,10,0,0" Command="{Binding Settings}" x:Name="settingsButton" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="6*"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="6*" />
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <fa:ImageAwesome Icon="Cog" Grid.Column="1" Grid.Row="1"  />
+                        </Grid>
                         <Button.Triggers>
                             <EventTrigger RoutedEvent="Button.Click" >
                                 <BeginStoryboard  Storyboard="{StaticResource StoryboardSlideSettingsOut}">
@@ -205,8 +217,8 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
-                
+
+
             </Grid>
         </StackPanel>
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >

@@ -59,7 +59,8 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.ColumnSpan="2">
-            <Button x:Name="button" MaxHeight="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35" helpers:CloseOnClickBehaviour.IsEnabled="True">
+            <Button x:Name="button" MaxHeight="45" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Command="{Binding CloseSettingsView}" MinWidth="35" helpers:CloseOnClickBehaviour.IsEnabled="True">
+                
                 <fa:ImageAwesome Icon="ArrowLeft" />
                 <Button.Triggers>
                     <EventTrigger RoutedEvent="Button.Click" >
