@@ -237,6 +237,7 @@ namespace Digital_Indicator.Logic.Filament
 
         private void SetupStopwatch()
         {
+            stopWatch.Reset();
             stopWatch.Start();
 
 
