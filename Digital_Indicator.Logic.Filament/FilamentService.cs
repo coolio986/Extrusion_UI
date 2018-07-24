@@ -6,6 +6,7 @@ using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -19,7 +20,11 @@ namespace Digital_Indicator.Logic.Filament
 
         public event EventHandler PropertyChanged;
 
+        public event EventHandler StopWatchedTimeChanged;
+
         public Dictionary<string, string> FilamentServiceVariables { get; private set; }
+
+        public Stopwatch stopWatch { get; private set; }
 
         private IXmlService _xmlService;
         private ICsvService _csvService;
@@ -116,9 +121,13 @@ namespace Digital_Indicator.Logic.Filament
                     FilamentServiceVariables["LowestValue"] = nominalDiameter;
                     SpoolNumber = (spoolNumber.GetInteger() + 1).ToString();
                     SetupPlots();
+                    SetupStopwatch();
                 }
                 else
+                {
                     SaveHistoricalData(ZedGraphPlotModel.GetPlot("HistoricalModel").GetDataPoints());
+                    stopWatch.Stop();
+                }
             }
         }
 
@@ -130,6 +139,8 @@ namespace Digital_Indicator.Logic.Filament
 
         public FilamentService(ISerialService serialService, IXmlService xmlService, ICsvService csvService)
         {
+            stopWatch = new Stopwatch();
+
             _serialService = serialService;
             _serialService.DiameterChanged += SerialService_DiameterChanged;
 
@@ -222,6 +233,22 @@ namespace Digital_Indicator.Logic.Filament
             FilamentServiceVariables["LowerLimit"] = lowerLimit.ToString();
             FilamentServiceVariables["NominalDiameter"] = nominalDiameter.ToString();
 
+        }
+
+        private void SetupStopwatch()
+        {
+            stopWatch.Start();
+
+
+            Task.Factory.StartNew(() =>
+            {
+                while (stopWatch.IsRunning)
+                {
+                    StopWatchedTimeChanged?.Invoke(stopWatch, new EventArgs());
+                    System.Threading.Thread.Sleep(500);
+                }
+
+            });
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

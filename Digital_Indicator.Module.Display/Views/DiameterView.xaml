@@ -211,14 +211,13 @@
                 <Label Content="Batch Number"  FontSize="26" HorizontalAlignment="Left" />
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
             </Grid>
-            <Grid MinHeight="20">
+            <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-
-
+                <Label Content="Duration"  FontSize="26" HorizontalAlignment="Left" />
+                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right" Margin="0,0,-50,0" />
             </Grid>
         </StackPanel>
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >

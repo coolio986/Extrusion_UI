@@ -53,6 +53,13 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return _filamentService.CaptureStarted; }
         }
 
+        public string Duration
+        {
+            get { return (_filamentService.stopWatch.Elapsed.Hours.ToString("0") + ":" + 
+                    _filamentService.stopWatch.Elapsed.Minutes.ToString("0#") + ":" + 
+                    _filamentService.stopWatch.Elapsed.Seconds.ToString("0#")); }
+        }
+
         private object settingsView;
         public object SettingsView
         {
@@ -66,11 +73,18 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _navigationService = navigationService;
             _navigationService.RegionCleared += _navigationService_RegionCleared;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
+            _filamentService.StopWatchedTimeChanged += _filamentService_StopWatchedTimeChanged;
+            
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
+        }
+
+        private void _filamentService_StopWatchedTimeChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("Duration");
         }
 
         private void _navigationService_RegionCleared(object sender, EventArgs e)

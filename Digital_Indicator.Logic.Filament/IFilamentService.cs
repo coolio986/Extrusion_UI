@@ -1,6 +1,7 @@
 ﻿using Digital_Indicator.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,14 @@ namespace Digital_Indicator.Logic.Filament
 
         event EventHandler DiameterChanged;
         event EventHandler PropertyChanged;
+        event EventHandler StopWatchedTimeChanged;
 
         bool CaptureStarted { get; set; }
         bool IsSimulationModeActive { get; set; }
 
         void SaveHistoricalData(HashSet<DataListXY> dataPoints);
+
+        Stopwatch stopWatch { get;}
         
     }
 }
