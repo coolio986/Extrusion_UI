@@ -243,7 +243,7 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Reset Graph" Command="{Binding ResetGraph}" Grid.Row="2" Grid.Column="1" Margin="0,5,7,10"/>
+            <Button Content="Recenter Graph" Command="{Binding ResetGraph}" Grid.Row="2" Grid.Column="1" Margin="0,5,7,10"/>
         </Grid>
     </Grid>
 </UserControl>
