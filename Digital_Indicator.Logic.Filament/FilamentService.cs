@@ -154,6 +154,7 @@ namespace Digital_Indicator.Logic.Filament
             FilamentServiceVariables.Add("NominalValue", "");
             FilamentServiceVariables.Add("UpperLimit", "");
             FilamentServiceVariables.Add("LowerLimit", "");
+            FilamentServiceVariables.Add("Duration", "");
 
             BuildXmlData();
             SetupPlots();
@@ -246,6 +247,12 @@ namespace Digital_Indicator.Logic.Filament
                 while (stopWatch.IsRunning)
                 {
                     StopWatchedTimeChanged?.Invoke(stopWatch, new EventArgs());
+
+
+                    FilamentServiceVariables["Duration"] = stopWatch.Elapsed.Hours.ToString("0") + ":" +
+                                                          stopWatch.Elapsed.Minutes.ToString("0#") + ":" +
+                                                          stopWatch.Elapsed.Seconds.ToString("0#");
+
                     System.Threading.Thread.Sleep(500);
                 }
 
