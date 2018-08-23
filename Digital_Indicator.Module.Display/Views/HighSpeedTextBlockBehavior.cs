@@ -26,6 +26,10 @@ namespace Digital_Indicator.Module.Display.Views
         DependencyProperty.Register("VariableName", typeof(string), typeof(HighSpeedTextBlockBehavior),
         new PropertyMetadata(null));
 
+        public static readonly DependencyProperty UnitProperty =
+        DependencyProperty.Register("Unit", typeof(string), typeof(HighSpeedTextBlockBehavior),
+        new PropertyMetadata(null));
+
 
         public IFilamentService FilamentService
         {
@@ -37,6 +41,12 @@ namespace Digital_Indicator.Module.Display.Views
         {
             get { return (string)GetValue(VariableNameProperty); }
             set { SetValue(VariableNameProperty, value); }
+        }
+
+        public string Unit
+        {
+            get { return (string)GetValue(UnitProperty); }
+            set { SetValue(UnitProperty, value); }
         }
 
         protected override void OnAttached()
@@ -55,7 +65,9 @@ namespace Digital_Indicator.Module.Display.Views
 
         private void OnRendering(object sender, EventArgs e)
         {
-            AssociatedObject.Text = FilamentService.FilamentServiceVariables[VariableName];
+            var TextValue = FilamentService.FilamentServiceVariables[VariableName];
+            TextValue = TextValue == string.Empty ? "" : TextValue + $" {Unit}";
+            AssociatedObject.Text = TextValue;
         }
 
     }
