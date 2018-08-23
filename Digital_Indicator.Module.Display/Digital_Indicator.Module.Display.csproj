@@ -150,5 +150,8 @@
     </PackageReference>
     <PackageReference Include="Prism.Unity" Version="6.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\FILABOT_LOGO_2017.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -197,11 +197,11 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                 <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
@@ -213,10 +213,10 @@
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Right"  >
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
@@ -225,10 +225,10 @@
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Right"  >
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
@@ -237,7 +237,7 @@
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                 <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
@@ -245,7 +245,7 @@
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Batch Number" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
@@ -253,46 +253,26 @@
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Right" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Grid.RowSpan="2">
-            <!--<Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Spool Number"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
-            </Grid>-->
-            <!--<Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Batch Number"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
-            </Grid>-->
-            <!--<Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Duration"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right" Margin="0,0,-50,0" />
-            </Grid>-->
-        </StackPanel>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
+        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="10">
+            <Image Source="/Digital_Indicator.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
+        
+        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
+        
 
         <Grid Grid.Column="7"  Grid.Row="0" Grid.ColumnSpan="2" >
             <Grid.ColumnDefinitions>
