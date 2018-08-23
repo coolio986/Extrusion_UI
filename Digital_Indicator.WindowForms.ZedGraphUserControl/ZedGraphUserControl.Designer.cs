@@ -49,7 +49,7 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
             this.zedGraphControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.zedGraphControl1.TabIndex = 0;
             this.zedGraphControl1.GraphPane.XAxis.Title.Text = "Time";
-            this.zedGraphControl1.GraphPane.YAxis.Title.Text = "Diameter";
+            this.zedGraphControl1.GraphPane.YAxis.Title.Text = "Diameter (mm)";
             this.zedGraphControl1.GraphPane.XAxis.Scale.Format = "HH:mm:ss";
             this.zedGraphControl1.GraphPane.XAxis.Type = AxisType.Date;
 
