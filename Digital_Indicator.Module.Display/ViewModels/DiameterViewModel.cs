@@ -21,6 +21,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return GetStartButtonGradient(); }
         }
 
+        public GradientStopCollection StopButtonGradientCollection
+        {
+            get { return GetStopButtonGradient(); }
+        }
+
         private bool settingsOpen;
         public bool SettingsOpen
         {
@@ -125,6 +130,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("CaptureStarted");
             RaisePropertyChanged("RealTimeModel");
             RaisePropertyChanged("StartButtonGradientCollection");
+            RaisePropertyChanged("StopButtonGradientCollection");
         }
 
         private void StopCapture_Click()
@@ -132,6 +138,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
             RaisePropertyChanged("StartButtonGradientCollection");
+            RaisePropertyChanged("StopButtonGradientCollection");
         }
 
         private void Settings_Click()
@@ -142,21 +149,40 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private GradientStopCollection GetStartButtonGradient()
         {
-            GradientStopCollection gradientStopCollection = new GradientStopCollection();
+            GradientStopCollection gradientStartCollection = new GradientStopCollection();
 
             if (_filamentService.CaptureStarted)
             {
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FF00"), Offset = 0 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FC00"), Offset = 0.21 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00F200"), Offset = 0.38 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00E100"), Offset = 0.53 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00C900"), Offset = 0.67 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00AA00"), Offset = 0.81 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF008500"), Offset = 0.94 });
-                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF007300"), Offset = 1 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FF00"), Offset = 0 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FC00"), Offset = 0.21 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00F200"), Offset = 0.38 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00E100"), Offset = 0.53 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00C900"), Offset = 0.67 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00AA00"), Offset = 0.81 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF008500"), Offset = 0.94 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF007300"), Offset = 1 });
 
             }
             else
+            {
+                //gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#e6e6e6"), Offset = 0 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#d9d9d9"), Offset = 0.21 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#cccccc"), Offset = 0.38 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#bfbfbf"), Offset = 0.53 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#b3b3b3"), Offset = 0.67 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#a6a6a6"), Offset = 0.81 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#999999"), Offset = 0.94 });
+                gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
+            }
+            return gradientStartCollection;
+
+        }
+        private GradientStopCollection GetStopButtonGradient()
+        {
+            GradientStopCollection gradientStopCollection = new GradientStopCollection();
+
+            if (_filamentService.CaptureStarted)
             {
                 //gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#e6e6e6"), Offset = 0 });
@@ -167,6 +193,22 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#a6a6a6"), Offset = 0.81 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#999999"), Offset = 0.94 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
+
+
+
+                
+
+            }
+            else
+            {
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFFF0000"), Offset = 0 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFFC0000"), Offset = 0.21 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFF20000"), Offset = 0.38 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFE10000"), Offset = 0.53 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFC90000"), Offset = 0.67 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFAA0000"), Offset = 0.81 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF850000"), Offset = 0.94 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF730000"), Offset = 1 });
             }
             return gradientStopCollection;
 
