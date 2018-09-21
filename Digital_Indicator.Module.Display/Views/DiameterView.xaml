@@ -298,7 +298,7 @@
                 <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="10">
+        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="20">
             <Image Source="/Digital_Indicator.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
         </Grid>
 
@@ -306,20 +306,25 @@
             <!--Placeholder for zedgraph -->
 
         </Grid>
-        
+
         <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
-        
 
-        <Grid Grid.Column="7"  Grid.Row="0" Grid.ColumnSpan="2" >
+
+        <Grid Grid.Column="7"  Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.25*"/>
+                <RowDefinition/>
+                <RowDefinition Height="1.25*"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!--ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  /-->
-            <ToggleButton  Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource StartToggleButtonStyle}" Margin="0,0,10,15"  >
+            <ToggleButton  Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource StartToggleButtonStyle}" Margin="0,0,10,0" Grid.Row="1"  >
 
                 <ToggleButton.Background>
                     <DrawingBrush>
@@ -445,9 +450,9 @@
                 </ToggleButton.Background>
 
             </ToggleButton>
-            <ToggleButton Content="Stop Capture" Command="{Binding StopCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Grid.Column="1" Margin="0,0,10,15" Style="{DynamicResource StopCaptureButtonStyle}"   />
+            <ToggleButton Content="Stop Capture" Command="{Binding StopCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Grid.Column="1" Margin="0,0,10,0" Style="{DynamicResource StopCaptureButtonStyle}" Grid.Row="1"   />
         </Grid>
-        <Grid Grid.Column="7"  Grid.Row="1" Grid.ColumnSpan="2"  >
+        <!--Grid Grid.Column="7"  Grid.Row="1" Grid.ColumnSpan="2"  >
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="2.0*"/>
@@ -459,6 +464,6 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Button Content="Recenter Graph" Command="{Binding ResetGraph}" Grid.Row="1" Grid.Column="1" Margin="0"/>
-        </Grid>
+        </Grid-->
     </Grid>
 </UserControl>
