@@ -274,7 +274,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <!--">ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  /-->
-            <ToggleButton Margin="0,0,10,15" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource StartToggleButtonStyle}"  >
+            <ToggleButton Margin="0,0,10,15" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource StartToggleButtonStyle}"  >
                 <ToggleButton.Background>
                     <DrawingBrush>
                         <DrawingBrush.Drawing>
@@ -295,15 +295,16 @@
                                         <DrawingGroup Opacity="1">
                                             <GeometryDrawing>
                                                 <GeometryDrawing.Brush>
-                                                    <LinearGradientBrush StartPoint="140.028,12.6" EndPoint="140.028,125.64" Opacity="1" MappingMode="Absolute">
-                                                        <GradientStop Color="#FF00FF00" Offset="0" />
+                                                    <LinearGradientBrush StartPoint="140.028,12.6" EndPoint="140.028,125.64" Opacity="1" MappingMode="Absolute" GradientStops="{Binding StartButtonGradientCollection }">
+                                                        <!--GradientStop Color="#FF00FF00" Offset="0" />
                                                         <GradientStop Color="#FF00FC00" Offset="0.21" />
                                                         <GradientStop Color="#FF00F200" Offset="0.38" />
                                                         <GradientStop Color="#FF00E100" Offset="0.53" />
                                                         <GradientStop Color="#FF00C900" Offset="0.67" />
                                                         <GradientStop Color="#FF00AA00" Offset="0.81" />
                                                         <GradientStop Color="#FF008500" Offset="0.94" />
-                                                        <GradientStop Color="#FF007300" Offset="1" />
+                                                        <GradientStop Color="#FF007300" Offset="1" /-->
+                                                        
                                                     </LinearGradientBrush>
                                                 </GeometryDrawing.Brush>
                                                 <GeometryDrawing.Geometry>
