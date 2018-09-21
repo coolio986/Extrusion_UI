@@ -4,6 +4,7 @@ using System;
 using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.WindowForms.ZedGraphUserControl;
+using System.Windows.Media;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -19,6 +20,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public bool SettingsOpen {
             get { return settingsOpen; }
             private set { settingsOpen = value; RaisePropertyChanged(); }
+        }
+
+        public GradientStopCollection StartButtonGradientCollection
+        {
+            get { return GetStartButtonGradient(); }
         }
 
         private INavigationService _navigationService;
@@ -111,18 +117,51 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.CaptureStarted = true;
             RaisePropertyChanged("CaptureStarted");
             RaisePropertyChanged("RealTimeModel");
+            RaisePropertyChanged("StartButtonGradientCollection");
         }
 
         private void StopCapture_Click()
         {
             _filamentService.CaptureStarted = false;
             RaisePropertyChanged("CaptureStarted");
+            RaisePropertyChanged("StartButtonGradientCollection");
         }
 
         private void Settings_Click()
         {
             SettingsOpen = true;
             _navigationService.NavigateToRegion("SettingsRegion", "SettingsView");
+        }
+        private GradientStopCollection GetStartButtonGradient()
+        {
+            GradientStopCollection gradientStopCollection = new GradientStopCollection();
+
+            if (_filamentService.CaptureStarted)
+            {
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FF00"), Offset = 0 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00FC00"), Offset = 0.21 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00F200"), Offset = 0.38 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00E100"), Offset = 0.53 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00C900"), Offset = 0.67 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF00AA00"), Offset = 0.81 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF008500"), Offset = 0.94 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF007300"), Offset = 1 });
+
+            }
+            else
+            {
+                //gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#e6e6e6"), Offset = 0 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#d9d9d9"), Offset = 0.21 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#cccccc"), Offset = 0.38 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#bfbfbf"), Offset = 0.53 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#b3b3b3"), Offset = 0.67 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#a6a6a6"), Offset = 0.81 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#999999"), Offset = 0.94 });
+                gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
+            }
+            return gradientStopCollection;
+
         }
     }
 }
