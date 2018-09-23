@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,16 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
+        public string VersionNumber
+        {
+            get
+            {
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return fvi.FileVersion;
+            }
+        }
+
         public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService)
         {
             _filamentService = filamentService;
@@ -65,7 +76,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             CloseSettingsView = new DelegateCommand(CloseView_Click);
-
 
         }
 
