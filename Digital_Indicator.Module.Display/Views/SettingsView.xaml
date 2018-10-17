@@ -194,26 +194,29 @@
                 <TextBlock Text="Description" FontSize="18" HorizontalAlignment="Center" />
                 <TextBox  FontSize="18"  Text="{Binding FilamentDescription}" MinHeight="75" />
             </StackPanel>
-            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Filament Diameter" FontSize="18" VerticalAlignment="Center" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding FilamentDiameter}" />
                 <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
             </StackPanel>
-            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Upper Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,53,0" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding UpperLimit}" />
                 <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
             </StackPanel>
-            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Lower Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,55,0" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding LowerLimit}" />
                 <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
             </StackPanel>
-            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Spool Number" FontSize="18" VerticalAlignment="Center" Margin="0,0,50,0" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolNumber}" />
+                <Button MaxWidth="80" Margin="5,0,0,0"  Command="{Binding OpenSpoolDataFolder}" >
+                    <TextBlock Text="Spool Data Folder" TextWrapping="Wrap" TextAlignment="Center" />
+                </Button>
             </StackPanel>
-            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Batch Number" FontSize="18" VerticalAlignment="Center" Margin="0,0,51,0" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding BatchNumber}" />
             </StackPanel>
