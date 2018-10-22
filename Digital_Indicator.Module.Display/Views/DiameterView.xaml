@@ -32,20 +32,20 @@
         <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
         <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
-        <SolidColorBrush x:Key="Button.IsChecked.Background" Color="#00ff00"/>
+        <SolidColorBrush x:Key="StartButton.IsChecked.Background" Color="#00ff00"/>
         <Style x:Key="StartCaptureButtonStyle" TargetType="{x:Type ToggleButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
             <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderThickness" Value="2"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ToggleButton}">
-                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="5">
                             <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -66,7 +66,7 @@
                                 <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.IsChecked.Background}" />
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource StartButton.IsChecked.Background}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -87,6 +87,47 @@
                 </EasingDoubleKeyFrame>
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
+        <SolidColorBrush x:Key="StopButton.IsChecked.Background" Color="#ff0000"/>
+        <Style x:Key="StopCaptureButtonStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" CornerRadius="5">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Button.IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource StopButton.IsChecked.Background}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="ToggleButtonStyle" TargetType="{x:Type ToggleButton}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
             <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
@@ -109,12 +150,12 @@
                             <Trigger Property="IsMouseOver" Value="true">
                                 <!--Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/-->
-                                <Setter Property="Opacity" Value="0.6"/>
+                                <Setter Property="Opacity" Value="0.5"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="true">
                                 <!--Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
                                 <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/-->
-                                <Setter Property="Opacity" Value="0.3"/>
+                                <Setter Property="Opacity" Value="0.6"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
@@ -165,7 +206,7 @@
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -252,7 +293,7 @@
                                                 </DrawingGroup>
                                                 <DrawingGroup Opacity="1">
                                                     <DrawingGroup Opacity="0.5">
-                                                        
+
                                                     </DrawingGroup>
                                                 </DrawingGroup>
                                             </DrawingGroup>
@@ -359,20 +400,7 @@
                                 </DrawingBrush.Drawing>
                             </DrawingBrush>
                         </Button.Background>
-                        <!--<Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition Height="6*"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition Width="6*" />
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <fa:ImageAwesome Icon="Cog" Grid.Column="1" Grid.Row="1"  />
-                        </Grid>-->
-                        <Button.Triggers>
+                            <Button.Triggers>
                             <EventTrigger RoutedEvent="Button.Click" >
                                 <BeginStoryboard  Storyboard="{StaticResource StoryboardSlideSettingsOut}">
                                 </BeginStoryboard>
@@ -382,14 +410,14 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2">
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Diameter"  FontSize="26" HorizontalAlignment="Left" />
-                <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Left" >
+                <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
                     <!--<i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
                     </i:Interaction.Behaviors>-->
@@ -397,71 +425,81 @@
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Highest Value" FontSize="26" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  >
+                <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" />
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="180"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Lowest Value" FontSize="26" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  >
+                <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" />
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
-        </StackPanel>
-        <StackPanel Grid.Row="0" Grid.Column="4" Grid.ColumnSpan="3" Grid.RowSpan="2">
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Spool Number"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
+                <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Batch Number"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right"  />
+                <Label Content="Batch Number" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Duration"  FontSize="26" HorizontalAlignment="Left" />
-                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="26" HorizontalAlignment="Right" Margin="0,0,-50,0" />
+                <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
+        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="20">
+            <Image Source="/Digital_Indicator.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
+        </Grid>
+
+        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
-        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
+
+        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
 
-        <Grid Grid.Column="7"  Grid.Row="0" Grid.ColumnSpan="2" >
+
+        <Grid Grid.Column="7"  Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" FlowDirection="RightToLeft" Margin="0,0,10,0"    >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.25*"/>
+                <RowDefinition/>
+                <RowDefinition Height="1.25*"/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition MinWidth="85" MaxWidth="150"/>
+                <ColumnDefinition MinWidth="85" MaxWidth="150"/>
             </Grid.ColumnDefinitions>
-            <!--">ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  /-->
-            <ToggleButton Margin="0,0,10,15" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}"  >
+            <!--ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  /-->
+            <ToggleButton MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" Margin="0,0,10,0" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight"  >
+
                 <ToggleButton.Background>
                     <DrawingBrush>
                         <DrawingBrush.Drawing>
@@ -505,7 +543,7 @@
                                         </DrawingGroup>
                                         <DrawingGroup Opacity="1">
                                             <DrawingGroup Opacity="0.5">
-                                                
+
                                             </DrawingGroup>
                                         </DrawingGroup>
                                     </DrawingGroup>
@@ -571,7 +609,7 @@
                 </ToggleButton.Background>
 
             </ToggleButton>
-            <ToggleButton Command="{Binding StopCapture}" Grid.Column="1" Margin="0,0,10,15" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}">
+            <ToggleButton   MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StopCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Grid.Column="0" Margin="0,0,10,0" Grid.Row="1"  BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" FlowDirection="LeftToRight" >
                 <ToggleButton.Background>
                     <DrawingBrush>
                         <DrawingBrush.Drawing>
@@ -615,7 +653,7 @@
                                         </DrawingGroup>
                                         <DrawingGroup Opacity="1">
                                             <DrawingGroup Opacity="0.5">
-                                                
+
                                             </DrawingGroup>
                                         </DrawingGroup>
                                     </DrawingGroup>
@@ -676,13 +714,18 @@
                 </ToggleButton.Background>
             </ToggleButton>
         </Grid>
-        <Grid Grid.Column="7"  Grid.Row="1" Grid.ColumnSpan="2"  >
+        <!--Grid Grid.Column="7"  Grid.Row="1" Grid.ColumnSpan="2"  >
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="2.0*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="2.0*"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <!--Button Content="Recenter Graph" Command="{Binding ResetGraph}" Grid.Row="2" Grid.Column="1" Margin="0,5,7,10"/-->
-        </Grid>
+            <Button Content="Recenter Graph" Command="{Binding ResetGraph}" Grid.Row="1" Grid.Column="1" Margin="0"/>
+        </Grid-->
     </Grid>
 </UserControl>

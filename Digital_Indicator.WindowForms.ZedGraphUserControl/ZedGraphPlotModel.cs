@@ -54,6 +54,7 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                      UpperLimitDiameter = upperLimit,
                      NominalDiameter = nominalDiameter,
                      LowerLimitDiameter = lowerLimit,
+                     AllowZoom = false,
                  });
             }
         }

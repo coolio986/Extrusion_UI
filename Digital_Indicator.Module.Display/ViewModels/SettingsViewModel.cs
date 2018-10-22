@@ -1,9 +1,11 @@
 ﻿using Digital_Indicator.Logic.Filament;
+using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Navigation;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +16,20 @@ namespace Digital_Indicator.Module.Display.ViewModels
     public class SettingsViewModel : BindableBase
     {
         IFilamentService _filamentService;
+        IFileService _fileService;
         INavigationService _navigationService;
+        private DelegateCommand openSpoolDataFolder;
         private DelegateCommand closeSettingsView;
         public DelegateCommand CloseSettingsView
         {
             get { return closeSettingsView; }
             set { SetProperty(ref closeSettingsView, value); }
+        }
+
+        public DelegateCommand OpenSpoolDataFolder
+        {
+            get { return openSpoolDataFolder; }
+            set { SetProperty(ref openSpoolDataFolder, value); }
         }
 
         public string FilamentDiameter
@@ -58,14 +68,25 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
-        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService)
+        public string VersionNumber
+        {
+            get
+            {
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return fvi.FileVersion;
+            }
+        }
+
+        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService, IFileService fileService)
         {
             _filamentService = filamentService;
+            _fileService = fileService;
             _navigationService = navigationService;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             CloseSettingsView = new DelegateCommand(CloseView_Click);
-
+            OpenSpoolDataFolder = new DelegateCommand(OpenSpoolDataFolder_Click);
 
         }
 
@@ -74,6 +95,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
             
         }
 
+        private void OpenSpoolDataFolder_Click()
+        {
+            Process.Start(_fileService.EnvironmentDirectory);
+        }
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged("SpoolNumber");

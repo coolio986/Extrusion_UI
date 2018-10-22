@@ -21,8 +21,22 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
         private LineItem diameterCurve;
         private FilteredPointList filteredDiameter;
 
+
         public ZedGraphControl ZedGraph { get; set; }
         public bool IsZoomed { get; private set; }
+
+
+        public bool AllowZoom
+        {
+            get { return zedGraphControl1.IsEnableWheelZoom; }
+            set
+            {
+                zedGraphControl1.IsEnableWheelZoom = value;
+                zedGraphControl1.ZoomButtons = MouseButtons.None;
+                zedGraphControl1.ZoomButtons2 = MouseButtons.None;
+            }
+        }
+
 
         private string nominalDiameter;
         public string NominalDiameter
@@ -70,14 +84,18 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
 
         private void ZedGraphControl1_ZoomEvent(ZedGraphControl sender, ZoomState oldState, ZoomState newState)
         {
+            if (AllowZoom)
+            {
+                IsZoomed = true;
+                // The maximum number of point to displayed is based on the width of the graphpane, and the visible range of the X axis
+                filteredDiameter.SetBounds(sender.GraphPane.XAxis.Scale.Min, sender.GraphPane.XAxis.Scale.Max, (int)sender.GraphPane.Rect.Width);
 
-            IsZoomed = true;
-            // The maximum number of point to displayed is based on the width of the graphpane, and the visible range of the X axis
-            filteredDiameter.SetBounds(sender.GraphPane.XAxis.Scale.Min, sender.GraphPane.XAxis.Scale.Max, (int)this.zedGraphControl1.GraphPane.Rect.Width);
+                ReZoomLineObjs();
 
-            // This refreshes the graph when the button is released after a panning operation
-            if (newState.Type == ZoomState.StateType.Pan)
-                sender.Invalidate();
+                // This refreshes the graph when the button is released after a panning operation
+                if (newState.Type == ZoomState.StateType.Pan)
+                    sender.Invalidate();
+            }
         }
 
         public void ClearPlots()
@@ -121,7 +139,7 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                 if (!IsZoomed)
                 {
                     filteredDiameter = new FilteredPointList(dblTime, dblDiameter);
-                    filteredDiameter.SetBounds(this.zedGraphControl1.GraphPane.XAxis.Scale.Min, this.zedGraphControl1.GraphPane.XAxis.Scale.Max, (int)this.zedGraphControl1.GraphPane.Rect.Width);
+                    filteredDiameter.SetBounds(this.zedGraphControl1.GraphPane.XAxis.Scale.Min, new XDate(DateTime.Now.AddMilliseconds(2)), (int)this.zedGraphControl1.GraphPane.Rect.Width);
 
                     this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
 
@@ -130,19 +148,28 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                     //***********************//
                     //Adding the reference lines here updates the visual faster than adding them in a function
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
-                    upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(upperLimitDiameter));
-                    upperLimitLine.Line.Width = 2.0F;
-                    this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+                    if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
+                    {
+                        upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(upperLimitDiameter));
+                        upperLimitLine.Line.Width = 2.0F;
+                        this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+                    }
 
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
-                    lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(lowerLimitDiameter));
-                    lowerLimitLine.Line.Width = 2.0F;
-                    this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+                    if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(lowerLimitDiameter))
+                    {
+                        lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(lowerLimitDiameter));
+                        lowerLimitLine.Line.Width = 2.0F;
+                        this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+                    }
 
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
-                    nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(nominalDiameter));
-                    nominalLine.Line.Width = 2.0F;
-                    this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                    if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(nominalDiameter) && this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(nominalDiameter))
+                    {
+                        nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(nominalDiameter));
+                        nominalLine.Line.Width = 2.0F;
+                        this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                    }
                     //***********************//
 
                 }
@@ -160,19 +187,28 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
                 //***********************//
                 //Adding the reference lines here updates the visual faster than adding them in a function
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
-                upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
-                upperLimitLine.Line.Width = 2.0F;
-                this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+                if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
+                {
+                    upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
+                    upperLimitLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+                }
 
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
-                lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
-                lowerLimitLine.Line.Width = 2.0F;
-                this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+                if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(lowerLimitDiameter))
+                {
+                    lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
+                    lowerLimitLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+                }
 
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
-                nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
-                nominalLine.Line.Width = 2.0F;
-                this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(nominalDiameter) && this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(nominalDiameter))
+                {
+                    nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
+                    nominalLine.Line.Width = 2.0F;
+                    this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+                }
                 //***********************//
 
             }
@@ -188,6 +224,34 @@ namespace Digital_Indicator.WindowForms.ZedGraphUserControl
         public HashSet<DataListXY> GetDataPoints()
         {
             return diameterList;
+        }
+
+        public void ReZoomLineObjs()
+        {
+            this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
+            if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
+            {
+                upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
+                upperLimitLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
+            }
+
+            this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
+            if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(lowerLimitDiameter))
+            {
+                lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
+                lowerLimitLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
+            }
+
+            this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
+            if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(nominalDiameter) && this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(nominalDiameter))
+            {
+
+                nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
+                nominalLine.Line.Width = 2.0F;
+                this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
+            }
         }
     }
 }

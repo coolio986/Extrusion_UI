@@ -16,6 +16,13 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand StopCapture { get; private set; }
         public DelegateCommand Settings { get; private set; }
 
+        private bool settingsOpen;
+        public bool SettingsOpen
+        {
+            get { return settingsOpen; }
+            private set { settingsOpen = value; RaisePropertyChanged(); }
+        }
+
         public GradientStopCollection StartButtonGradientCollection
         {
             get { return GetStartButtonGradient(); }
@@ -24,13 +31,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public GradientStopCollection StopButtonGradientCollection
         {
             get { return GetStopButtonGradient(); }
-        }
-
-        private bool settingsOpen;
-        public bool SettingsOpen
-        {
-            get { return settingsOpen; }
-            private set { settingsOpen = value; RaisePropertyChanged(); }
         }
 
         private INavigationService _navigationService;
@@ -95,8 +95,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             StartCapture = new DelegateCommand(StartCapture_Click);
             StopCapture = new DelegateCommand(StopCapture_Click);
             Settings = new DelegateCommand(Settings_Click);
-
-
         }
 
         private void _filamentService_StopWatchedTimeChanged(object sender, EventArgs e)
@@ -116,7 +114,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
-            
         }
 
         private void ResetGraph_Click()
@@ -146,7 +143,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             SettingsOpen = true;
             _navigationService.NavigateToRegion("SettingsRegion", "SettingsView");
         }
-
         private GradientStopCollection GetStartButtonGradient()
         {
             GradientStopCollection gradientStartCollection = new GradientStopCollection();
@@ -165,7 +161,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             }
             else
             {
-                //gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
                 gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#e6e6e6"), Offset = 0 });
                 gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#d9d9d9"), Offset = 0.21 });
                 gradientStartCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#cccccc"), Offset = 0.38 });
@@ -178,13 +173,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
             return gradientStartCollection;
 
         }
+
         private GradientStopCollection GetStopButtonGradient()
         {
             GradientStopCollection gradientStopCollection = new GradientStopCollection();
-
             if (_filamentService.CaptureStarted)
             {
-                //gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#e6e6e6"), Offset = 0 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#d9d9d9"), Offset = 0.21 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#cccccc"), Offset = 0.38 });
@@ -193,12 +187,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#a6a6a6"), Offset = 0.81 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#999999"), Offset = 0.94 });
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#8c8c8c"), Offset = 1 });
-
-
-
-                
-
             }
+
+
             else
             {
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FFFF0000"), Offset = 0 });
@@ -211,7 +202,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
                 gradientStopCollection.Add(new GradientStop { Color = (Color)ColorConverter.ConvertFromString("#FF730000"), Offset = 1 });
             }
             return gradientStopCollection;
-
         }
     }
 }
