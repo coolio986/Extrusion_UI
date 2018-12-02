@@ -9,6 +9,7 @@ using Digital_Indicator.Logic.SerialCommunications;
 using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.WebService;
+using Digital_Indicator.Logic.Spooler;
 
 namespace Digital_Indicator.Startup
 {
@@ -53,6 +54,7 @@ namespace Digital_Indicator.Startup
             Container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerialService, SerialService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IFilamentService, FilamentService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<ISpoolerService, SpoolerService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IFileService, FileService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());

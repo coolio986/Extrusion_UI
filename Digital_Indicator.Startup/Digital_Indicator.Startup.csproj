@@ -131,6 +131,10 @@
       <Project>{f7861637-3550-49d6-9b8d-f9d38c6a3602}</Project>
       <Name>Digital_Indicator.Logic.SerialCommunications</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.Spooler\Digital_Indicator.Logic.Spooler.csproj">
+      <Project>{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}</Project>
+      <Name>Digital_Indicator.Logic.Spooler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Module.Display\Digital_Indicator.Module.Display.csproj">
       <Project>{17d124ea-f1e0-4a24-810f-81151c48638b}</Project>
       <Name>Digital_Indicator.Module.Display</Name>

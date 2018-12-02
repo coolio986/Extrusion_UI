@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Web
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{C8105991-4D1C-49E8-B487-F6096F409E06}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Digital_Indicator.Logic.Spooler", "Digital_Indicator.Logic.Spooler\Digital_Indicator.Logic.Spooler.csproj", "{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8105991-4D1C-49E8-B487-F6096F409E06}.Debug|Any CPU.ActiveCfg = Debug
 		{C8105991-4D1C-49E8-B487-F6096F409E06}.Release|Any CPU.ActiveCfg = Release
+		{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

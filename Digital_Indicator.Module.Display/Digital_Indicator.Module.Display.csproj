@@ -125,6 +125,10 @@
       <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
       <Name>Digital_Indicator.Logic.SerialCommunications</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.Spooler\Digital_Indicator.Logic.Spooler.csproj">
+      <Project>{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}</Project>
+      <Name>Digital_Indicator.Logic.Spooler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.WindowForms.ZedGraphUserControl\Digital_Indicator.WindowForms.ZedGraphUserControl.csproj">
       <Project>{4304c760-7374-4c33-90d9-032d798e1254}</Project>
       <Name>Digital_Indicator.WindowForms.ZedGraphUserControl</Name>

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</ProjectGuid>
+    <ProjectGuid>{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Digital_Indicator.Logic.SerialCommunications</RootNamespace>
-    <AssemblyName>Digital_Indicator.Logic.SerialCommunications</AssemblyName>
+    <RootNamespace>Digital_Indicator.Logic.Spooler</RootNamespace>
+    <AssemblyName>Digital_Indicator.Logic.Spooler</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,17 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectedDeviceTypes.cs" />
-    <Compile Include="ISerialService.cs" />
+    <Compile Include="ISpoolerService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialPortClass.cs" />
-    <Compile Include="SerialCommand.cs" />
-    <Compile Include="SerialService.cs" />
+    <Compile Include="SpoolerService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Digital_Indicator.Logic.Helpers\Digital_Indicator.Logic.Helpers.csproj">
-      <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
-      <Name>Digital_Indicator.Logic.Helpers</Name>
+    <ProjectReference Include="..\Digital_Indicator.Logic.SerialCommunications\Digital_Indicator.Logic.SerialCommunications.csproj">
+      <Project>{f7861637-3550-49d6-9b8d-f9d38c6a3602}</Project>
+      <Name>Digital_Indicator.Logic.SerialCommunications</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

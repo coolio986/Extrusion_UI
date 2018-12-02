@@ -13,8 +13,11 @@ namespace Digital_Indicator.Logic.SerialCommunications
         void ConnectToSerialPort(string portName);
 
         event EventHandler DiameterChanged;
+        event EventHandler SpoolerDataChanged;
 
         bool IsSimulationModeActive { get; set; }
         bool PortDataIsSet { get; }
+
+        void SendSerialData(SerialCommand command);
     }
 }

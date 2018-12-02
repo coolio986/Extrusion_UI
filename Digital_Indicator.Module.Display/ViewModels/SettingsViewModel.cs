@@ -1,6 +1,7 @@
 ﻿using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Navigation;
+using Digital_Indicator.Logic.Spooler;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -17,6 +18,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
     {
         IFilamentService _filamentService;
         IFileService _fileService;
+        ISpoolerService _spoolerService { get; set; }
         INavigationService _navigationService;
         private DelegateCommand openSpoolDataFolder;
         private DelegateCommand closeSettingsView;
@@ -68,6 +70,12 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
+        public string SpoolerRPM
+        {
+            get { return _spoolerService.SpoolerRPM; }
+            set { }
+        }
+
         public string VersionNumber
         {
             get
@@ -78,16 +86,23 @@ namespace Digital_Indicator.Module.Display.ViewModels
             }
         }
 
-        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService, IFileService fileService)
+        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService, IFileService fileService, ISpoolerService spoolerService)
         {
             _filamentService = filamentService;
             _fileService = fileService;
+            _spoolerService = spoolerService;
             _navigationService = navigationService;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
+            _spoolerService.SpoolerRPMChanged += _spoolerService_SpoolerRPMChanged;
 
             CloseSettingsView = new DelegateCommand(CloseView_Click);
             OpenSpoolDataFolder = new DelegateCommand(OpenSpoolDataFolder_Click);
 
+        }
+
+        private void _spoolerService_SpoolerRPMChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("SpoolerRPM");
         }
 
         private void CloseView_Click()

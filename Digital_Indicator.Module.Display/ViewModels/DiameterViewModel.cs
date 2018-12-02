@@ -5,6 +5,7 @@ using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System.Windows.Media;
+using Digital_Indicator.Logic.Spooler;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -15,6 +16,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         public DelegateCommand StartCapture { get; private set; }
         public DelegateCommand StopCapture { get; private set; }
         public DelegateCommand Settings { get; private set; }
+        public ISpoolerService _spoolerService { get; }
 
         private bool settingsOpen;
         public bool SettingsOpen
@@ -82,9 +84,10 @@ namespace Digital_Indicator.Module.Display.ViewModels
             private set { settingsView = value; RaisePropertyChanged(); }
         }
 
-        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService)
+        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService, ISpoolerService spoolerService)
         {
             _filamentService = filamentService;
+            _spoolerService = spoolerService;
             _navigationService = navigationService;
             _navigationService.RegionCleared += _navigationService_RegionCleared;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
