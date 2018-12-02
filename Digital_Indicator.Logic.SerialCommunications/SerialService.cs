@@ -39,6 +39,8 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public bool IsSimulationModeActive { get; set; }
 
+        public bool PortDataIsSet { get; private set; }
+
         public void BindHandlers()
         {
             serialPort.DataReceived += SerialPort_DataReceived;
@@ -50,6 +52,13 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void ConnectToSerialPort(string portName)
         {
+            if (IsSimulationModeActive && (portName != null || portName == string.Empty))
+            {
+                PortName = portName;
+                serialPort.Open();
+                RunSimulation();
+                return;
+            }
             if (!IsSimulationModeActive)
             {
                 PortName = portName;
@@ -66,6 +75,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             serialPort.PortName = portName;
             serialPort.DtrEnable = true;
             serialPort.RtsEnable = true;
+            PortDataIsSet = true;
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -118,18 +128,25 @@ namespace Digital_Indicator.Logic.SerialCommunications
         {
             Task.Factory.StartNew(() =>
             {
-                while (true)
+                if (PortDataIsSet)
                 {
-                    double diameter = GetRandomNumber(1.7000, 1.8000, 4);
-
-                    string formatString = "0.";
-                    for (int i = 0; i < 4; i++)
+                    serialPort.WriteLine("1;IsInSimulationMode = true");
+                }
+                else
+                {
+                    while (true)
                     {
-                        formatString += "0";
-                    }
+                        double diameter = GetRandomNumber(1.7000, 1.8000, 4);
 
-                    DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-                    Thread.Sleep(50);
+                        string formatString = "0.";
+                        for (int i = 0; i < 4; i++)
+                        {
+                            formatString += "0";
+                        }
+
+                        DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                        Thread.Sleep(50);
+                    }
                 }
             });
         }
