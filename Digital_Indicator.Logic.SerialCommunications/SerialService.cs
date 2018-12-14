@@ -134,7 +134,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                             Value = null,
                         };
                         SendSerialData(command);
-                        Thread.Sleep(100);
+                        Thread.Sleep(1000);
                     }
                 }
             });
@@ -179,14 +179,18 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         ConnectedDeviceTypes GetDeviceType(string serialString)
         {
-            string deviceID = serialString.Substring(0, serialString.IndexOf(";"));
-            return (ConnectedDeviceTypes)Convert.ChangeType(deviceID, typeof(int));
-
+            if (serialString != string.Empty)
+            {
+                string deviceID = serialString.Substring(0, serialString.IndexOf(";"));
+                return (ConnectedDeviceTypes)Convert.ChangeType(deviceID, typeof(int));
+            }
+            return 0;
         }
 
         public void SendSerialData(SerialCommand command)
         {
-            serialPort.WriteLine(command.AssembleCommand());
+            string serialCommand = command.AssembleCommand();
+            serialPort.WriteLine(serialCommand);
         }
         public void ProcessIndicatorData(string data)
         {

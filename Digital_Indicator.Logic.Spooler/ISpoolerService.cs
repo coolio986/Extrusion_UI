@@ -9,7 +9,8 @@ namespace Digital_Indicator.Logic.Spooler
     public interface ISpoolerService
     {
         bool SpoolerServiceIsEnabled { get; set; }
-        string SpoolerRPM { get; set; }
+        string CurrentSpoolerRPM { get; set; }
+        string SpoolerRPMSetpoint { get; set; }
         event EventHandler SpoolerRPMChanged;
     }
 }

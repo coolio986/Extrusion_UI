@@ -38,7 +38,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
             else
             {
-                return deviceID + ";" + command + " = " + this.value + ";";
+                return deviceID + ";" + command + " " + this.value + ";\r\n";
             }
         }
     }

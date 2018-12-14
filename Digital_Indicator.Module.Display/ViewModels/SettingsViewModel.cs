@@ -70,10 +70,17 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.BatchNumber = value; }
         }
 
-        public string SpoolerRPM
+        public string CurrentSpoolerRPM
         {
-            get { return _spoolerService.SpoolerRPM; }
+            get { return _spoolerService.CurrentSpoolerRPM; }
             set { }
+        }
+
+        
+        public string SpoolerRPMSetpoint
+        {
+            get { return _spoolerService.SpoolerRPMSetpoint; }
+            set { _spoolerService.SpoolerRPMSetpoint = value; }
         }
 
         public string VersionNumber
@@ -102,7 +109,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _spoolerService_SpoolerRPMChanged(object sender, EventArgs e)
         {
-            RaisePropertyChanged("SpoolerRPM");
+            RaisePropertyChanged("CurrentSpoolerRPM");
         }
 
         private void CloseView_Click()

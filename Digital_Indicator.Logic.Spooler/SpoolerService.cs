@@ -11,21 +11,43 @@ namespace Digital_Indicator.Logic.Spooler
     public class SpoolerService : ISpoolerService
     {
         ISerialService _serialService;
-        private string spoolerRPM;
+        private string currentSpoolerRPM;
+        private string spoolerRPMSetpoint = "0";
 
         public bool SpoolerServiceIsEnabled
         {
             get { return true; }
             set { }
         }
-        public string SpoolerRPM
+        public string CurrentSpoolerRPM
         {
-            get { return spoolerRPM; }
-            set { spoolerRPM = value; }
+            get { return currentSpoolerRPM; }
+            set { currentSpoolerRPM = value; }
+        }
+
+        public string SpoolerRPMSetpoint
+        {
+            get
+            {
+                return (Math.Abs((float)Convert.ChangeType(spoolerRPMSetpoint, typeof(float)))).ToString(); 
+            }
+            set
+            {
+                spoolerRPMSetpoint = (-Math.Abs((float)Convert.ChangeType(value, typeof(float)))).ToString();
+                SendSerialData(new SerialCommand() { Command = "velocity", Value = spoolerRPMSetpoint });
+            }
         }
 
         public event EventHandler SpoolerRPMChanged;
-        
+
+
+        private void SendSerialData(SerialCommand serialCommand)
+        {
+
+            serialCommand.DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString();
+            _serialService.SendSerialData(serialCommand);
+        }
+
         public SpoolerService(ISerialService serialService)
         {
             _serialService = serialService;
@@ -40,6 +62,7 @@ namespace Digital_Indicator.Logic.Spooler
             string[] stringArray = sender.ToString().Replace("\r", "").Split(';');
             SerialCommand command = new SerialCommand();
 
+
             for (int i = 0; i < stringArray.Length; i++)
             {
                 if (stringArray[i] != string.Empty)
@@ -47,14 +70,18 @@ namespace Digital_Indicator.Logic.Spooler
                     if (stringArray[i].Contains("="))
                     {
                         string[] str = stringArray[i].Replace(" ", "").Split('=');
-                        if(str.Length == 2)
+                        if (str.Length == 2)
                         {
                             command.Command = str[0];
                             command.Value = str[1];
-                            spoolerRPM = command.Value;
+                            currentSpoolerRPM = command.Value;
                             SpoolerRPMChanged?.Invoke(command.Value, null);
                         }
                         continue;
+
+                    }
+                    if (stringArray[i].Contains("ERROR"))
+                    {
 
                     }
                     if (i == 0) { command.DeviceID = stringArray[i]; }
@@ -62,6 +89,6 @@ namespace Digital_Indicator.Logic.Spooler
             }
         }
 
-        
+
     }
 }
