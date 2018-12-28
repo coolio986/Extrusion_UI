@@ -48,7 +48,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         }
         public void UnbindHandlers()
         {
-            serialPort.DataReceived -= SerialPort_DataReceived;
+            //serialPort.DataReceived -= SerialPort_DataReceived;
         }
 
         public void ConnectToSerialPort(string portName)
@@ -129,7 +129,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                     {
                         SerialCommand command = new SerialCommand()
                         {
-                            DeviceID = "2;",
+                            DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
                             Command = "getrpm;",
                             Value = null,
                         };
@@ -179,10 +179,19 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         ConnectedDeviceTypes GetDeviceType(string serialString)
         {
-            if (serialString != string.Empty)
+            try
             {
-                string deviceID = serialString.Substring(0, serialString.IndexOf(";"));
-                return (ConnectedDeviceTypes)Convert.ChangeType(deviceID, typeof(int));
+                if (serialString != string.Empty)
+                {
+                    string deviceID = serialString.Substring(0, serialString.IndexOf(";"));
+                    //Console.WriteLine(serialString);
+                    return (ConnectedDeviceTypes)Convert.ChangeType(deviceID, typeof(int));
+                    
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error: " + serialString);
             }
             return 0;
         }
@@ -196,7 +205,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         {
             string asciiConvertedBytes = string.Empty;
 
-            asciiConvertedBytes = data.Replace("3;", "").Replace("\r", "").Replace("\n", "");
+            asciiConvertedBytes = data.Replace("0;", "").Replace("\r", "").Replace("\n", "");
 
             if (asciiConvertedBytes.Length == 52) //if data is valid
             {

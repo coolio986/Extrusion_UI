@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Digital_Indicator.Logic.SerialCommunications
 {
+
     public enum ConnectedDeviceTypes
     {
-        INTERNALDEVICE = 1,
-        SPOOLER = 2,
-        INDICATOR = 3,
-        EXTRUDER = 4,
+        INDICATOR = 0, //0 = indicator
+        SPOOLER = 1, //1 = spooler
+        EXTRUDER = 2, //2 = extruder
+        INTERNALDEVICE = 100, // 100 = internal
     }
 }
