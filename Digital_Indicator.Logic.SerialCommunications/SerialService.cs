@@ -44,11 +44,11 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void BindHandlers()
         {
-            serialPort.DataReceived += SerialPort_DataReceived;
+            
         }
         public void UnbindHandlers()
         {
-            //serialPort.DataReceived -= SerialPort_DataReceived;
+            
         }
 
         public void ConnectToSerialPort(string portName)
@@ -71,7 +71,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 RunSimulation();
             }
 
+            StartSerialReceive();
             QueryUpdates();
+
         }
 
         private void SetPort()
@@ -82,14 +84,53 @@ namespace Digital_Indicator.Logic.SerialCommunications
             PortDataIsSet = true;
         }
 
-        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        private void StartSerialReceive()
         {
+            Task.Factory.StartNew(() =>
+            {
+                if (PortDataIsSet)
+                {
+                    while (true)
+                    {
+                        try
+                        {
+                            string dataIn = serialPort.ReadLine();
+                            ConnectedDeviceTypes deviceType = GetDeviceType(dataIn);
 
-            string dataIn = serialPort.ReadLine();
-            ConnectedDeviceTypes deviceType = GetDeviceType(dataIn);
+                            if (deviceType == ConnectedDeviceTypes.INDICATOR) { ProcessIndicatorData(dataIn); };
+                            if (deviceType == ConnectedDeviceTypes.SPOOLER) { ProcessSpoolerData(dataIn); };
+                        }
+                        catch (Exception oe)
+                        {
+                            Console.WriteLine("Serial Error: " + oe.Message);
+                        }
 
-            if (deviceType == ConnectedDeviceTypes.INDICATOR) { ProcessIndicatorData(dataIn); };
-            if (deviceType == ConnectedDeviceTypes.SPOOLER) { ProcessSpoolerData(dataIn); };
+                        Thread.Sleep(1);
+                    }
+                }
+            });
+        }
+
+        private void QueryUpdates()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                if (PortDataIsSet)
+                {
+                    while (true)
+                    {
+                        SerialCommand command = new SerialCommand()
+                        {
+                            DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
+                            Command = "getrpm;",
+                            Value = null,
+                        };
+                        SendSerialData(command);
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
+
         }
 
         private void RunSimulation()
@@ -119,27 +160,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             });
         }
 
-        private void QueryUpdates()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                if (PortDataIsSet)
-                {
-                    while (true)
-                    {
-                        SerialCommand command = new SerialCommand()
-                        {
-                            DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
-                            Command = "getrpm;",
-                            Value = null,
-                        };
-                        SendSerialData(command);
-                        Thread.Sleep(1000);
-                    }
-                }
-            });
-
-        }
+        
 
         private double GetRandomNumber(double minimum, double maximum, int decimalPlaces)
         {
