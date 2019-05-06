@@ -234,7 +234,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
             string[] splitData = asciiConvertedBytes.Split(';');
 
-            if (splitData.Length == 3)
+            if (splitData.Length != 3)
             {
                 return;
             }
@@ -248,12 +248,13 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
                 {
                     string formatString = "0.";
-                    //for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
-                    //{
-                    //    formatString += "0";
-                    //}
+                    int test = splitData[2].Split('.')[1].ToString().Length;
+                    for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
+                    {
+                        formatString += "0";
+                    }
 
-                    //DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                    DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                 }
             }
             catch (Exception oe)
