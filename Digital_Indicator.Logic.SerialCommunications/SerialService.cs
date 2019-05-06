@@ -81,6 +81,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             serialPort.PortName = portName;
             serialPort.DtrEnable = true;
             serialPort.RtsEnable = true;
+            serialPort.BaudRate = 115200;
             PortDataIsSet = true;
         }
 
@@ -117,17 +118,19 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
                 if (PortDataIsSet)
                 {
-                    while (true)
-                    {
-                        SerialCommand command = new SerialCommand()
-                        {
-                            DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
-                            Command = "getrpm;",
-                            Value = null,
-                        };
-                        SendSerialData(command);
-                        Thread.Sleep(1000);
-                    }
+
+                    //TESTING UNCOMMENT WHEN DONE
+                    //while (true)
+                    //{
+                    //    SerialCommand command = new SerialCommand()
+                    //    {
+                    //        DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
+                    //        Command = "getrpm;",
+                    //        Value = null,
+                    //    };
+                    //    SendSerialData(command);
+                    //    Thread.Sleep(1000);
+                    //}
                 }
             });
 
@@ -226,44 +229,76 @@ namespace Digital_Indicator.Logic.SerialCommunications
         {
             string asciiConvertedBytes = string.Empty;
 
-            asciiConvertedBytes = data.Replace("0;", "").Replace("\r", "").Replace("\n", "");
+            
+            asciiConvertedBytes = data.Replace("\r", "").Replace("\n", "");
 
-            if (asciiConvertedBytes.Length == 52) //if data is valid
+            string[] splitData = asciiConvertedBytes.Split(';');
+
+            if (splitData.Length == 3)
             {
-                byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
-
-                for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
-                {
-                    bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
-                }
-
-                string diameterStringBuilder = string.Empty;
-                for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
-                {
-                    diameterStringBuilder += bytes[i].ToString();
-                }
-
-                try //if anything fails, skip it and wait for the next serial event
-                {
-                    //bytes[11] is the decmial position from right
-                    diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
-
-                    double diameter = 0;
-
-                    if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
-                    {
-                        string formatString = "0.";
-                        for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
-                        {
-                            formatString += "0";
-                        }
-
-                        DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-                    }
-
-                }
-                catch { }
+                return;
             }
+
+
+            double diameter = 0;
+
+            try //if anything fails, skip it and wait for the next serial event
+            {
+
+                if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
+                {
+                    string formatString = "0.";
+                    //for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
+                    //{
+                    //    formatString += "0";
+                    //}
+
+                    //DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                }
+            }
+            catch (Exception oe)
+            {
+
+            }
+
+
+
+            //if (asciiConvertedBytes.Length == 52) //if data is valid
+            //{
+            //    byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
+
+            //    for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
+            //    {
+            //        bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
+            //    }
+
+            //    string diameterStringBuilder = string.Empty;
+            //    for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
+            //    {
+            //        diameterStringBuilder += bytes[i].ToString();
+            //    }
+
+            //    try //if anything fails, skip it and wait for the next serial event
+            //    {
+            //        //bytes[11] is the decmial position from right
+            //        diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
+
+            //        double diameter = 0;
+
+            //        if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
+            //        {
+            //            string formatString = "0.";
+            //            for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
+            //            {
+            //                formatString += "0";
+            //            }
+
+            //            DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+            //        }
+
+            //    }
+            //    catch { }
+            //}
         }
         public void ProcessSpoolerData(string data)
         {
