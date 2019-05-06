@@ -14,7 +14,11 @@ namespace Digital_Indicator.Logic.FileOperations
         public string EnvironmentDirectory { get; private set; }
         public FileService()
         {
-            EnvironmentDirectory = Path.Combine(Environment.CurrentDirectory, "spooldata");
+            //EnvironmentDirectory = Path.Combine(Environment.CurrentDirectory, "spooldata");
+
+            EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "Filalogger");
+            EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "spooldata");
 
             CheckEnvironment();
         }

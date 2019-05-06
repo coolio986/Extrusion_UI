@@ -4,7 +4,7 @@ namespace Digital_Indicator.Startup.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Digital Indicator for SPC";
+        private string _title = "Filalogger - Filament Diameter Measurement";
         public string Title
         {
             get { return _title; }
