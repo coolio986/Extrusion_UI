@@ -18,7 +18,7 @@ namespace Digital_Indicator.Logic.FileOperations
             _fileService = fileService;
         }
 
-        public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string description)
+        public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string batchNumber, string description)
         {
             StringBuilder stringBuilderCsv = new StringBuilder();
             stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
@@ -31,8 +31,17 @@ namespace Digital_Indicator.Logic.FileOperations
             string csvString = stringBuilderCsv.ToString();
             csvString = csvString.TrimEnd(','); //remove trailing comma
 
-            string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") + 
-                "_" + description + "_" + "Spool" + spoolNumber + ".csv";
+            if (batchNumber != "0")
+            {
+                batchNumber = "_Batch" + batchNumber;
+            }
+            else
+            {
+                batchNumber = "";
+            }
+
+            string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
+                "_" + description + "_" + "Spool" + spoolNumber + batchNumber + ".csv";
 
             _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
         }

@@ -266,7 +266,7 @@ namespace Digital_Indicator.Logic.Filament
 
         public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
         {
-            _csvService.SaveSettings(dataPoints, spoolNumber, description);
+            _csvService.SaveSettings(dataPoints, spoolNumber, batchNumber, description);
         }
     }
 }
