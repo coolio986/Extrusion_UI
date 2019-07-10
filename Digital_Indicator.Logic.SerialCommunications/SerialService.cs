@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -239,7 +240,20 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 return;
             }
 
+            try
+            {
+                Type type = this.GetType();
+                MethodInfo method = type.GetMethod(splitData[1]);
+                method.Invoke(this, new object[] { splitData });
+            }
+            catch ( Exception oe)
+            {
 
+            }
+            
+        }
+        public void Diameter(string[] splitData) //reflection calls this
+        {
             double diameter = 0;
 
             try //if anything fails, skip it and wait for the next serial event
@@ -248,7 +262,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
                 {
                     string formatString = "0.";
-                    int test = splitData[2].Split('.')[1].ToString().Length;
+                    splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
                     for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
                     {
                         formatString += "0";
@@ -263,44 +277,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
 
 
-
-            //if (asciiConvertedBytes.Length == 52) //if data is valid
-            //{
-            //    byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
-
-            //    for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
-            //    {
-            //        bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
-            //    }
-
-            //    string diameterStringBuilder = string.Empty;
-            //    for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
-            //    {
-            //        diameterStringBuilder += bytes[i].ToString();
-            //    }
-
-            //    try //if anything fails, skip it and wait for the next serial event
-            //    {
-            //        //bytes[11] is the decmial position from right
-            //        diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
-
-            //        double diameter = 0;
-
-            //        if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
-            //        {
-            //            string formatString = "0.";
-            //            for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
-            //            {
-            //                formatString += "0";
-            //            }
-
-            //            DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-            //        }
-
-            //    }
-            //    catch { }
-            //}
         }
+
+
         public void ProcessSpoolerData(string data)
         {
             SpoolerDataChanged?.Invoke(data, null);

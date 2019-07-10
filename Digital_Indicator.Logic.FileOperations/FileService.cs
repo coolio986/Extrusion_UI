@@ -16,8 +16,10 @@ namespace Digital_Indicator.Logic.FileOperations
         {
             //EnvironmentDirectory = Path.Combine(Environment.CurrentDirectory, "spooldata");
 
-            EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "Filalogger");
+            EnvironmentDirectory = Environment.CurrentDirectory;
+
+            //EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            //EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "Filalogger");
             EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "spooldata");
 
             CheckEnvironment();
@@ -41,6 +43,7 @@ namespace Digital_Indicator.Logic.FileOperations
         {
             if (!Directory.Exists(EnvironmentDirectory))
                 Directory.CreateDirectory(EnvironmentDirectory);
+           
 
             if (!File.Exists(EnvironmentDirectory + @"\persistence.xml"))
                 File.Create(EnvironmentDirectory + @"\persistence.xml").Close();
