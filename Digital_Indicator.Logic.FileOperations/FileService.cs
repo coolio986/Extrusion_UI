@@ -16,7 +16,9 @@ namespace Digital_Indicator.Logic.FileOperations
         {
             //EnvironmentDirectory = Path.Combine(Environment.CurrentDirectory, "spooldata");
 
-            EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            //EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "Filalogger");
             EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "spooldata");
 
