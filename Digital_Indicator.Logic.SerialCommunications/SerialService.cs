@@ -19,6 +19,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public event EventHandler DiameterChanged;
         public event EventHandler SpoolerDataChanged;
+        public event EventHandler TraverseDataChanged;
 
         public SerialService()
         {
@@ -45,11 +46,11 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void BindHandlers()
         {
-            
+
         }
         public void UnbindHandlers()
         {
-            
+
         }
 
         public void ConnectToSerialPort(string portName)
@@ -97,10 +98,20 @@ namespace Digital_Indicator.Logic.SerialCommunications
                         try
                         {
                             string dataIn = serialPort.ReadLine();
-                            ConnectedDeviceTypes deviceType = GetDeviceType(dataIn);
 
-                            if (deviceType == ConnectedDeviceTypes.INDICATOR) { ProcessIndicatorData(dataIn); };
-                            if (deviceType == ConnectedDeviceTypes.SPOOLER) { ProcessSpoolerData(dataIn); };
+                            string functionName = GetFunctionName(dataIn);
+
+                            string asciiConvertedBytes = string.Empty;
+                            asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
+                            string[] splitData = asciiConvertedBytes.Split(';');
+                            if (splitData.Length >= 2)
+                            {
+                                Type type = this.GetType();
+                                MethodInfo method = type.GetMethod(functionName);
+                                method.Invoke(this, new object[] { splitData });
+                            }
+
+
                         }
                         catch (Exception oe)
                         {
@@ -164,7 +175,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             });
         }
 
-        
+
 
         private double GetRandomNumber(double minimum, double maximum, int decimalPlaces)
         {
@@ -202,23 +213,26 @@ namespace Digital_Indicator.Logic.SerialCommunications
             return ListOfSerialPortClass;
         }
 
-        ConnectedDeviceTypes GetDeviceType(string serialString)
+        string GetFunctionName(string serialString)
         {
+
             try
             {
                 if (serialString != string.Empty)
                 {
-                    string deviceID = serialString.Substring(0, serialString.IndexOf(";"));
-                    //Console.WriteLine(serialString);
-                    return (ConnectedDeviceTypes)Convert.ChangeType(deviceID, typeof(int));
-                    
+                    string[] stringArray = serialString.ToString().Replace("\r", "").Split(';');
+
+                    if (stringArray.Length >= 1)
+                    {
+                        return stringArray[1];
+                    }
                 }
             }
             catch
             {
                 Console.WriteLine("Error: " + serialString);
             }
-            return 0;
+            return string.Empty;
         }
 
         public void SendSerialData(SerialCommand command)
@@ -226,32 +240,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             string serialCommand = command.AssembleCommand();
             serialPort.WriteLine(serialCommand);
         }
-        public void ProcessIndicatorData(string data)
-        {
-            string asciiConvertedBytes = string.Empty;
-
-            
-            asciiConvertedBytes = data.Replace("\r", "").Replace("\n", "");
-
-            string[] splitData = asciiConvertedBytes.Split(';');
-
-            if (splitData.Length != 3)
-            {
-                return;
-            }
-
-            try
-            {
-                Type type = this.GetType();
-                MethodInfo method = type.GetMethod(splitData[1]);
-                method.Invoke(this, new object[] { splitData });
-            }
-            catch ( Exception oe)
-            {
-
-            }
-            
-        }
+        
         public void Diameter(string[] splitData) //reflection calls this
         {
             double diameter = 0;
@@ -275,14 +264,21 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
 
             }
-
-
         }
 
-
-        public void ProcessSpoolerData(string data)
+        public void spoolRpm(string[] splitData) //reflection calls this
         {
-            SpoolerDataChanged?.Invoke(data, null);
+            SerialCommand command = new SerialCommand();
+
+            if (splitData.Length == 3)
+            {
+                command.DeviceID = splitData[0];
+                command.Command = splitData[1];
+                command.Value = splitData[2].Replace("\0", string.Empty); //remove nulls
+
+                TraverseDataChanged?.Invoke(command.Value, null);    
+
+            }
         }
     }
 }

@@ -48,6 +48,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
                 item.PropertyChanged += ItemChange_Handler;
                 item.EnterCommand = new DelegateCommand<ViewModelBase>(UpdateItem);
                 
+                
             }
         }
 

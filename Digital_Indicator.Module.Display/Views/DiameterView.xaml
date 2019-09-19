@@ -460,8 +460,8 @@
                     <ColumnDefinition Width="140"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Batch Number" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                <Label Content="Spool RPM" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <Label Content="{Binding SpoolRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
@@ -472,9 +472,7 @@
                 <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="20">
-            <Image Source="/Digital_Indicator.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
-        </Grid>
+        
 
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
@@ -487,18 +485,22 @@
         </Grid>
 
 
-        <Grid Grid.Column="7"  Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" FlowDirection="RightToLeft" Margin="0,0,10,0"    >
+        <Grid Grid.Column="7"  Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2" FlowDirection="RightToLeft" Margin="5,0,10,0"    >
             <Grid.RowDefinitions>
                 <RowDefinition Height="1.25*"/>
                 <RowDefinition/>
-                <RowDefinition Height="1.25*"/>
+                <RowDefinition Height="0*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="85" MaxWidth="150"/>
                 <ColumnDefinition MinWidth="85" MaxWidth="150"/>
             </Grid.ColumnDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="1" Margin="0,0,5,-10">
+                <Image Source="/Digital_Indicator.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
+            </Grid>
             <!--ToggleButton Content="Start Capture" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Style="{DynamicResource StartCaptureButtonStyle}" Margin="0,0,10,15"  /-->
-            <ToggleButton MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" Margin="0,0,10,0" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight"  >
+            <ToggleButton MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StartCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" Margin="0,25,10,0" Grid.Row="1" Grid.Column="1" FlowDirection="LeftToRight"  >
 
                 <ToggleButton.Background>
                     <DrawingBrush>
@@ -609,7 +611,7 @@
                 </ToggleButton.Background>
 
             </ToggleButton>
-            <ToggleButton   MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StopCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Grid.Column="0" Margin="0,0,10,0" Grid.Row="1"  BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" FlowDirection="LeftToRight" >
+            <ToggleButton   MinWidth="85" MinHeight="40" MaxWidth="150" MaxHeight="100" Command="{Binding StopCapture}" IsChecked="{Binding CaptureStarted, Mode=OneWay}" Grid.Column="0" Margin="0,25,10,0" Grid.Row="1"  BorderBrush="{x:Null}" BorderThickness="0" Style="{DynamicResource ToggleButtonStyle}" FlowDirection="LeftToRight" >
                 <ToggleButton.Background>
                     <DrawingBrush>
                         <DrawingBrush.Drawing>

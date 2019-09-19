@@ -95,16 +95,16 @@ namespace Digital_Indicator.Logic.Filament
             }
         }
 
-        private string batchNumber;
-        public string BatchNumber
+        private string spoolRPM;
+        public string SpoolRPM
         {
-            get { return batchNumber; }
+            get { return spoolRPM; }
             set
             {
-                batchNumber = value;
+                spoolRPM = value;
                 OnPropertyChanged();
-                UpdatePlots();
-                SaveXmlData();
+                //UpdatePlots();
+                //SaveXmlData();
             }
         }
 
@@ -143,6 +143,7 @@ namespace Digital_Indicator.Logic.Filament
 
             _serialService = serialService;
             _serialService.DiameterChanged += SerialService_DiameterChanged;
+            _serialService.TraverseDataChanged += _serialService_TraverseDataChanged;
 
             _xmlService = xmlService;
             _csvService = csvService;
@@ -158,6 +159,11 @@ namespace Digital_Indicator.Logic.Filament
 
             BuildXmlData();
             SetupPlots();
+        }
+
+        private void _serialService_TraverseDataChanged(object sender, EventArgs e)
+        {
+            SpoolRPM = sender.ToString();
         }
 
         private void SetupPlots()
@@ -211,7 +217,7 @@ namespace Digital_Indicator.Logic.Filament
             lowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
             spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
             description = _xmlService.XmlSettings["filamentData.materialDescription"];
-            batchNumber = _xmlService.XmlSettings["filamentData.batchNumber"];
+            
 
             SetFilamentVariables();
         }
@@ -223,7 +229,7 @@ namespace Digital_Indicator.Logic.Filament
             _xmlService.XmlSettings["filamentData.lowerLimit"] = lowerLimit;
             _xmlService.XmlSettings["filamentData.spoolNumber"] = spoolNumber;
             _xmlService.XmlSettings["filamentData.materialDescription"] = description;
-            _xmlService.XmlSettings["filamentData.batchNumber"] = batchNumber;
+            
 
             _xmlService.SaveSettings();
         }

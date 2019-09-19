@@ -7,6 +7,7 @@ using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System.Windows.Media;
 using Digital_Indicator.Logic.Spooler;
 
+
 namespace Digital_Indicator.Module.Display.ViewModels
 {
     public class DiameterViewModel : BindableBase
@@ -57,9 +58,9 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return _filamentService.SpoolNumber; }
         }
 
-        public string BatchNumber
+        public string SpoolRPM
         {
-            get { return _filamentService.BatchNumber; }
+            get { return _filamentService.SpoolRPM; }
         }
 
         public bool CaptureStarted
@@ -88,6 +89,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             _filamentService = filamentService;
             _spoolerService = spoolerService;
+            
             _navigationService = navigationService;
             _navigationService.RegionCleared += _navigationService_RegionCleared;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
@@ -116,7 +118,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
             RaisePropertyChanged("SpoolNumber");
-            RaisePropertyChanged("BatchNumber");
+            RaisePropertyChanged("SpoolRPM");
         }
 
         private void ResetGraph_Click()
@@ -126,19 +128,30 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void StartCapture_Click()
         {
-            _filamentService.CaptureStarted = true;
-            RaisePropertyChanged("CaptureStarted");
-            RaisePropertyChanged("RealTimeModel");
-            RaisePropertyChanged("StartButtonGradientCollection");
-            RaisePropertyChanged("StopButtonGradientCollection");
+            if (!_filamentService.CaptureStarted)
+            {
+                _filamentService.CaptureStarted = true;
+                RaisePropertyChanged("CaptureStarted");
+                RaisePropertyChanged("RealTimeModel");
+                RaisePropertyChanged("StartButtonGradientCollection");
+                RaisePropertyChanged("StopButtonGradientCollection");
+            }
         }
 
         private void StopCapture_Click()
         {
-            _filamentService.CaptureStarted = false;
-            RaisePropertyChanged("CaptureStarted");
-            RaisePropertyChanged("StartButtonGradientCollection");
-            RaisePropertyChanged("StopButtonGradientCollection");
+            if (_filamentService.CaptureStarted)
+            {
+                _filamentService.CaptureStarted = false;
+                RaisePropertyChanged("CaptureStarted");
+                RaisePropertyChanged("StartButtonGradientCollection");
+                RaisePropertyChanged("StopButtonGradientCollection");
+            }
+        }
+
+        private void _traverseService_SpoolRPMChanged(object sender, EventArgs e)
+        {
+            RaisePropertyChanged("SpoolRPM");
         }
 
         private void Settings_Click()

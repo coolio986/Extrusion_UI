@@ -75,19 +75,6 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { _filamentService.SpoolNumber = value; }
         }
 
-        public string BatchNumber
-        {
-            get { return _filamentService.BatchNumber; }
-            set { _filamentService.BatchNumber = value; }
-        }
-
-        public string CurrentSpoolerRPM
-        {
-            get { return _spoolerService.CurrentSpoolerRPM; }
-            set { }
-        }
-
-        
         public string SpoolerRPMSetpoint
         {
             get { return _spoolerService.SpoolerRPMSetpoint; }

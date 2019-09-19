@@ -54,7 +54,6 @@ namespace Digital_Indicator.Logic.Spooler
 
             //SpoolerRPMChanged += SpoolerService_SpoolerRPMChanged;
             _serialService.SpoolerDataChanged += _serialService_SpoolerDataChanged;
-
         }
 
         private void _serialService_SpoolerDataChanged(object sender, EventArgs e)

@@ -14,6 +14,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         event EventHandler DiameterChanged;
         event EventHandler SpoolerDataChanged;
+        event EventHandler TraverseDataChanged;
 
         bool IsSimulationModeActive { get; set; }
         bool PortDataIsSet { get; }

@@ -61,13 +61,11 @@ namespace Digital_Indicator.Logic.FileOperations
                     var doc = new XDocument(new XDeclaration("1.0", "", ""), new XElement("persistenceData"));
                     doc.Element("persistenceData").Add(new XElement("filamentData"));
                     XElement settings = doc.Element("persistenceData").Element("filamentData");
-                    settings.Add(new XElement("previousBatchNumber", "0"));
                     settings.Add(new XElement("materialDescription", ""));
                     settings.Add(new XElement("nominalDiameter", "1.75"));
                     settings.Add(new XElement("upperLimit", "1.80"));
                     settings.Add(new XElement("lowerLimit", "1.70"));
                     settings.Add(new XElement("spoolNumber", "0"));
-                    settings.Add(new XElement("batchNumber", "0"));
                     doc.Save(EnvironmentDirectory + @"\persistence.xml");
                 }
                 else

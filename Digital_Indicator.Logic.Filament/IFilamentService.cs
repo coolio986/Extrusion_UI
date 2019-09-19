@@ -18,8 +18,7 @@ namespace Digital_Indicator.Logic.Filament
         //string HighestValue { get; set; }
         //string LowestValue { get; set; }
         string SpoolNumber { get; set; }
-        string BatchNumber { get; set; }
-
+        string SpoolRPM { get; set; }
         Dictionary<string, string> FilamentServiceVariables { get; }
 
         event EventHandler DiameterChanged;

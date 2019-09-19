@@ -18,7 +18,6 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         private DataInputViewModel UpperLimit;
         private DataInputViewModel LowerLimit;
         private DataInputViewModel SpoolNumber;
-        private DataInputViewModel BatchNumber;
         private DataInputViewModel SpoolerRpm;
         private DataInputViewModel TraverseInnerOffset;
         private DataInputViewModel TraverseSpoolWdith;
@@ -35,7 +34,6 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             UpperLimit = new DataInputViewModel();
             LowerLimit = new DataInputViewModel();
             SpoolNumber = new DataInputViewModel();
-            BatchNumber = new DataInputViewModel();
             SpoolerRpm = new DataInputViewModel();
             TraverseInnerOffset = new DataInputViewModel();
             TraverseSpoolWdith = new DataInputViewModel();
@@ -60,11 +58,6 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             SpoolNumber.ParameterName = "Spool Number";
             SpoolNumber.IsXmLParameter = true;
             SpoolNumber.XmlParameterName = "SpoolNumber";
-
-            BatchNumber.ParameterName = "Batch Number";
-            BatchNumber.IsXmLParameter = true;
-            BatchNumber.XmlParameterName = "BatchNumber";
-
 
             SpoolerRpm.HardwareType = "1";
             SpoolerRpm.ParameterName = "Spooler RPM Setpoint";
@@ -105,7 +98,6 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             Settings.Add(UpperLimit);
             Settings.Add(LowerLimit);
             Settings.Add(SpoolNumber);
-            Settings.Add(BatchNumber);
             Settings.Add(SpoolerRpm);
             Settings.Add(TraverseInnerOffset);
             Settings.Add(TraverseSpoolWdith);
