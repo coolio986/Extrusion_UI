@@ -115,6 +115,14 @@
     <PackageReference Include="Prism.Unity" Version="6.3.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Downloads\btechnet-hmi-configurator-6daafd53281b\MesserSuite\MesserSuite.VirtualKeyboard\Digital_Indicator.VirtualKeyboard.csproj">
+      <Project>{a10f6d63-fc72-49dd-9e43-4231b5f8c618}</Project>
+      <Name>Digital_Indicator.VirtualKeyboard</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Infrastructure.UI\Digital_Indicator.Infrastructure.UI.csproj">
+      <Project>{19f4dfae-d57b-4311-ac6f-b9abd54640a2}</Project>
+      <Name>Digital_Indicator.Infrastructure.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Logic.Filament\Digital_Indicator.Logic.Filament.csproj">
       <Project>{fdd57cac-b228-496a-8bc7-496f742013c0}</Project>
       <Name>Digital_Indicator.Logic.Filament</Name>
@@ -135,9 +143,17 @@
       <Project>{C3DD00FC-CC99-4300-A41E-54DEE85A64DC}</Project>
       <Name>Digital_Indicator.Logic.Spooler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.UI_Intelligence\Digital_Indicator.Logic.UI_Intelligence.csproj">
+      <Project>{822f81c2-6444-4883-98d9-f52842976519}</Project>
+      <Name>Digital_Indicator.Logic.UI_Intelligence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Module.Display\Digital_Indicator.Module.Display.csproj">
       <Project>{17d124ea-f1e0-4a24-810f-81151c48638b}</Project>
       <Name>Digital_Indicator.Module.Display</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Toolkits\Digital_Indicator.Toolkits.csproj">
+      <Project>{2c224c37-9627-4cfc-b12e-873b37b38699}</Project>
+      <Name>Digital_Indicator.Toolkits</Name>
     </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.WebService\Digital_Indicator.Logic.WebService.csproj">
       <Project>{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}</Project>

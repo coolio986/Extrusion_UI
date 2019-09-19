@@ -10,6 +10,7 @@ using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.WebService;
 using Digital_Indicator.Logic.Spooler;
+using Digital_Indicator.Logic.UI_Intelligence;
 
 namespace Digital_Indicator.Startup
 {
@@ -59,6 +60,7 @@ namespace Digital_Indicator.Startup
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IWebService, Logic.WebService.WebService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IUI_IntelligenceService, UI_IntelligenceService>(new ContainerControlledLifetimeManager());
 
             StartFilamentService();
             StartWebService();

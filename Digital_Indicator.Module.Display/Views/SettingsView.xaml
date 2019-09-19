@@ -7,12 +7,15 @@
              xmlns:local="clr-namespace:Digital_Indicator.Module.Display.Views"
              xmlns:helpers="clr-namespace:Digital_Indicator.Logic.Helpers;assembly=Digital_Indicator.Logic.Helpers"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:paramControls="clr-namespace:Digital_Indicator.Infrastructure.UI.Controls;assembly=Digital_Indicator.Infrastructure.UI"
+             xmlns:paramClasses="clr-namespace:Digital_Indicator.Infrastructure.UI.ControlBase;assembly=Digital_Indicator.Infrastructure.UI"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" x:Name="settingsViewUserControl" x:Class="Digital_Indicator.Module.Display.Views.SettingsView"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800"
              Width="300" 
              prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
     <UserControl.Resources>
+        
         <Storyboard x:Key="Storyboard_Slide_Settings_In">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="settingsViewUserControl">
                 <EasingDoubleKeyFrame KeyTime="0" Value="0">
@@ -81,6 +84,26 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate DataType="{x:Type paramControls:BooleanSwitchViewModel}">
+            <paramControls:BooleanSwitchView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:DoubleInputViewModel}">
+            <paramControls:DoubleInputView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:DataInputViewModel}">
+            <paramControls:DataInputView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:EnumItemsViewModel}">
+            <paramControls:EnumItemsView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramClasses:EnumItem}">
+            <Border>
+                <TextBlock Text="{Binding ItemValue}"/>
+            </Border>
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate1">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <ei:StoryboardCompletedTrigger Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
@@ -189,8 +212,9 @@
             </Button>
         </Grid>
         <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />
-        <StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">
-            <StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
+        
+        <!--<StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">-->
+            <!--<StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
                 <TextBlock Text="Description" FontSize="18" HorizontalAlignment="Center" />
                 <TextBox  FontSize="18"  Text="{Binding FilamentDescription}" MinHeight="75" />
             </StackPanel>
@@ -224,16 +248,19 @@
                 <TextBlock Text="Current Spooler RPM" FontSize="18" VerticalAlignment="Center" Margin="0,0,63,0" />
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding CurrentSpoolerRPM}" />
             </StackPanel>
-            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
-                <TextBlock Text="Spooler RPM Setpoint" FontSize="18" VerticalAlignment="Center" Margin="0,0,63,0" />
-                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolerRPMSetpoint}" />
+            <StackPanel MinHeight="40" Orientation="Horizontal" >
+                --><!--<TextBlock Text="Spooler RPM Setpoint" FontSize="18" VerticalAlignment="Center" Margin="0,0,63,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolerRPMSetpoint}" />--><!--
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
             </StackPanel>
             <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
                 <TextBlock Text="Version" FontSize="10" VerticalAlignment="Center" Margin="0,0,15,0" />
                 <TextBlock Text="{Binding VersionNumber}" FontSize="10" VerticalAlignment="Center" Margin="0,0,51,0" />
-            </StackPanel>
-
-        </StackPanel>
-
+            </StackPanel>-->
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="7" Grid.RowSpan="4" HorizontalAlignment="Center" Width="{Binding ActualWidth, ElementName=grid_CarriageProperties}"  >
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+            </ScrollViewer>
+        <!--</StackPanel>-->
+        
     </Grid>
 </UserControl>

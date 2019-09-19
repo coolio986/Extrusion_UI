@@ -1,11 +1,14 @@
-﻿using Digital_Indicator.Logic.Filament;
+﻿using Digital_Indicator.Infrastructure.UI.Controls;
+using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.FileOperations;
 using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.Logic.Spooler;
+using Digital_Indicator.Logic.UI_Intelligence;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -20,8 +23,16 @@ namespace Digital_Indicator.Module.Display.ViewModels
         IFileService _fileService;
         ISpoolerService _spoolerService { get; set; }
         INavigationService _navigationService;
+        IUI_IntelligenceService _iui_IntelligenceService;
         private DelegateCommand openSpoolDataFolder;
         private DelegateCommand closeSettingsView;
+        public ObservableCollection<ViewModelBase> settingItems;
+
+        public ObservableCollection<ViewModelBase> SettingItems
+        {
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings(); }
+        }
+
         public DelegateCommand CloseSettingsView
         {
             get { return closeSettingsView; }
@@ -93,17 +104,33 @@ namespace Digital_Indicator.Module.Display.ViewModels
             }
         }
 
-        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService, IFileService fileService, ISpoolerService spoolerService)
+
+        public SettingsViewModel(IFilamentService filamentService, INavigationService navigationService, IFileService fileService, ISpoolerService spoolerService, IUI_IntelligenceService iui_IntelligenceService)
         {
             _filamentService = filamentService;
             _fileService = fileService;
             _spoolerService = spoolerService;
             _navigationService = navigationService;
+            _iui_IntelligenceService = iui_IntelligenceService;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
             _spoolerService.SpoolerRPMChanged += _spoolerService_SpoolerRPMChanged;
+            
 
             CloseSettingsView = new DelegateCommand(CloseView_Click);
             OpenSpoolDataFolder = new DelegateCommand(OpenSpoolDataFolder_Click);
+
+            //settingItems = new ObservableCollection<ViewModelBase>();
+
+            //DataInputViewModel spooler = new DataInputViewModel();
+            //spooler.ParameterName = "Spooler RPM Setpoint";
+            //spooler.HardwareType = "1";
+            //spooler.SerialCommand = "velocity";
+            //spooler.PropertyChanged += SpoolerDataChanged;
+
+            //settingItems.Add(spooler);
+            //RaisePropertyChanged("SettingItems");
+
+            
 
         }
 
@@ -112,6 +139,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             RaisePropertyChanged("CurrentSpoolerRPM");
         }
 
+        private void SpoolerDataChanged(object sender, EventArgs e)
+        {
+            _spoolerService.SpoolerRPMSetpoint = ((DataInputViewModel)sender).Value.ToString();
+
+        }
         private void CloseView_Click()
         {
             

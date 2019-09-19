@@ -34,7 +34,7 @@ namespace Digital_Indicator.Logic.Spooler
             set
             {
                 spoolerRPMSetpoint = (-Math.Abs((float)Convert.ChangeType(value, typeof(float)))).ToString();
-                SendSerialData(new SerialCommand() { Command = "velocity", Value = spoolerRPMSetpoint });
+                SendSerialData(new SerialCommand() { Command = "velocity", Value = spoolerRPMSetpoint, DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() });
             }
         }
 
@@ -44,7 +44,7 @@ namespace Digital_Indicator.Logic.Spooler
         private void SendSerialData(SerialCommand serialCommand)
         {
 
-            serialCommand.DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString();
+            
             _serialService.SendSerialData(serialCommand);
         }
 
