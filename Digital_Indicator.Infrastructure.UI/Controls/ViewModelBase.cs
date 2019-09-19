@@ -15,9 +15,10 @@ namespace Digital_Indicator.Infrastructure.UI.Controls
     public class ViewModelBase : BindableBase
     {
         public string ParameterName { get; set; }
-        public string ParameterID { get; set; }
         public string HardwareType { get; set; }
         public string SerialCommand { get; set; }
+        public bool IsXmLParameter { get; set; }
+        public string XmlParameterName { get; set; }
         public DelegateCommand <ViewModelBase>EnterCommand { get; set; }
 
         private object value;

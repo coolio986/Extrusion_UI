@@ -59,6 +59,10 @@
       <Project>{19F4DFAE-D57B-4311-AC6F-B9ABD54640A2}</Project>
       <Name>Digital_Indicator.Infrastructure.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Digital_Indicator.Logic.Filament\Digital_Indicator.Logic.Filament.csproj">
+      <Project>{FDD57CAC-B228-496A-8BC7-496F742013C0}</Project>
+      <Name>Digital_Indicator.Logic.Filament</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Logic.SerialCommunications\Digital_Indicator.Logic.SerialCommunications.csproj">
       <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
       <Name>Digital_Indicator.Logic.SerialCommunications</Name>

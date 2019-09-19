@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Digital_Indicator.Infrastructure.UI.Controls;
+using Digital_Indicator.Logic.Filament;
 using Digital_Indicator.Logic.SerialCommunications;
 using Prism.Commands;
 using Prism.Mvvm;
+using System.Reflection;
 
 
 namespace Digital_Indicator.Logic.UI_Intelligence
@@ -17,12 +19,14 @@ namespace Digital_Indicator.Logic.UI_Intelligence
     {
         public event EventHandler SettingsUpdated;
         private ISerialService _serialService;
+        private IFilamentService _filamentService;
 
         private Collection<ViewModelBase> Settings { get; set; }
 
-        public UI_IntelligenceService(ISerialService serialService)
+        public UI_IntelligenceService(ISerialService serialService, IFilamentService filamentService)
         {
             _serialService = serialService;
+            _filamentService = filamentService;
 
             SettingItems items = new SettingItems();
 
@@ -30,6 +34,17 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
             foreach (ViewModelBase item in items.Settings)
             {
+                if (item.IsXmLParameter)
+                {
+                    PropertyInfo prop = _filamentService.GetType().GetProperty(item.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+
+                    if (prop != null)
+                    {
+                       item.Value = prop.GetValue(_filamentService, null);
+                    }
+
+                }
+
                 item.PropertyChanged += ItemChange_Handler;
                 item.EnterCommand = new DelegateCommand<ViewModelBase>(UpdateItem);
                 
@@ -57,6 +72,8 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             ViewModelBase objectItem = (ViewModelBase)sender;
 
 
+
+
             //TO DO needs refactor, not the right place for this
             string itemValue = objectItem.Value.ToString();
 
@@ -70,6 +87,17 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             if (objectItem.HardwareType != string.Empty)
             {
                 _serialService.SendSerialData(new SerialCommand() { Command = objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType});
+            }
+
+            if (objectItem.IsXmLParameter)
+            {
+                PropertyInfo prop = _filamentService.GetType().GetProperty(objectItem.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+
+                if(prop != null)
+                {
+                    prop.SetValue(_filamentService, objectItem.Value, null);
+                }
+                
             }
 
         }

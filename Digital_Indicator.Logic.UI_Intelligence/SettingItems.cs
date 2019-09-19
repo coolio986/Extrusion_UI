@@ -42,11 +42,28 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseRunMode = new EnumItemsViewModel();
 
             Description.ParameterName = "Description";
+            Description.IsXmLParameter = true;
+            Description.XmlParameterName = "Description";
+
             FilamentDiameter.ParameterName = "Filament Diameter";
+            FilamentDiameter.IsXmLParameter = true;
+            FilamentDiameter.XmlParameterName = "NominalDiameter";
+
             UpperLimit.ParameterName = "Upper Limit";
+            UpperLimit.IsXmLParameter = true;
+            UpperLimit.XmlParameterName = "UpperLimit";
+
             LowerLimit.ParameterName = "Lower Limit";
+            LowerLimit.IsXmLParameter = true;
+            LowerLimit.XmlParameterName = "LowerLimit";
+
             SpoolNumber.ParameterName = "Spool Number";
+            SpoolNumber.IsXmLParameter = true;
+            SpoolNumber.XmlParameterName = "SpoolNumber";
+
             BatchNumber.ParameterName = "Batch Number";
+            BatchNumber.IsXmLParameter = true;
+            BatchNumber.XmlParameterName = "BatchNumber";
 
 
             SpoolerRpm.HardwareType = "1";
