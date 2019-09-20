@@ -99,15 +99,15 @@ namespace Digital_Indicator.Logic.SerialCommunications
                         {
                             string dataIn = serialPort.ReadLine();
 
-                            string functionName = GetFunctionName(dataIn);
+                            //string functionName = GetFunctionName(dataIn);
 
-                            string asciiConvertedBytes = string.Empty;
-                            asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
-                            string[] splitData = asciiConvertedBytes.Split(';');
+                            //string asciiConvertedBytes = string.Empty;
+                            //asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
+                            string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Split(';');
                             if (splitData.Length >= 2)
                             {
                                 Type type = this.GetType();
-                                MethodInfo method = type.GetMethod(functionName);
+                                MethodInfo method = type.GetMethod(splitData[1]);
                                 method.Invoke(this, new object[] { splitData });
                             }
 
