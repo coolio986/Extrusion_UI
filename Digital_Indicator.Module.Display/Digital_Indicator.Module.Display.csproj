@@ -97,10 +97,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Downloads\btechnet-hmi-configurator-6daafd53281b\MesserSuite\MesserSuite.VirtualKeyboard\Digital_Indicator.VirtualKeyboard.csproj">
-      <Project>{a10f6d63-fc72-49dd-9e43-4231b5f8c618}</Project>
-      <Name>Digital_Indicator.VirtualKeyboard</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Digital_Indicator.Infrastructure.UI\Digital_Indicator.Infrastructure.UI.csproj">
       <Project>{19f4dfae-d57b-4311-ac6f-b9abd54640a2}</Project>
       <Name>Digital_Indicator.Infrastructure.UI</Name>

@@ -188,9 +188,9 @@
       <Project>{2c224c37-9627-4cfc-b12e-873b37b38699}</Project>
       <Name>MesserSuite.Toolkits</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Downloads\btechnet-hmi-configurator-6daafd53281b\MesserSuite\MesserSuite.VirtualKeyboard\Digital_Indicator.VirtualKeyboard.csproj">
+    <ProjectReference Include="..\Digital_Indicator.VirtualKeyboard\Digital_Indicator.VirtualKeyboard.csproj">
       <Project>{a10f6d63-fc72-49dd-9e43-4231b5f8c618}</Project>
-      <Name>MesserSuite.VirtualKeyboard</Name>
+      <Name>Digital_Indicator.VirtualKeyboard</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
