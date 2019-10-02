@@ -60,7 +60,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             SpoolNumber.XmlParameterName = "SpoolNumber";
 
             SpoolerRpm.HardwareType = "1";
-            SpoolerRpm.ParameterName = "Spooler RPM Setpoint";
+            SpoolerRpm.ParameterName = "Pull Speed";
             SpoolerRpm.SerialCommand = "velocity";
             SpoolerRpm.Value = "0";
 

@@ -7,7 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:b="clr-namespace:Digital_Indicator.Toolkits.Wpf;assembly=Digital_Indicator.Toolkits"
              mc:Ignorable="d" 
-             d:DesignHeight="40" d:DesignWidth="300" MinHeight="40" 
+             d:DesignHeight="45" d:DesignWidth="300" MinHeight="45" 
             x:Name="inputControl"
             Text="{Binding Value}"
             FontSize="18"
@@ -19,7 +19,7 @@
             VirtualKeyboard:NumericKeyboardBase.IsEnabled="True"
             VirtualKeyboard:NumericKeyboardBase.HorizontalOffset="80"
             VirtualKeyboard:NumericKeyboardBase.Height="325"
-            VirtualKeyboard:NumericKeyboardBase.Width="275" Style="{DynamicResource TextBoxStyle1}" Margin="0,0,0,10">
+            VirtualKeyboard:NumericKeyboardBase.Width="275" Style="{DynamicResource TextBoxStyle1}" Margin="0,0,0,5">
     <TextBox.InputBindings>
         <KeyBinding Command="{Binding EnterCommand}" Key="Return" CommandParameter="{Binding}" />
         <KeyBinding Command="{Binding EnterCommand}" Key="Enter" CommandParameter="{Binding}"/>
@@ -43,7 +43,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Grid Width="300">
+                        <Grid Width="300" Margin="0,5,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*"/>
                                 <ColumnDefinition Width="1*"/>

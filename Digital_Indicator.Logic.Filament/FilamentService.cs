@@ -155,6 +155,7 @@ namespace Digital_Indicator.Logic.Filament
             FilamentServiceVariables.Add("NominalValue", "");
             FilamentServiceVariables.Add("UpperLimit", "");
             FilamentServiceVariables.Add("LowerLimit", "");
+            FilamentServiceVariables.Add("Tolerance", "");
             FilamentServiceVariables.Add("Duration", "");
 
             BuildXmlData();

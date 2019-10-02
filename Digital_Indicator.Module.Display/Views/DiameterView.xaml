@@ -400,7 +400,7 @@
                                 </DrawingBrush.Drawing>
                             </DrawingBrush>
                         </Button.Background>
-                            <Button.Triggers>
+                        <Button.Triggers>
                             <EventTrigger RoutedEvent="Button.Click" >
                                 <BeginStoryboard  Storyboard="{StaticResource StoryboardSlideSettingsOut}">
                                 </BeginStoryboard>
@@ -410,70 +410,145 @@
                 </StackPanel>
             </Border>
         </Grid>
-        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2">
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
+
+        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Height="{Binding ActualHeight, ElementName=stackPanel}" MinHeight="120">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
+            </Border.Effect>
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="1"/>
+                    <GradientStop Color="White" Offset="0.008"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1F1F1F" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <StackPanel x:Name="stackPanel" >
+
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Spool RPM" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="{Binding SpoolRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                </Grid>
+
+
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel1}" MinHeight="120">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
+            </Border.Effect>
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="1"/>
+                    <GradientStop Color="White" Offset="0.008"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1F1F1F" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <StackPanel x:Name="stackPanel1" >
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
                     <!--<i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
                     </i:Interaction.Behaviors>-->
-                </TextBlock>
-            </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    </TextBlock>
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
-                </TextBlock>
-            </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    </TextBlock>
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit="mm"/>
                     </i:Interaction.Behaviors>
-                </TextBlock>
-            </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
-            </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Spool RPM" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <Label Content="{Binding SpoolRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
-            </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="120"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
-            </Grid>
-        </StackPanel>
-        
+                    </TextBlock>
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Tolerance" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    <i:Interaction.Behaviors>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="Tolerance" Unit="mm"/>
+                    </i:Interaction.Behaviors>
+                    </TextBlock>
+                </Grid>
+                
+                
+                
+                
+            </StackPanel>
+        </Border>
+        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel2}" MinHeight="120">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
+            </Border.Effect>
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFF0F0F0" Offset="1"/>
+                    <GradientStop Color="White" Offset="0.008"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black"/>
+                    <GradientStop Color="#FF1F1F1F" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <StackPanel x:Name="stackPanel2" >
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                </Grid>
 
+            </StackPanel>
+        </Border>
         <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
 

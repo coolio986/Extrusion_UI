@@ -94,7 +94,7 @@
             <paramControls:DataInputView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type paramControls:EnumItemsViewModel}">
-            <paramControls:EnumItemsView />
+            <paramControls:EnumItemsView  />
         </DataTemplate>
         <DataTemplate DataType="{x:Type paramClasses:EnumItem}">
             <Border>
@@ -120,7 +120,10 @@
     </UserControl.RenderTransform>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
@@ -257,9 +260,43 @@
                 <TextBlock Text="Version" FontSize="10" VerticalAlignment="Center" Margin="0,0,15,0" />
                 <TextBlock Text="{Binding VersionNumber}" FontSize="10" VerticalAlignment="Center" Margin="0,0,51,0" />
             </StackPanel>-->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="7" Grid.RowSpan="4" HorizontalAlignment="Center" Width="{Binding ActualWidth, ElementName=grid_CarriageProperties}"  >
-                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
-            </ScrollViewer>
+        <TabControl   BorderThickness="0" Background="LightGray" Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="10" Grid.RowSpan="7">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid Name="Panel">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="10,2" MinHeight="30"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Panel" Property="Background" Value="White" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header ="Diameter" FontSize="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center" Width="{Binding ActualWidth, ElementName=grid_CarriageProperties}" Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Spool" FontSize="16"/>
+            <TabItem Header="Traverse" FontSize="16"/>
+            <TabItem Header="Pulling" FontSize="16"/>
+        </TabControl>
+        
+        
         <!--</StackPanel>-->
         
     </Grid>
