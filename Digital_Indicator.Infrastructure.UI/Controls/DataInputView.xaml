@@ -53,7 +53,7 @@
                             <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True" Grid.Column="1">
                                 <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
                             </Border>
-                            <TextBlock Text="{Binding Unit}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="10,0,0,0" Grid.Column="2" TextWrapping="WrapWithOverflow" FontSize="18" />
+                            <TextBlock Text="{Binding Unit}" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="5,0,0,0" Grid.Column="2" TextWrapping="WrapWithOverflow" FontSize="18" />
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsEnabled" Value="false">

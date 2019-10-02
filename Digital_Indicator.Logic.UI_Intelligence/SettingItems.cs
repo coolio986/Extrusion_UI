@@ -19,7 +19,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         private DataInputViewModel LowerLimit;
         private DataInputViewModel SpoolNumber;
         private DataInputViewModel SpoolerRpm;
-        private DataInputViewModel TraverseInnerOffset;
+        private DoubleInputViewModel TraverseInnerOffset;
         private DataInputViewModel TraverseSpoolWdith;
         private EnumItemsViewModel TraverseRunMode;
         
@@ -35,7 +35,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             LowerLimit = new DataInputViewModel();
             SpoolNumber = new DataInputViewModel();
             SpoolerRpm = new DataInputViewModel();
-            TraverseInnerOffset = new DataInputViewModel();
+            TraverseInnerOffset = new DoubleInputViewModel();
             TraverseSpoolWdith = new DataInputViewModel();
             TraverseRunMode = new EnumItemsViewModel();
 
@@ -46,14 +46,17 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             FilamentDiameter.ParameterName = "Filament Diameter";
             FilamentDiameter.IsXmLParameter = true;
             FilamentDiameter.XmlParameterName = "NominalDiameter";
+            FilamentDiameter.Unit = "mm";
 
             UpperLimit.ParameterName = "Upper Limit";
             UpperLimit.IsXmLParameter = true;
             UpperLimit.XmlParameterName = "UpperLimit";
+            UpperLimit.Unit = "mm";
 
             LowerLimit.ParameterName = "Lower Limit";
             LowerLimit.IsXmLParameter = true;
             LowerLimit.XmlParameterName = "LowerLimit";
+            LowerLimit.Unit = "mm";
 
             SpoolNumber.ParameterName = "Spool Number";
             SpoolNumber.IsXmLParameter = true;
@@ -63,16 +66,19 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             SpoolerRpm.ParameterName = "Pull Speed";
             SpoolerRpm.SerialCommand = "velocity";
             SpoolerRpm.Value = "0";
+            SpoolerRpm.Unit = "rpm";
 
             TraverseInnerOffset.HardwareType = "3";
             TraverseInnerOffset.ParameterName = "Traverse Inner Offset";
             TraverseInnerOffset.SerialCommand = "InnerOffset";
             TraverseInnerOffset.Value = "100";
+            TraverseInnerOffset.Unit = "mm";
 
             TraverseSpoolWdith.HardwareType = "3";
             TraverseSpoolWdith.ParameterName = "Spool Width";
             TraverseSpoolWdith.SerialCommand = "SpoolWidth";
             TraverseSpoolWdith.Value = "60000";
+            TraverseSpoolWdith.Unit = "mm";
 
             TraverseRunMode.HardwareType = "3";
             TraverseRunMode.ParameterName = "Traverse Run Mode";

@@ -84,6 +84,7 @@
     <Compile Include="Wpf\FalseToHiddenConverter.cs" />
     <Compile Include="Wpf\FontHelper.cs" />
     <Compile Include="Wpf\InputBindingsManager.cs" />
+    <Compile Include="Wpf\MM_Converter.cs" />
     <Compile Include="Wpf\TrueToCollapsedConverter.cs" />
     <Compile Include="Wpf\TrueToHiddenConverter.cs" />
     <Compile Include="Wpf\UriHelper.cs" />
