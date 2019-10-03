@@ -20,7 +20,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         private DataInputViewModel SpoolNumber;
         private DataInputViewModel SpoolerRpm;
         private DoubleInputViewModel TraverseInnerOffset;
-        private DataInputViewModel TraverseSpoolWdith;
+        private DoubleInputViewModel TraverseSpoolWidth;
         private EnumItemsViewModel TraverseRunMode;
         
 
@@ -36,7 +36,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             SpoolNumber = new DataInputViewModel();
             SpoolerRpm = new DataInputViewModel();
             TraverseInnerOffset = new DoubleInputViewModel();
-            TraverseSpoolWdith = new DataInputViewModel();
+            TraverseSpoolWidth = new DoubleInputViewModel();
             TraverseRunMode = new EnumItemsViewModel();
 
             Description.ParameterName = "Description";
@@ -74,11 +74,11 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseInnerOffset.Value = "100";
             TraverseInnerOffset.Unit = "mm";
 
-            TraverseSpoolWdith.HardwareType = "3";
-            TraverseSpoolWdith.ParameterName = "Spool Width";
-            TraverseSpoolWdith.SerialCommand = "SpoolWidth";
-            TraverseSpoolWdith.Value = "60000";
-            TraverseSpoolWdith.Unit = "mm";
+            TraverseSpoolWidth.HardwareType = "3";
+            TraverseSpoolWidth.ParameterName = "Spool Width";
+            TraverseSpoolWidth.SerialCommand = "SpoolWidth";
+            TraverseSpoolWidth.Value = "60000";
+            TraverseSpoolWidth.Unit = "mm";
 
             TraverseRunMode.HardwareType = "3";
             TraverseRunMode.ParameterName = "Traverse Run Mode";
@@ -106,7 +106,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             Settings.Add(SpoolNumber);
             Settings.Add(SpoolerRpm);
             Settings.Add(TraverseInnerOffset);
-            Settings.Add(TraverseSpoolWdith);
+            Settings.Add(TraverseSpoolWidth);
             Settings.Add(TraverseRunMode);
 
 

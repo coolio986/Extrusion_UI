@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
+using Digital_Indicator.Logic.Helpers;
 
 namespace Digital_Indicator.Toolkits.Wpf
 {
@@ -22,7 +23,9 @@ namespace Digital_Indicator.Toolkits.Wpf
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            double doubleValue = 0;
+            double.TryParse(value.ToString(), out doubleValue);
+            return String.Format("{0}", (int)doubleValue * 1000);
         }
     }
 }
