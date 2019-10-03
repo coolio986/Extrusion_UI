@@ -64,24 +64,28 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
             SpoolerRpm.HardwareType = "1";
             SpoolerRpm.ParameterName = "Pull Speed";
+            SpoolerRpm.IsSerialCommand = true;
             SpoolerRpm.SerialCommand = "velocity";
             SpoolerRpm.Value = "0";
             SpoolerRpm.Unit = "rpm";
 
             TraverseInnerOffset.HardwareType = "3";
             TraverseInnerOffset.ParameterName = "Traverse Inner Offset";
+            TraverseInnerOffset.IsSerialCommand = true;
             TraverseInnerOffset.SerialCommand = "InnerOffset";
-            TraverseInnerOffset.Value = "100";
+            TraverseInnerOffset.Value = "0";
             TraverseInnerOffset.Unit = "mm";
 
             TraverseSpoolWidth.HardwareType = "3";
             TraverseSpoolWidth.ParameterName = "Spool Width";
+            TraverseSpoolWidth.IsSerialCommand = true;
             TraverseSpoolWidth.SerialCommand = "SpoolWidth";
-            TraverseSpoolWidth.Value = "60000";
+            TraverseSpoolWidth.Value = "0";
             TraverseSpoolWidth.Unit = "mm";
 
             TraverseRunMode.HardwareType = "3";
             TraverseRunMode.ParameterName = "Traverse Run Mode";
+            TraverseRunMode.IsSerialCommand = true;
             TraverseRunMode.SerialCommand = "RunMode";
 
             EnumItem home = new EnumItem() { ItemValue = "Home", ItemValueID = "0" };

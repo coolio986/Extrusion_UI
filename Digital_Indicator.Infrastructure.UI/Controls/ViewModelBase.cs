@@ -16,6 +16,7 @@ namespace Digital_Indicator.Infrastructure.UI.Controls
     {
         public string ParameterName { get; set; }
         public string HardwareType { get; set; }
+        public bool IsSerialCommand { get; set; }
         public string SerialCommand { get; set; }
         public bool IsXmLParameter { get; set; }
         public string XmlParameterName { get; set; }

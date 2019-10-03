@@ -32,13 +32,17 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public string AssembleCommand()
         {
             string assembledCommand = string.Empty;
-            if (deviceID == string.Empty || command == string.Empty || value == string.Empty)
+            if (deviceID != string.Empty && command != string.Empty && value != string.Empty)
             {
-                return "ERROR";
+                return deviceID + ";" + command + ";" + this.value + ";\r\n";
+            }
+            if (deviceID != string.Empty && command != string.Empty)
+            {
+                return deviceID + ";" + command + ";\r\n";
             }
             else
             {
-                return deviceID + ";" + command + ";" + this.value + ";\r\n";
+                return "ERROR";
             }
         }
     }

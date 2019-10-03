@@ -11,7 +11,7 @@ using Digital_Indicator.Logic.SerialCommunications;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Reflection;
-
+using System.Threading;
 
 namespace Digital_Indicator.Logic.UI_Intelligence
 {
@@ -32,6 +32,8 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
             Settings = items.Settings; //new ObservableCollection<ViewModelBase>();
 
+            
+
             foreach (ViewModelBase item in items.Settings)
             {
                 if (item.IsXmLParameter)
@@ -43,6 +45,11 @@ namespace Digital_Indicator.Logic.UI_Intelligence
                        item.Value = prop.GetValue(_filamentService, null);
                     }
 
+                }
+                if (item.IsSerialCommand)
+                {
+                    _serialService.SendSerialData(new SerialCommand() { Command = item.SerialCommand, DeviceID = item.HardwareType });
+                    Thread.Sleep(100);
                 }
 
                 item.PropertyChanged += ItemChange_Handler;

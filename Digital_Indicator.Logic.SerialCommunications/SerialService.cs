@@ -20,6 +20,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public event EventHandler DiameterChanged;
         public event EventHandler SpoolerDataChanged;
         public event EventHandler TraverseDataChanged;
+        public event EventHandler GeneralDataChanged;
 
         public SerialService()
         {
@@ -100,14 +101,18 @@ namespace Digital_Indicator.Logic.SerialCommunications
                             string dataIn = serialPort.ReadLine();
 
                             //string functionName = GetFunctionName(dataIn);
-
+                            //Console.WriteLine(dataIn);
                             //string asciiConvertedBytes = string.Empty;
                             //asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
-                            string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Split(';');
+                            string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
                             if (splitData.Length >= 2)
                             {
                                 Type type = this.GetType();
                                 MethodInfo method = type.GetMethod(splitData[1]);
+                                if (method == null)
+                                {
+                                    Console.WriteLine(splitData[1] + " Failed to work");
+                                }
                                 method.Invoke(this, new object[] { splitData });
                             }
 
@@ -237,7 +242,9 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
         public void SendSerialData(SerialCommand command)
         {
+            
             string serialCommand = command.AssembleCommand();
+            Console.WriteLine(serialCommand);
             serialPort.WriteLine(serialCommand);
         }
         
@@ -266,17 +273,47 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
         }
 
-        public void spoolRpm(string[] splitData) //reflection calls this
+        public void SpoolRPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void velocity(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void InnerOffset(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void SpoolWidth(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void RunMode(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+
+        private void processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();
 
+            
             if (splitData.Length == 3)
             {
                 command.DeviceID = splitData[0];
                 command.Command = splitData[1];
                 command.Value = splitData[2].Replace("\0", string.Empty); //remove nulls
 
-                TraverseDataChanged?.Invoke(command.Value, null);    
+               
+
+
+                GeneralDataChanged?.Invoke(command, null);
 
             }
         }

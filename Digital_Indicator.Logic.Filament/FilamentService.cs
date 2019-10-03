@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -144,6 +146,7 @@ namespace Digital_Indicator.Logic.Filament
             _serialService = serialService;
             _serialService.DiameterChanged += SerialService_DiameterChanged;
             _serialService.TraverseDataChanged += _serialService_TraverseDataChanged;
+            _serialService.GeneralDataChanged += _serialService_GeneralDataChanged;
 
             _xmlService = xmlService;
             _csvService = csvService;
@@ -160,6 +163,26 @@ namespace Digital_Indicator.Logic.Filament
 
             BuildXmlData();
             SetupPlots();
+        }
+
+        private void _serialService_GeneralDataChanged(object sender, EventArgs e)
+        {
+            SerialCommand command = (SerialCommand)sender;
+
+            //Expression set (faster than reflection)
+            Type type = this.GetType();
+            PropertyInfo propertyInfo = type.GetProperty(command.Command);
+            ParameterExpression instanceParam = Expression.Parameter(type);
+            ParameterExpression argumentParam = Expression.Parameter(typeof(Object));
+
+            if (propertyInfo != null)
+            {
+                Action<FilamentService, Object> expression = Expression.Lambda<Action<FilamentService, Object>>(
+                   Expression.Call(instanceParam, propertyInfo.GetSetMethod(), Expression.Convert(argumentParam, propertyInfo.PropertyType)),
+                   instanceParam, argumentParam
+                 ).Compile();
+                expression(this, command.Value);
+            }
         }
 
         private void _serialService_TraverseDataChanged(object sender, EventArgs e)
@@ -218,7 +241,7 @@ namespace Digital_Indicator.Logic.Filament
             lowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
             spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
             description = _xmlService.XmlSettings["filamentData.materialDescription"];
-            
+
 
             SetFilamentVariables();
         }
@@ -230,7 +253,7 @@ namespace Digital_Indicator.Logic.Filament
             _xmlService.XmlSettings["filamentData.lowerLimit"] = lowerLimit;
             _xmlService.XmlSettings["filamentData.spoolNumber"] = spoolNumber;
             _xmlService.XmlSettings["filamentData.materialDescription"] = description;
-            
+
 
             _xmlService.SaveSettings();
         }
