@@ -20,6 +20,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         public event EventHandler SettingsUpdated;
         private ISerialService _serialService;
         private IFilamentService _filamentService;
+        SettingItems items;
 
         private Collection<ViewModelBase> Settings { get; set; }
 
@@ -28,37 +29,67 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             _serialService = serialService;
             _filamentService = filamentService;
 
-            SettingItems items = new SettingItems();
+
+            items = new SettingItems();
 
             Settings = items.Settings; //new ObservableCollection<ViewModelBase>();
 
-            
+            _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
             foreach (ViewModelBase item in items.Settings)
             {
                 if (item.IsXmLParameter)
                 {
-                    PropertyInfo prop = _filamentService.GetType().GetProperty(item.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+                    //PropertyInfo prop = _filamentService.GetType().GetProperty(item.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+                    item.Value = _filamentService.FilamentServiceVariables[item.XmlParameterName];
 
-                    if (prop != null)
-                    {
-                       item.Value = prop.GetValue(_filamentService, null);
-                    }
+                    //if (prop != null)
+                    //{
+                    //    item.Value = prop.GetValue(_filamentService, null);
+                    //}
+                }
+            }
 
-                }
-                if (item.IsSerialCommand)
-                {
-                    _serialService.SendSerialData(new SerialCommand() { Command = item.SerialCommand, DeviceID = item.HardwareType });
-                    Thread.Sleep(100);
-                }
+            _serialService.SendSerialData(new SerialCommand() { Command = "GetFullUpdate", DeviceID = "100" });
+
+            foreach (ViewModelBase item in items.Settings)
+            {
 
                 item.PropertyChanged += ItemChange_Handler;
                 item.EnterCommand = new DelegateCommand<ViewModelBase>(UpdateItem);
-                
-                
             }
         }
 
+
+        private void _filamentService_PropertyChanged(object sender, EventArgs e)
+        {
+            SerialCommand command = (SerialCommand)sender;
+
+            if (items != null)
+            {
+                foreach (ViewModelBase item in items.Settings)
+                {
+                    if (item.SerialCommand == command.Command && item.IsSerialCommand)
+                    {
+
+                        if (item.Value.ToString() != command.Value)
+                        {
+                            if (item.GetType() == typeof(EnumItemsViewModel))
+                            {
+                                ((EnumItemsViewModel)item).ItemIndex = Int32.Parse(command.Value);
+                            }
+                            else
+                            {
+                                item.Value = command.Value;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+
+        }
 
         public IReadOnlyCollection<ViewModelBase> GetSettings()
         {
@@ -75,41 +106,42 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             ItemChange_Handler(sender, null);
         }
 
-        private void ItemChange_Handler (object sender, EventArgs e)
+        private void ItemChange_Handler(object sender, EventArgs e)
         {
             ViewModelBase objectItem = (ViewModelBase)sender;
-
-
-
 
             //TO DO needs refactor, not the right place for this
             string itemValue = objectItem.Value.ToString();
 
-            if (objectItem.SerialCommand == "velocity")
-            {
-                itemValue = (-Math.Abs((float)Convert.ChangeType(objectItem.Value.ToString(), typeof(float)))).ToString();
-            }
-            
+            //if (objectItem.SerialCommand == "velocity")
+            //{
+            //    itemValue = (-Math.Abs((float)Convert.ChangeType(objectItem.Value.ToString(), typeof(float)))).ToString();
+            //}
+
 
 
             if (objectItem.HardwareType != string.Empty)
             {
-                _serialService.SendSerialData(new SerialCommand() { Command = objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType});
+                _serialService.SendSerialData(new SerialCommand() { Command = objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType });
             }
 
             if (objectItem.IsXmLParameter)
             {
-                PropertyInfo prop = _filamentService.GetType().GetProperty(objectItem.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
 
-                if(prop != null)
-                {
-                    prop.SetValue(_filamentService, objectItem.Value, null);
-                }
+                _filamentService.FilamentServiceVariables[objectItem.XmlParameterName] = objectItem.Value.ToString();
+                _filamentService.SaveXmlData();
                 
+                //PropertyInfo prop = _filamentService.GetType().GetProperty(objectItem.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+
+                //if (prop != null)
+                //{
+                //    prop.SetValue(_filamentService, objectItem.Value, null);
+                //}
+
             }
 
         }
 
-        
+
     }
 }

@@ -87,6 +87,8 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseRunMode.ParameterName = "Traverse Run Mode";
             TraverseRunMode.IsSerialCommand = true;
             TraverseRunMode.SerialCommand = "RunMode";
+            TraverseRunMode.ItemIndex = 0;
+            TraverseRunMode.Value = 0;
 
             EnumItem home = new EnumItem() { ItemValue = "Home", ItemValueID = "0" };
             EnumItem stop = new EnumItem() { ItemValue = "Stop", ItemValueID = "1" };
@@ -108,9 +110,9 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             Settings.Add(UpperLimit);
             Settings.Add(LowerLimit);
             Settings.Add(SpoolNumber);
-            Settings.Add(SpoolerRpm);
             Settings.Add(TraverseInnerOffset);
             Settings.Add(TraverseSpoolWidth);
+            Settings.Add(SpoolerRpm);
             Settings.Add(TraverseRunMode);
 
 

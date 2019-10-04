@@ -22,6 +22,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public event EventHandler TraverseDataChanged;
         public event EventHandler GeneralDataChanged;
 
+
         public SerialService()
         {
             if (!IsSimulationModeActive)
@@ -44,6 +45,8 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public bool IsSimulationModeActive { get; set; }
 
         public bool PortDataIsSet { get; private set; }
+
+        
 
         public void BindHandlers()
         {
@@ -101,7 +104,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                             string dataIn = serialPort.ReadLine();
 
                             //string functionName = GetFunctionName(dataIn);
-                            //Console.WriteLine(dataIn);
+                            Console.WriteLine(dataIn);
                             //string asciiConvertedBytes = string.Empty;
                             //asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
                             string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
@@ -115,15 +118,16 @@ namespace Digital_Indicator.Logic.SerialCommunications
                                 }
                                 method.Invoke(this, new object[] { splitData });
                             }
-
+                            
 
                         }
                         catch (Exception oe)
                         {
                             Console.WriteLine("Serial Error: " + oe.Message);
+                            
                         }
-
-                        Thread.Sleep(1);
+                        
+                        Thread.Sleep(10);
                     }
                 }
             });
@@ -245,6 +249,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             
             string serialCommand = command.AssembleCommand();
             Console.WriteLine(serialCommand);
+            
             serialPort.WriteLine(serialCommand);
         }
         

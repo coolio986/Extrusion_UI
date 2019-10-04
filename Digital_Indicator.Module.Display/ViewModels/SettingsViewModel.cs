@@ -45,41 +45,41 @@ namespace Digital_Indicator.Module.Display.ViewModels
             set { SetProperty(ref openSpoolDataFolder, value); }
         }
 
-        public string FilamentDiameter
-        {
-            get { return _filamentService.NominalDiameter; }
-            set { _filamentService.NominalDiameter = value; RaisePropertyChanged(); }
-        }
+        //public string FilamentDiameter
+        //{
+        //    get { return _filamentService.FilamentServiceVariables["NominalDiameter"]; }
+        //    set { _filamentService.FilamentServiceVariables["NominalDiameter"] = value; RaisePropertyChanged(); }
+        //}
 
-        public string UpperLimit
-        {
-            get { return _filamentService.UpperLimit; }
-            set { _filamentService.UpperLimit = value; RaisePropertyChanged(); }
-        }
+        //public string UpperLimit
+        //{
+        //    get { return _filamentService.FilamentServiceVariables["UpperLimit"]; }
+        //    set { _filamentService.FilamentServiceVariables["UpperLimit"] = value; RaisePropertyChanged(); }
+        //}
 
-        public string LowerLimit
-        {
-            get { return _filamentService.LowerLimit; }
-            set { _filamentService.LowerLimit = value; RaisePropertyChanged(); }
-        }
+        //public string LowerLimit
+        //{
+        //    get { return _filamentService.FilamentServiceVariables["LowerLimit"]; }
+        //    set { _filamentService.FilamentServiceVariables["LowerLimit"] = value; RaisePropertyChanged(); }
+        //}
 
-        public string FilamentDescription
-        {
-            get { return _filamentService.Description; }
-            set { _filamentService.Description = value; RaisePropertyChanged(); }
-        }
+        //public string FilamentDescription
+        //{
+        //    get { return _filamentService.FilamentServiceVariables["Description"]; }
+        //    set { _filamentService.FilamentServiceVariables["Description"] = value; RaisePropertyChanged(); }
+        //}
 
-        public string SpoolNumber
-        {
-            get { return _filamentService.SpoolNumber; }
-            set { _filamentService.SpoolNumber = value; }
-        }
+        //public string SpoolNumber
+        //{
+        //    get { return _filamentService.FilamentServiceVariables["SpoolNumber"]; }
+        //    set { _filamentService.FilamentServiceVariables["SpoolNumber"] = value; }
+        //}
 
-        public string SpoolerRPMSetpoint
-        {
-            get { return _spoolerService.SpoolerRPMSetpoint; }
-            set { _spoolerService.SpoolerRPMSetpoint = value; }
-        }
+        //public string SpoolerRPMSetpoint
+        //{
+        //    get { return _spoolerService.SpoolerRPMSetpoint; }
+        //    set { _spoolerService.SpoolerRPMSetpoint = value; }
+        //}
 
         public string VersionNumber
         {
@@ -100,7 +100,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
             _navigationService = navigationService;
             _iui_IntelligenceService = iui_IntelligenceService;
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
-            _spoolerService.SpoolerRPMChanged += _spoolerService_SpoolerRPMChanged;
+            
             
 
             CloseSettingsView = new DelegateCommand(CloseView_Click);
@@ -121,10 +121,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         }
 
-        private void _spoolerService_SpoolerRPMChanged(object sender, EventArgs e)
-        {
-            RaisePropertyChanged("CurrentSpoolerRPM");
-        }
+       
 
         private void SpoolerDataChanged(object sender, EventArgs e)
         {

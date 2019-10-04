@@ -55,12 +55,17 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         public string SpoolNumber
         {
-            get { return _filamentService.SpoolNumber; }
+            get { return _filamentService.FilamentServiceVariables["SpoolNumber"]; }
         }
 
         public string SpoolRPM
         {
-            get { return _filamentService.SpoolRPM; }
+            get { return _filamentService.FilamentServiceVariables["SpoolRPM"]; }
+        }
+
+        public string Tolerance
+        {
+            get { return _filamentService.FilamentServiceVariables["Tolerance"]; }
         }
 
         public bool CaptureStarted

@@ -32,83 +32,83 @@ namespace Digital_Indicator.Logic.Filament
         private ICsvService _csvService;
         private ISerialService _serialService;
 
-        private string description;
-        public string Description
-        {
-            get { return description; }
-            set { description = value; }
-        }
+        //private string description;
+        //public string Description
+        //{
+        //    get { return description; }
+        //    set { description = value; }
+        //}
 
 
-        private string nominalDiameter;
-        public string NominalDiameter
-        {
-            get { return nominalDiameter; }
-            set
-            {
-                nominalDiameter = value;
+        //private string nominalDiameter;
+        //public string NominalDiameter
+        //{
+        //    get { return nominalDiameter; }
+        //    set
+        //    {
+        //        nominalDiameter = value;
 
-                OnPropertyChanged();
-                UpdatePlots();
-                SaveXmlData();
-                SetFilamentVariables();
-            }
-        }
+        //        OnPropertyChanged();
+        //        UpdatePlots();
+        //        SaveXmlData();
+        //        SetFilamentVariables();
+        //    }
+        //}
 
-        private string upperLimit;
-        public string UpperLimit
-        {
-            get { return upperLimit; }
-            set
-            {
-                upperLimit = value;
-                OnPropertyChanged();
-                UpdatePlots();
-                SaveXmlData();
-                SetFilamentVariables();
-            }
-        }
+        //private string upperLimit;
+        //public string UpperLimit
+        //{
+        //    get { return upperLimit; }
+        //    set
+        //    {
+        //        upperLimit = value;
+        //        OnPropertyChanged();
+        //        UpdatePlots();
+        //        SaveXmlData();
+        //        SetFilamentVariables();
+        //    }
+        //}
 
-        private string lowerLimit;
-        public string LowerLimit
-        {
-            get { return lowerLimit; }
-            set
-            {
-                lowerLimit = value;
+        //private string lowerLimit;
+        //public string LowerLimit
+        //{
+        //    get { return lowerLimit; }
+        //    set
+        //    {
+        //        lowerLimit = value;
 
-                OnPropertyChanged();
-                UpdatePlots();
-                SaveXmlData();
-                SetFilamentVariables();
-            }
-        }
+        //        OnPropertyChanged();
+        //        UpdatePlots();
+        //        SaveXmlData();
+        //        SetFilamentVariables();
+        //    }
+        //}
 
-        private string spoolNumber;
-        public string SpoolNumber
-        {
-            get { return spoolNumber; }
-            set
-            {
-                spoolNumber = value;
-                OnPropertyChanged();
-                UpdatePlots();
-                SaveXmlData();
-            }
-        }
+        //private string spoolNumber;
+        //public string SpoolNumber
+        //{
+        //    get { return spoolNumber; }
+        //    set
+        //    {
+        //        spoolNumber = value;
+        //        OnPropertyChanged();
+        //        UpdatePlots();
+        //        SaveXmlData();
+        //    }
+        //}
 
-        private string spoolRPM;
-        public string SpoolRPM
-        {
-            get { return spoolRPM; }
-            set
-            {
-                spoolRPM = value;
-                OnPropertyChanged();
-                //UpdatePlots();
-                //SaveXmlData();
-            }
-        }
+        //private string spoolRPM;
+        //public string SpoolRPM
+        //{
+        //    get { return spoolRPM; }
+        //    set
+        //    {
+        //        spoolRPM = value;
+        //        OnPropertyChanged();
+        //        //UpdatePlots();
+        //        //SaveXmlData();
+        //    }
+        //}
 
         private bool captureStarted;
         public bool CaptureStarted
@@ -119,9 +119,12 @@ namespace Digital_Indicator.Logic.Filament
                 captureStarted = value;
                 if (captureStarted)
                 {
-                    FilamentServiceVariables["HighestValue"] = nominalDiameter;
-                    FilamentServiceVariables["LowestValue"] = nominalDiameter;
-                    SpoolNumber = (spoolNumber.GetInteger() + 1).ToString();
+                    FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["NominalDiameter"];
+                    FilamentServiceVariables["LowestValue"] = FilamentServiceVariables["NominalDiameter"];
+
+                    //FilamentServiceVariables["HighestValue"] = nominalDiameter;
+                    //FilamentServiceVariables["LowestValue"] = nominalDiameter;
+                    FilamentServiceVariables["SpoolNumber"] = (FilamentServiceVariables["SpoolNumber"].GetInteger() + 1).ToString();
                     SetupPlots();
                     SetupStopwatch();
                 }
@@ -145,21 +148,24 @@ namespace Digital_Indicator.Logic.Filament
 
             _serialService = serialService;
             _serialService.DiameterChanged += SerialService_DiameterChanged;
-            _serialService.TraverseDataChanged += _serialService_TraverseDataChanged;
+            //_serialService.TraverseDataChanged += _serialService_TraverseDataChanged;
             _serialService.GeneralDataChanged += _serialService_GeneralDataChanged;
 
             _xmlService = xmlService;
             _csvService = csvService;
 
             FilamentServiceVariables = new Dictionary<string, string>();
+            FilamentServiceVariables.Add("Description", "");
             FilamentServiceVariables.Add("ActualDiameter", "");
             FilamentServiceVariables.Add("HighestValue", "");
             FilamentServiceVariables.Add("LowestValue", "");
-            FilamentServiceVariables.Add("NominalValue", "");
+            FilamentServiceVariables.Add("NominalDiameter", "");
             FilamentServiceVariables.Add("UpperLimit", "");
             FilamentServiceVariables.Add("LowerLimit", "");
             FilamentServiceVariables.Add("Tolerance", "");
             FilamentServiceVariables.Add("Duration", "");
+            FilamentServiceVariables.Add("SpoolNumber", "");
+            FilamentServiceVariables.Add("SpoolRPM", "");
 
             BuildXmlData();
             SetupPlots();
@@ -169,31 +175,33 @@ namespace Digital_Indicator.Logic.Filament
         {
             SerialCommand command = (SerialCommand)sender;
 
-            //Expression set (faster than reflection)
-            Type type = this.GetType();
-            PropertyInfo propertyInfo = type.GetProperty(command.Command);
-            ParameterExpression instanceParam = Expression.Parameter(type);
-            ParameterExpression argumentParam = Expression.Parameter(typeof(Object));
+            FilamentServiceVariables[command.Command] = command.Value;
 
-            if (propertyInfo != null)
-            {
-                Action<FilamentService, Object> expression = Expression.Lambda<Action<FilamentService, Object>>(
-                   Expression.Call(instanceParam, propertyInfo.GetSetMethod(), Expression.Convert(argumentParam, propertyInfo.PropertyType)),
-                   instanceParam, argumentParam
-                 ).Compile();
-                expression(this, command.Value);
-            }
-        }
+            PropertyChanged?.Invoke(command, new PropertyChangedEventArgs(command.Command));
 
-        private void _serialService_TraverseDataChanged(object sender, EventArgs e)
-        {
-            SpoolRPM = sender.ToString();
+            ////Expression set (faster than reflection)
+            //Type type = this.GetType();
+            //PropertyInfo propertyInfo = type.GetProperty(command.Command);
+            //ParameterExpression instanceParam = Expression.Parameter(type);
+            //ParameterExpression argumentParam = Expression.Parameter(typeof(Object));
+
+            //if (propertyInfo != null)
+            //{
+            //    Action<FilamentService, Object> expression = Expression.Lambda<Action<FilamentService, Object>>(
+            //       Expression.Call(instanceParam, propertyInfo.GetSetMethod(), Expression.Convert(argumentParam, propertyInfo.PropertyType)),
+            //       instanceParam, argumentParam
+            //     ).Compile();
+            //    expression(this, command.Value);
+            //}
         }
 
         private void SetupPlots()
         {
-            ZedGraphPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
+            ZedGraphPlotModel.CreatePlots(FilamentServiceVariables["UpperLimit"], FilamentServiceVariables["NominalDiameter"], FilamentServiceVariables["LowerLimit"]);
             ZedGraphPlotModel.GetPlot("HistoricalModel").ZedGraph.GraphPane.XAxis.Scale.Min = new ZedGraph.XDate(DateTime.Now.AddMilliseconds(-100));
+
+            //ZedGraphPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
+            //ZedGraphPlotModel.GetPlot("HistoricalModel").ZedGraph.GraphPane.XAxis.Scale.Min = new ZedGraph.XDate(DateTime.Now.AddMilliseconds(-100));
 
         }
 
@@ -218,6 +226,7 @@ namespace Digital_Indicator.Logic.Filament
             string lowestValue = FilamentServiceVariables["LowestValue"];
             FilamentServiceVariables["HighestValue"] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
             FilamentServiceVariables["LowestValue"] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+            FilamentServiceVariables["Tolerance"] = (highestValue.GetDouble() - lowestValue.GetDouble()).ToString();
         }
 
         private void UpdatePlots()
@@ -227,32 +236,68 @@ namespace Digital_Indicator.Logic.Filament
             if (zedGraphPlotModel != null)
                 zedGraphPlotModel.Select(x =>
                 {
-                    x.UpperLimitDiameter = upperLimit;
-                    x.NominalDiameter = nominalDiameter;
-                    x.LowerLimitDiameter = lowerLimit;
+                    x.UpperLimitDiameter = FilamentServiceVariables["UpperLimit"];
+                    x.NominalDiameter = FilamentServiceVariables["NominalDiameter"];
+                    x.LowerLimitDiameter = FilamentServiceVariables["LowerLimit"];
                     return x;
                 }).ToList();
         }
 
         private void BuildXmlData()
         {
-            nominalDiameter = _xmlService.XmlSettings["filamentData.nominalDiameter"];
-            upperLimit = _xmlService.XmlSettings["filamentData.upperLimit"];
-            lowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
-            spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
-            description = _xmlService.XmlSettings["filamentData.materialDescription"];
+
+            //FilamentServiceVariables["NominalDiameter"] = _xmlService.XmlSettings["filamentData.nominalDiameter"];
+            //FilamentServiceVariables["UpperLimit"] = _xmlService.XmlSettings["filamentData.upperLimit"];
+            //FilamentServiceVariables["LowerLimit"] = _xmlService.XmlSettings["filamentData.lowerLimit"];
+            //FilamentServiceVariables["SpoolNumber"] = _xmlService.XmlSettings["filamentData.spoolNumber"];
+            //FilamentServiceVariables["Description"] = _xmlService.XmlSettings["filamentData.materialDescription"];
+
+            
 
 
-            SetFilamentVariables();
+            foreach (KeyValuePair<string, string> kvp in FilamentServiceVariables.ToList())
+            {
+                if(!_xmlService.XmlSettings.ContainsKey("filamentData." + kvp.Key))
+                {
+                    _xmlService.XmlSettings.Add("filamentData." + kvp.Key.ToString(), string.Empty);
+                }
+
+
+
+                FilamentServiceVariables[kvp.Key] = _xmlService.XmlSettings["filamentData." + kvp.Key];
+            }
+            SaveXmlData();
+
+            //nominalDiameter = _xmlService.XmlSettings["filamentData.nominalDiameter"];
+            //upperLimit = _xmlService.XmlSettings["filamentData.upperLimit"];
+            //lowerLimit = _xmlService.XmlSettings["filamentData.lowerLimit"];
+            //spoolNumber = _xmlService.XmlSettings["filamentData.spoolNumber"];
+            //description = _xmlService.XmlSettings["filamentData.materialDescription"];
+
+
+            //SetFilamentVariables();
         }
 
-        private void SaveXmlData()
+        public void SaveXmlData()
         {
-            _xmlService.XmlSettings["filamentData.nominalDiameter"] = nominalDiameter;
-            _xmlService.XmlSettings["filamentData.upperLimit"] = upperLimit;
-            _xmlService.XmlSettings["filamentData.lowerLimit"] = lowerLimit;
-            _xmlService.XmlSettings["filamentData.spoolNumber"] = spoolNumber;
-            _xmlService.XmlSettings["filamentData.materialDescription"] = description;
+            //_xmlService.XmlSettings["filamentData.nominalDiameter"] = FilamentServiceVariables["NominalDiameter"];
+            //_xmlService.XmlSettings["filamentData.upperLimit"] = FilamentServiceVariables["UpperLimit"];
+            //_xmlService.XmlSettings["filamentData.lowerLimit"] = FilamentServiceVariables["LowerLimit"];
+            //_xmlService.XmlSettings["filamentData.spoolNumber"] = FilamentServiceVariables["SpoolNumber"];
+            //_xmlService.XmlSettings["filamentData.materialDescription"] = FilamentServiceVariables["Description"];
+
+            foreach (KeyValuePair<string, string> kvp in FilamentServiceVariables)
+            {
+                _xmlService.XmlSettings["filamentData." + kvp.Key] = kvp.Value;
+            }
+            UpdatePlots();
+
+
+            //_xmlService.XmlSettings["filamentData.nominalDiameter"] = nominalDiameter;
+            //_xmlService.XmlSettings["filamentData.upperLimit"] = upperLimit;
+            //_xmlService.XmlSettings["filamentData.lowerLimit"] = lowerLimit;
+            //_xmlService.XmlSettings["filamentData.spoolNumber"] = spoolNumber;
+            //_xmlService.XmlSettings["filamentData.materialDescription"] = description;
 
 
             _xmlService.SaveSettings();
@@ -260,9 +305,9 @@ namespace Digital_Indicator.Logic.Filament
 
         private void SetFilamentVariables()
         {
-            FilamentServiceVariables["UpperLimit"] = upperLimit.ToString();
-            FilamentServiceVariables["LowerLimit"] = lowerLimit.ToString();
-            FilamentServiceVariables["NominalDiameter"] = nominalDiameter.ToString();
+            //FilamentServiceVariables["UpperLimit"] = upperLimit.ToString();
+            //FilamentServiceVariables["LowerLimit"] = lowerLimit.ToString();
+            //FilamentServiceVariables["NominalDiameter"] = nominalDiameter.ToString();
 
         }
 
@@ -296,7 +341,7 @@ namespace Digital_Indicator.Logic.Filament
 
         public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
         {
-            _csvService.SaveSettings(dataPoints, spoolNumber, description);
+            _csvService.SaveSettings(dataPoints, FilamentServiceVariables["SpoolNumber"], FilamentServiceVariables["Description"]);
         }
     }
 }

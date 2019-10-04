@@ -25,7 +25,7 @@ namespace Digital_Indicator.Toolkits.Wpf
         {
             double doubleValue = 0;
             double.TryParse(value.ToString(), out doubleValue);
-            return String.Format("{0}", (int)doubleValue * 1000);
+            return String.Format("{0}", (int)(doubleValue * 1000));
         }
     }
 }

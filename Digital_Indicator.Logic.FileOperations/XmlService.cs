@@ -34,10 +34,21 @@ namespace Digital_Indicator.Logic.FileOperations
                 if (kvp.Key.Contains(".") && kvp.Value != null)
                 {
                     string parentNode = kvp.Key.Substring(0, kvp.Key.IndexOf("."));
-                    XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
 
-                    if (element != null)
-                        element.Value = kvp.Value;
+                    if (parentNode != "persistenceData")
+                    {
+                        XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+                        //XElement element = persistentXml.Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+
+                        if (element != null)
+                        {
+                            element.Value = kvp.Value;
+                        }
+                        else
+                        {
+                            persistentXml.Element("persistenceData").Element(parentNode).Add(new XElement(kvp.Key.Substring(kvp.Key.IndexOf(".") + 1), kvp.Value));
+                        }
+                    }
                 }
 
             }
