@@ -121,12 +121,15 @@ namespace Digital_Indicator.Logic.Filament
                 {
                     FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["NominalDiameter"];
                     FilamentServiceVariables["LowestValue"] = FilamentServiceVariables["NominalDiameter"];
-
+                    if (FilamentServiceVariables["SpoolNumber"] == string.Empty) { FilamentServiceVariables["SpoolNumber"] = "0"; }
                     //FilamentServiceVariables["HighestValue"] = nominalDiameter;
                     //FilamentServiceVariables["LowestValue"] = nominalDiameter;
+
+
                     FilamentServiceVariables["SpoolNumber"] = (FilamentServiceVariables["SpoolNumber"].GetInteger() + 1).ToString();
                     SetupPlots();
                     SetupStopwatch();
+                    SaveXmlData();
                 }
                 else
                 {
@@ -257,12 +260,17 @@ namespace Digital_Indicator.Logic.Filament
 
             foreach (KeyValuePair<string, string> kvp in FilamentServiceVariables.ToList())
             {
-                if(!_xmlService.XmlSettings.ContainsKey("filamentData." + kvp.Key))
+                
+
+                if (!_xmlService.XmlSettings.ContainsKey("filamentData." + kvp.Key))
                 {
                     _xmlService.XmlSettings.Add("filamentData." + kvp.Key.ToString(), string.Empty);
                 }
 
-
+                //if (_xmlService.XmlSettings.ContainsKey("filamentData." + kvp.Key))
+                //{
+                //    _xmlService.XmlSettings.Add("filamentData." + kvp.Key.ToString(), string.Empty);
+                //}
 
                 FilamentServiceVariables[kvp.Key] = _xmlService.XmlSettings["filamentData." + kvp.Key];
             }

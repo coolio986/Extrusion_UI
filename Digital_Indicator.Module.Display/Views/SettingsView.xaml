@@ -15,7 +15,7 @@
              Width="300" 
              prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
     <UserControl.Resources>
-        
+
         <Storyboard x:Key="Storyboard_Slide_Settings_In">
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="settingsViewUserControl">
                 <EasingDoubleKeyFrame KeyTime="0" Value="0">
@@ -92,6 +92,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type paramControls:DataInputViewModel}">
             <paramControls:DataInputView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:LargeDataInputViewModel}">
+            <paramControls:LargeDataInputView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type paramControls:EnumItemsViewModel}">
             <paramControls:EnumItemsView  />
@@ -215,9 +218,9 @@
             </Button>
         </Grid>
         <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />
-        
+
         <!--<StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">-->
-            <!--<StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
+        <!--<StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
                 <TextBlock Text="Description" FontSize="18" HorizontalAlignment="Center" />
                 <TextBox  FontSize="18"  Text="{Binding FilamentDescription}" MinHeight="75" />
             </StackPanel>
@@ -252,8 +255,10 @@
                 <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding CurrentSpoolerRPM}" />
             </StackPanel>
             <StackPanel MinHeight="40" Orientation="Horizontal" >
-                --><!--<TextBlock Text="Spooler RPM Setpoint" FontSize="18" VerticalAlignment="Center" Margin="0,0,63,0" />
-                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolerRPMSetpoint}" />--><!--
+                -->
+        <!--<TextBlock Text="Spooler RPM Setpoint" FontSize="18" VerticalAlignment="Center" Margin="0,0,63,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolerRPMSetpoint}" />-->
+        <!--
                 <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
             </StackPanel>
             <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
@@ -271,7 +276,7 @@
                                         VerticalAlignment="Center"
                                         HorizontalAlignment="Center"
                                         ContentSource="Header"
-                                        Margin="10,2" MinHeight="30"/>
+                                        Margin="5.6,2" MinHeight="30"/>
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
@@ -288,16 +293,34 @@
             </TabControl.Resources>
             <TabItem Header ="Diameter" FontSize="16">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
-                    <ItemsControl x:Name="itemsControl" ItemsSource="{Binding SettingItems}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                    <ItemsControl  ItemsSource="{Binding Diameter}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Spool" FontSize="16"/>
-            <TabItem Header="Traverse" FontSize="16"/>
-            <TabItem Header="Pulling" FontSize="16"/>
+            <TabItem Header="Spool" FontSize="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Spool}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Traverse" FontSize="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Traverse}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Pulling" FontSize="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Pulling}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Info" FontSize="16">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Info}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                    
+                </ScrollViewer>
+            </TabItem>
         </TabControl>
-        
-        
+
+
         <!--</StackPanel>-->
-        
+
     </Grid>
 </UserControl>

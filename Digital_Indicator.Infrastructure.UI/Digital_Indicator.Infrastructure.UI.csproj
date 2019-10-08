@@ -101,6 +101,10 @@
       <DependentUpon>DashboardItemView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ControlBase\ParameterMachine.cs" />
+    <Compile Include="Controls\LargeDataInputViewModel.cs" />
+    <Compile Include="Controls\LargeDataInputView.xaml.cs">
+      <DependentUpon>LargeDataInputView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataInputView.xaml.cs">
       <DependentUpon>DataInputView.xaml</DependentUpon>
     </Compile>
@@ -157,6 +161,10 @@
     <Page Include="Controls\DashboardItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LargeDataInputView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\DataInputView.xaml">
       <SubType>Designer</SubType>

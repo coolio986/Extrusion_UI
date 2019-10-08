@@ -28,9 +28,29 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private DelegateCommand closeSettingsView;
         public ObservableCollection<ViewModelBase> settingItems;
 
-        public ObservableCollection<ViewModelBase> SettingItems
+        public ObservableCollection<ViewModelBase> Diameter
         {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings(); }
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Diameter"]; }
+        }
+
+        public ObservableCollection<ViewModelBase> Spool
+        {
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Spool"]; }
+        }
+
+        public ObservableCollection<ViewModelBase> Traverse
+        {
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Traverse"]; }
+        }
+
+        public ObservableCollection<ViewModelBase> Pulling
+        {
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Pulling"]; }
+        }
+
+        public ObservableCollection<ViewModelBase> Info
+        {
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Info"]; }
         }
 
         public DelegateCommand CloseSettingsView

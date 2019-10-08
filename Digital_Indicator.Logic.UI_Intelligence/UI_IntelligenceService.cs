@@ -20,7 +20,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         public event EventHandler SettingsUpdated;
         private ISerialService _serialService;
         private IFilamentService _filamentService;
-        SettingItems items;
+        private SettingItems items;
 
         private Collection<ViewModelBase> Settings { get; set; }
 
@@ -31,28 +31,33 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
 
             items = new SettingItems();
-
-            Settings = items.Settings; //new ObservableCollection<ViewModelBase>();
+            Settings = new Collection<ViewModelBase>();
+            //Settings = items.Settings; //new ObservableCollection<ViewModelBase>();
 
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
 
-            foreach (ViewModelBase item in items.Settings)
+            foreach (KeyValuePair<string, ObservableCollection<ViewModelBase>> item in items.Settings)
             {
-                if (item.IsXmLParameter)
+                foreach(ViewModelBase vmb in item.Value)
                 {
-                    //PropertyInfo prop = _filamentService.GetType().GetProperty(item.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
-                    item.Value = _filamentService.FilamentServiceVariables[item.XmlParameterName];
+                    if (vmb.IsXmLParameter)
+                    {
+                        PropertyInfo prop = _filamentService.GetType().GetProperty(vmb.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
+                        vmb.Value = _filamentService.FilamentServiceVariables[vmb.XmlParameterName];
 
-                    //if (prop != null)
-                    //{
-                    //    item.Value = prop.GetValue(_filamentService, null);
-                    //}
+                        if (prop != null)
+                        {
+                            vmb.Value = prop.GetValue(_filamentService, null);
+                        }
+                    }
+                    Settings.Add(vmb);
                 }
+
             }
 
             _serialService.SendSerialData(new SerialCommand() { Command = "GetFullUpdate", DeviceID = "100" });
 
-            foreach (ViewModelBase item in items.Settings)
+            foreach (ViewModelBase item in Settings)
             {
 
                 item.PropertyChanged += ItemChange_Handler;
@@ -67,11 +72,11 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
             if (items != null)
             {
-                foreach (ViewModelBase item in items.Settings)
+                foreach (ViewModelBase item in Settings)
                 {
                     if (item.SerialCommand == command.Command && item.IsSerialCommand)
                     {
-
+                        item.PropertyChanged -= ItemChange_Handler;
                         if (item.Value.ToString() != command.Value)
                         {
                             if (item.GetType() == typeof(EnumItemsViewModel))
@@ -80,9 +85,14 @@ namespace Digital_Indicator.Logic.UI_Intelligence
                             }
                             else
                             {
-                                item.Value = command.Value;
+                                if ((string)item.Value != command.Value)
+                                {
+                                    item.Value = command.Value;
+                                    
+                                }
                             }
                         }
+                        item.PropertyChanged += ItemChange_Handler;
                         break;
                     }
                 }
@@ -91,9 +101,14 @@ namespace Digital_Indicator.Logic.UI_Intelligence
 
         }
 
-        public IReadOnlyCollection<ViewModelBase> GetSettings()
+        //public IReadOnlyCollection<ViewModelBase> GetSettings()
+        //{
+        //    return Settings;
+        //}
+
+        public Dictionary<string, ObservableCollection<ViewModelBase>> GetSettings()
         {
-            return Settings;
+            return items.Settings;
         }
 
         public void SaveSettings()

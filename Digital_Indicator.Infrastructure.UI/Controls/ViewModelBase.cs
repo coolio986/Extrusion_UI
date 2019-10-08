@@ -20,6 +20,7 @@ namespace Digital_Indicator.Infrastructure.UI.Controls
         public string SerialCommand { get; set; }
         public bool IsXmLParameter { get; set; }
         public string XmlParameterName { get; set; }
+        public string ParameterType { get; set; }
         //public string Unit { get; set; }
         public DelegateCommand<ViewModelBase> EnterCommand { get; set; }
 
