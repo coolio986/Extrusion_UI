@@ -119,8 +119,8 @@ namespace Digital_Indicator.Logic.Filament
                 captureStarted = value;
                 if (captureStarted)
                 {
-                    FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["NominalDiameter"];
-                    FilamentServiceVariables["LowestValue"] = FilamentServiceVariables["NominalDiameter"];
+                    FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["ActualDiameter"];
+                    FilamentServiceVariables["LowestValue"] = FilamentServiceVariables["ActualDiameter"];
                     if (FilamentServiceVariables["SpoolNumber"] == string.Empty) { FilamentServiceVariables["SpoolNumber"] = "0"; }
                     //FilamentServiceVariables["HighestValue"] = nominalDiameter;
                     //FilamentServiceVariables["LowestValue"] = nominalDiameter;
@@ -211,6 +211,16 @@ namespace Digital_Indicator.Logic.Filament
         private void SerialService_DiameterChanged(object sender, EventArgs e)
         {
             //ActualDiameter = sender.ToString();
+
+            double newDiameter = (double)Convert.ChangeType(sender, typeof(double));
+            double oldDiameter = (double)Convert.ChangeType(FilamentServiceVariables["ActualDiameter"], typeof(double));
+            if (Math.Abs(newDiameter - oldDiameter) > 1)
+            {
+                FilamentServiceVariables["ActualDiameter"] = sender.ToString();
+                return;
+            }
+                
+
             FilamentServiceVariables["ActualDiameter"] = sender.ToString();
 
             if (captureStarted)
@@ -229,7 +239,7 @@ namespace Digital_Indicator.Logic.Filament
             string lowestValue = FilamentServiceVariables["LowestValue"];
             FilamentServiceVariables["HighestValue"] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
             FilamentServiceVariables["LowestValue"] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
-            FilamentServiceVariables["Tolerance"] = (highestValue.GetDouble() - lowestValue.GetDouble()).ToString();
+            FilamentServiceVariables["Tolerance"] = ((highestValue.GetDouble() - lowestValue.GetDouble()) / 2).ToString("0.000");
         }
 
         private void UpdatePlots()
