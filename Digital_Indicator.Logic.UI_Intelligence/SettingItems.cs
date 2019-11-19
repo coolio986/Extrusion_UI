@@ -25,7 +25,11 @@ namespace Digital_Indicator.Logic.UI_Intelligence
         private DoubleInputViewModel TraverseSpoolWidth;
         private DoubleInputViewModel TraverseSpeed;
         private EnumItemsViewModel TraverseRunMode;
-        
+        private DataInputViewModel SpecificGravity;
+        private DataInputViewModel SpoolWeight;
+        private EnumItemsViewModel TraverseStartPosition;
+
+
 
         public SettingItems()
         {
@@ -43,42 +47,65 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseSpoolWidth = new DoubleInputViewModel();
             TraverseSpeed = new DoubleInputViewModel();
             TraverseRunMode = new EnumItemsViewModel();
+            SpecificGravity = new DataInputViewModel();
+            SpoolWeight = new DataInputViewModel();
+            TraverseStartPosition = new EnumItemsViewModel();
 
             Description.ParameterName = "Description";
             Description.IsXmLParameter = true;
             Description.XmlParameterName = "Description";
-            Description.ParameterType = "Info";
+            Description.ParameterType = "Production";
 
             FilamentDiameter.ParameterName = "Filament Diameter";
             FilamentDiameter.IsXmLParameter = true;
             FilamentDiameter.XmlParameterName = "NominalDiameter";
             FilamentDiameter.Unit = "mm";
-            FilamentDiameter.ParameterType = "Diameter";
+            FilamentDiameter.ParameterType = "Production";
 
             UpperLimit.ParameterName = "Upper Limit";
             UpperLimit.IsXmLParameter = true;
             UpperLimit.XmlParameterName = "UpperLimit";
             UpperLimit.Unit = "mm";
-            UpperLimit.ParameterType = "Diameter";
+            UpperLimit.ParameterType = "Production";
 
             LowerLimit.ParameterName = "Lower Limit";
             LowerLimit.IsXmLParameter = true;
             LowerLimit.XmlParameterName = "LowerLimit";
             LowerLimit.Unit = "mm";
-            LowerLimit.ParameterType = "Diameter";
+            LowerLimit.ParameterType = "Production";
 
             SpoolNumber.ParameterName = "Spool Number";
             SpoolNumber.IsXmLParameter = true;
             SpoolNumber.XmlParameterName = "SpoolNumber";
-            SpoolNumber.ParameterType = "Spool";
+            SpoolNumber.ParameterType = "Production";
 
             SpoolerRpm.HardwareType = "1";
-            SpoolerRpm.ParameterName = "Pull Speed";
+            SpoolerRpm.ParameterName = "Pull Rpm";
             SpoolerRpm.IsSerialCommand = true;
             SpoolerRpm.SerialCommand = "velocity";
             SpoolerRpm.Value = "0";
             SpoolerRpm.Unit = "rpm";
-            SpoolerRpm.ParameterType = "Pulling";
+            SpoolerRpm.ParameterType = "Production";
+
+            SpecificGravity.HardwareType = "3";
+            SpecificGravity.ParameterName = "Specific Gravity";
+            SpecificGravity.IsSerialCommand = true;
+            SpecificGravity.SerialCommand = "";
+            SpecificGravity.Value = 0;
+            SpecificGravity.ParameterType = "Production";
+            SpecificGravity.IsXmLParameter = true;
+            SpecificGravity.Unit = "g/cc";
+            SpecificGravity.XmlParameterName = "SpecificGravity";
+            
+            SpoolWeight.HardwareType = "3";
+            SpoolWeight.ParameterName = "Spool Weight";
+            SpoolWeight.IsSerialCommand = true;
+            SpoolWeight.SerialCommand = "";
+            SpoolWeight.Value = 0;
+            SpoolWeight.ParameterType = "Production";
+            SpoolWeight.IsXmLParameter = true;
+            SpoolWeight.XmlParameterName = "SpoolWeight";
+            SpoolWeight.Unit = "g";
 
             TraverseInnerOffset.HardwareType = "3";
             TraverseInnerOffset.ParameterName = "Traverse Inner Offset";
@@ -86,7 +113,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseInnerOffset.SerialCommand = "InnerOffset";
             TraverseInnerOffset.Value = "0";
             TraverseInnerOffset.Unit = "mm";
-            TraverseInnerOffset.ParameterType = "Traverse";
+            TraverseInnerOffset.ParameterType = "Machine";
 
             TraverseSpoolWidth.HardwareType = "3";
             TraverseSpoolWidth.ParameterName = "Spool Width";
@@ -94,7 +121,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseSpoolWidth.SerialCommand = "SpoolWidth";
             TraverseSpoolWidth.Value = "0";
             TraverseSpoolWidth.Unit = "mm";
-            TraverseSpoolWidth.ParameterType = "Spool";
+            TraverseSpoolWidth.ParameterType = "Machine";
 
             TraverseSpeed.HardwareType = "3";
             TraverseSpeed.ParameterName = "Traverse Speed";
@@ -102,7 +129,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseSpeed.SerialCommand = "TraverseRPM";
             TraverseSpeed.Value = "0";
             TraverseSpeed.Unit = "rpm";
-            TraverseSpeed.ParameterType = "Traverse";
+            TraverseSpeed.ParameterType = "Machine";
 
             TraverseRunMode.HardwareType = "3";
             TraverseRunMode.ParameterName = "Traverse Run Mode";
@@ -110,7 +137,9 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseRunMode.SerialCommand = "RunMode";
             TraverseRunMode.ItemIndex = 0;
             TraverseRunMode.Value = 0;
-            TraverseRunMode.ParameterType = "Traverse";
+            TraverseRunMode.ParameterType = "Machine";
+
+            
 
             EnumItem home = new EnumItem() { ItemValue = "Home", ItemValueID = "0" };
             EnumItem stop = new EnumItem() { ItemValue = "Stop", ItemValueID = "1" };
@@ -126,6 +155,25 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             TraverseRunMode.EnumList.Add(fullAuto);
 
 
+
+
+            TraverseStartPosition.HardwareType = "3";
+            TraverseStartPosition.ParameterName = "Traverse Start";
+            TraverseStartPosition.IsSerialCommand = true;
+            TraverseStartPosition.SerialCommand = "StartPosition";
+            TraverseStartPosition.ItemIndex = 0;
+            TraverseStartPosition.Value = 0;
+            TraverseStartPosition.ParameterType = "Machine";
+
+
+            EnumItem back = new EnumItem() { ItemValue = "Back", ItemValueID = "0" };
+            EnumItem middle = new EnumItem() { ItemValue = "Middle", ItemValueID = "1" };
+            EnumItem front = new EnumItem() { ItemValue = "Front", ItemValueID = "2" };
+            
+            TraverseStartPosition.EnumList = new ObservableCollection<EnumItem>();
+            TraverseStartPosition.EnumList.Add(back);
+            TraverseStartPosition.EnumList.Add(middle);
+            TraverseStartPosition.EnumList.Add(front);
 
 
 
@@ -150,6 +198,9 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             settings.Add(SpoolerRpm);
             settings.Add(TraverseSpeed);
             settings.Add(TraverseRunMode);
+            settings.Add(SpecificGravity);
+            settings.Add(SpoolWeight);
+            settings.Add(TraverseStartPosition);
             
 
             foreach (ViewModelBase item in settings)

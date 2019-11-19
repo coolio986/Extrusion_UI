@@ -291,32 +291,22 @@
                     </Setter>
                 </Style>
             </TabControl.Resources>
-            <TabItem Header ="Diameter" FontSize="16">
+            <TabItem Header ="Production" FontSize="16" Height="45" >
                 <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
-                    <ItemsControl  ItemsSource="{Binding Diameter}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                    <ItemsControl  ItemsSource="{Binding Production}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Spool" FontSize="16">
+            <TabItem Header="Machine" FontSize="16" Height="45">
                 <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
-                    <ItemsControl  ItemsSource="{Binding Spool}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                    <ItemsControl  ItemsSource="{Binding Machine}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
                 </ScrollViewer>
             </TabItem>
-            <TabItem Header="Traverse" FontSize="16">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
-                    <ItemsControl  ItemsSource="{Binding Traverse}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Pulling" FontSize="16">
-                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
-                    <ItemsControl  ItemsSource="{Binding Pulling}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
-                </ScrollViewer>
-            </TabItem>
-            <TabItem Header="Info" FontSize="16">
+            <!--<TabItem Header="Info" FontSize="16" Height="45" >
                 <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
                     <ItemsControl  ItemsSource="{Binding Info}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
                     
                 </ScrollViewer>
-            </TabItem>
+            </TabItem>-->
         </TabControl>
 
 

@@ -117,6 +117,7 @@ namespace Digital_Indicator.Logic.Filament
             set
             {
                 captureStarted = value;
+                
                 if (captureStarted)
                 {
                     FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["ActualDiameter"];
@@ -125,7 +126,7 @@ namespace Digital_Indicator.Logic.Filament
                     //FilamentServiceVariables["HighestValue"] = nominalDiameter;
                     //FilamentServiceVariables["LowestValue"] = nominalDiameter;
 
-
+                    
                     FilamentServiceVariables["SpoolNumber"] = (FilamentServiceVariables["SpoolNumber"].GetInteger() + 1).ToString();
                     SetupPlots();
                     SetupStopwatch();
@@ -136,6 +137,8 @@ namespace Digital_Indicator.Logic.Filament
                     SaveHistoricalData(ZedGraphPlotModel.GetPlot("HistoricalModel").GetDataPoints());
                     stopWatch.Stop();
                 }
+                SerialCommand command = new SerialCommand() { Command = "FilamentCapture", DeviceID = "100", Value = captureStarted ? "1" : "0" };
+                _serialService.SendSerialData(command);
             }
         }
 
@@ -169,6 +172,8 @@ namespace Digital_Indicator.Logic.Filament
             FilamentServiceVariables.Add("Duration", "");
             FilamentServiceVariables.Add("SpoolNumber", "");
             FilamentServiceVariables.Add("SpoolRPM", "");
+            FilamentServiceVariables.Add("SpecificGravity", "");
+            FilamentServiceVariables.Add("SpoolWeight", "");
 
             BuildXmlData();
             SetupPlots();

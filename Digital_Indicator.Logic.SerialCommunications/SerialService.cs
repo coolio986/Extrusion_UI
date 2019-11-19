@@ -303,6 +303,10 @@ namespace Digital_Indicator.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
+        public void StartPosition(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
 
         private void processSerialCommand(string[] splitData)
         {

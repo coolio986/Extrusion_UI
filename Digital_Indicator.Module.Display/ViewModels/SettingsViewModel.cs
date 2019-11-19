@@ -28,30 +28,30 @@ namespace Digital_Indicator.Module.Display.ViewModels
         private DelegateCommand closeSettingsView;
         public ObservableCollection<ViewModelBase> settingItems;
 
-        public ObservableCollection<ViewModelBase> Diameter
+        public ObservableCollection<ViewModelBase> Machine
         {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Diameter"]; }
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Machine"]; }
         }
 
-        public ObservableCollection<ViewModelBase> Spool
+        public ObservableCollection<ViewModelBase> Production
         {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Spool"]; }
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Production"]; }
         }
 
-        public ObservableCollection<ViewModelBase> Traverse
-        {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Traverse"]; }
-        }
+        //public ObservableCollection<ViewModelBase> Traverse
+        //{
+        //    get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Traverse"]; }
+        //}
 
-        public ObservableCollection<ViewModelBase> Pulling
-        {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Pulling"]; }
-        }
+        //public ObservableCollection<ViewModelBase> Pulling
+        //{
+        //    get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Pulling"]; }
+        //}
 
-        public ObservableCollection<ViewModelBase> Info
-        {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Info"]; }
-        }
+        //public ObservableCollection<ViewModelBase> Info
+        //{
+        //    get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Info"]; }
+        //}
 
         public DelegateCommand CloseSettingsView
         {

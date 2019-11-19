@@ -30,6 +30,7 @@ namespace Digital_Indicator.Module.Display.Views
 
         bool settingsWindowOpen;
         bool updateInProgress;
+        double zedGraphWidths = 0.0;
 
         public DiameterView(IFilamentService filamentService, INavigationService navigationService)
         {
@@ -94,6 +95,7 @@ namespace Digital_Indicator.Module.Display.Views
                 Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
                 Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath("(Width)"));
                 Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+                zedGraphWidths = this.ActualWidth;
 
                 sb.Completed += Storyboard_Completed;
                 plotStoryboard = sb;
@@ -133,6 +135,7 @@ namespace Digital_Indicator.Module.Display.Views
             Storyboard.SetTarget(doubleAnimationRealTime, zedGraphRealTimeModel);
             Storyboard.SetTargetProperty(doubleAnimationHistorical, new PropertyPath("(Width)"));
             Storyboard.SetTargetProperty(doubleAnimationRealTime, new PropertyPath("(Width)"));
+            zedGraphWidths = this.ActualWidth - 320;
 
             sb.Completed += Storyboard_Completed;
             plotStoryboard = sb;
@@ -143,11 +146,11 @@ namespace Digital_Indicator.Module.Display.Views
 
         private void Storyboard_Completed(object sender, EventArgs e)
         {
-            var width = this.zedGraphHistoricalModel.Width;
+            
             plotStoryboard.Completed -= Storyboard_Completed;
             plotStoryboard.Stop();
-            this.zedGraphHistoricalModel.Width = width;
-            this.zedGraphRealTimeModel.Width = width;
+            this.zedGraphHistoricalModel.Width = zedGraphWidths;
+            this.zedGraphRealTimeModel.Width = zedGraphWidths;
         }
 
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
