@@ -434,6 +434,25 @@
                         <ColumnDefinition Width="140"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
+                    <Label Content="Pull RPM"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="{Binding PullerRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Feedrate"  FontSize="20" HorizontalAlignment="Left" Padding="5,0,0,0" Margin="0" />
+                    <Label Content="(mm/s)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"  />
+                    <Label Content="{Binding Feedrate}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                </Grid>
+                
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
                     <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                     <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
                 </Grid>
@@ -545,6 +564,34 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                     <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Remaining"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="{Binding RemainingTime}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Weight"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="(g)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <Label Content="{Binding SpoolWeight}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                </Grid>
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Length"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="(m)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <Label Content="{Binding FilamentLength}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
                 </Grid>
 
             </StackPanel>

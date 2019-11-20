@@ -73,6 +73,16 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return _filamentService.CaptureStarted; }
         }
 
+        public string PullerRPM
+        {
+            get { return _filamentService.FilamentServiceVariables["PullerRPM"]; }
+        }
+
+        public string FilamentLength
+        {
+            get { return _filamentService.FilamentServiceVariables["FilamentLength"]; }
+        }
+
         public string Duration
         {
             get
@@ -124,6 +134,8 @@ namespace Digital_Indicator.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("SpoolRPM");
+            RaisePropertyChanged("PullerRPM");
+            RaisePropertyChanged("FilamentLength");
         }
 
         private void ResetGraph_Click()

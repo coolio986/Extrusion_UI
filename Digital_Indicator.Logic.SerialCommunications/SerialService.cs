@@ -308,6 +308,26 @@ namespace Digital_Indicator.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
+        public void SpoolTicks(string[] splitData) //reflection calls this
+        {
+            if (splitData.Length >= 3)
+            {
+                int ticks = (int)Convert.ChangeType(splitData[2], typeof(int));
+            }
+
+            processSerialCommand(splitData);
+        }
+
+        public void PullerRPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void FilamentLength(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
         private void processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();
