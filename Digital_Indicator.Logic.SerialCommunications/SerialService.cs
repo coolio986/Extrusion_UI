@@ -22,6 +22,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
         public event EventHandler TraverseDataChanged;
         public event EventHandler GeneralDataChanged;
 
+        private bool bHandshake = false;
 
         public SerialService()
         {
@@ -64,7 +65,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 PortName = portName;
                 serialPort.Open();
                 RunSimulation();
-                QueryUpdates();
+                
                 return;
             }
             if (!IsSimulationModeActive)
@@ -78,7 +79,6 @@ namespace Digital_Indicator.Logic.SerialCommunications
             }
 
             StartSerialReceive();
-            QueryUpdates();
 
         }
 
@@ -103,20 +103,32 @@ namespace Digital_Indicator.Logic.SerialCommunications
                         {
                             string dataIn = serialPort.ReadLine();
 
-                            //string functionName = GetFunctionName(dataIn);
                             Console.WriteLine(dataIn);
-                            //string asciiConvertedBytes = string.Empty;
-                            //asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
+                            
                             string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
                             if (splitData.Length >= 2)
                             {
                                 Type type = this.GetType();
                                 MethodInfo method = type.GetMethod(splitData[1]);
-                                if (method == null)
+
+                                if (bHandshake)
                                 {
-                                    Console.WriteLine(splitData[1] + " Failed to work");
+                                    if (method == null) //try indirect GetMethod
+                                    {
+                                        Console.WriteLine(splitData[1] + " Trying indirect method, no fuction defined");
+                                        method = type.GetMethod("ProcessIndirectFunction");
+                                    }
+                                    if (method == null) { throw new Exception(); }
+                                    method.Invoke(this, new object[] { splitData });
                                 }
-                                method.Invoke(this, new object[] { splitData });
+                                else
+                                {
+                                    if (splitData[1] == "Handshake")
+                                    {
+                                        method = type.GetMethod("Handshake");
+                                        method.Invoke(this, new object[] { splitData });
+                                    }
+                                }
                             }
                             
 
@@ -127,35 +139,13 @@ namespace Digital_Indicator.Logic.SerialCommunications
                             
                         }
                         
-                        Thread.Sleep(10);
+                        Thread.Sleep(10); //polling is faster than trying to use the serial ondata event ;(
                     }
                 }
             });
         }
 
-        private void QueryUpdates()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                if (PortDataIsSet)
-                {
-
-                    //TESTING UNCOMMENT WHEN DONE
-                    //while (true)
-                    //{
-                    //    SerialCommand command = new SerialCommand()
-                    //    {
-                    //        DeviceID = ((int)ConnectedDeviceTypes.SPOOLER).ToString() + ";",
-                    //        Command = "getrpm;",
-                    //        Value = null,
-                    //    };
-                    //    SendSerialData(command);
-                    //    Thread.Sleep(1000);
-                    //}
-                }
-            });
-
-        }
+        
 
         private void RunSimulation()
         {
@@ -276,6 +266,25 @@ namespace Digital_Indicator.Logic.SerialCommunications
             {
 
             }
+        }
+
+        public void Handshake(string[] splitData) //reflection calls this
+        {
+            if (!bHandshake)
+            {
+                SerialCommand command = new SerialCommand();
+                command.DeviceID = "100";
+                command.Command = "Handshake";
+                command.Value = "";
+
+                SendSerialData(command);
+            }
+            bHandshake = true;
+        }
+
+        public void ProcessIndirectFunction(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
         }
 
         public void SpoolRPM(string[] splitData) //reflection calls this
