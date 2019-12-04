@@ -6,7 +6,7 @@ using Digital_Indicator.Logic.Navigation;
 using Digital_Indicator.WindowForms.ZedGraphUserControl;
 using System.Windows.Media;
 using Digital_Indicator.Logic.Spooler;
-
+using System.ComponentModel;
 
 namespace Digital_Indicator.Module.Display.ViewModels
 {
@@ -83,6 +83,11 @@ namespace Digital_Indicator.Module.Display.ViewModels
             get { return _filamentService.FilamentServiceVariables["FilamentLength"]; }
         }
 
+        public string SpoolWeight
+        {
+            get { return _filamentService.FilamentServiceVariables["SpoolWeight"]; }
+        }
+
         public string Duration
         {
             get
@@ -132,10 +137,7 @@ namespace Digital_Indicator.Module.Display.ViewModels
 
         private void _filamentService_PropertyChanged(object sender, EventArgs e)
         {
-            RaisePropertyChanged("SpoolNumber");
-            RaisePropertyChanged("SpoolRPM");
-            RaisePropertyChanged("PullerRPM");
-            RaisePropertyChanged("FilamentLength");
+            RaisePropertyChanged(((PropertyChangedEventArgs)e).PropertyName);
         }
 
         private void ResetGraph_Click()

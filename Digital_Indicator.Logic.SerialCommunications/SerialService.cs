@@ -105,6 +105,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
 
                             Console.WriteLine(dataIn);
                             
+                            
                             string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
                             if (splitData.Length >= 2)
                             {
@@ -278,6 +279,13 @@ namespace Digital_Indicator.Logic.SerialCommunications
                 command.Value = "";
 
                 SendSerialData(command);
+
+                command.Command = "FilamentCapture";
+
+                Thread.Sleep(100);
+
+                SendSerialData(command);
+
             }
             bHandshake = true;
         }
@@ -342,7 +350,7 @@ namespace Digital_Indicator.Logic.SerialCommunications
             SerialCommand command = new SerialCommand();
 
             
-            if (splitData.Length == 3)
+            if (splitData.Length >= 3)
             {
                 command.DeviceID = splitData[0];
                 command.Command = splitData[1];

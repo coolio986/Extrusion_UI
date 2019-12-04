@@ -87,15 +87,15 @@ namespace Digital_Indicator.Logic.UI_Intelligence
             SpoolerRpm.Unit = "rpm";
             SpoolerRpm.ParameterType = "Production";
 
-            SpecificGravity.HardwareType = "3";
+            SpecificGravity.HardwareType = "100";
             SpecificGravity.ParameterName = "Specific Gravity";
             SpecificGravity.IsSerialCommand = true;
-            SpecificGravity.SerialCommand = "";
-            SpecificGravity.Value = 0;
+            SpecificGravity.SerialCommand = "SpecificGravity";
+            SpecificGravity.Value = "0";
             SpecificGravity.ParameterType = "Production";
-            SpecificGravity.IsXmLParameter = true;
+            //SpecificGravity.IsXmLParameter = true;
             SpecificGravity.Unit = "g/cc";
-            SpecificGravity.XmlParameterName = "SpecificGravity";
+            //SpecificGravity.XmlParameterName = "SpecificGravity";
             
             SpoolWeight.HardwareType = "3";
             SpoolWeight.ParameterName = "Spool Weight";

@@ -411,7 +411,7 @@
             </Border>
         </Grid>
 
-        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Height="{Binding ActualHeight, ElementName=stackPanel}" MinHeight="120">
+        <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel}" MinHeight="165">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
             </Border.Effect>
@@ -428,48 +428,51 @@
                 </LinearGradientBrush>
             </Border.BorderBrush>
             <StackPanel x:Name="stackPanel" >
-
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Pull RPM"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <Label Content="{Binding PullerRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
-                </Grid>
-                <Grid MaxWidth="270" HorizontalAlignment="Left">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="90"/>
+                        <ColumnDefinition Width="70"/>
                         <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="170"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Feedrate"  FontSize="20" HorizontalAlignment="Left" Padding="5,0,0,0" Margin="0" />
-                    <Label Content="(mm/s)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"  />
-                    <Label Content="{Binding Feedrate}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                    <Label Content="Wheel"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="(rpm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding PullerRPM}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="111,0,0,0"  />
                 </Grid>
-                
+                <Grid MaxWidth="270" HorizontalAlignment="Left">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Feedrate"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="(mm/s)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding Feedrate}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="40,0,0,0"  />
+                </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="150"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                    <Label Content=""  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="40,0,0,0"  />
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="170"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Spool RPM" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <Label Content="{Binding SpoolRPM}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
+                    <Label Content="Spool"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                    <Label Content="(rpm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding SpoolRPM}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="115,0,0,0"  />
                 </Grid>
-
 
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel1}" MinHeight="120">
+        <Border Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel1}" MinHeight="165">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
             </Border.Effect>
@@ -488,11 +491,13 @@
             <StackPanel x:Name="stackPanel1" >
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="96"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="135"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
+                    <Label Content="(mm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="79,0,0,0"  >
                     <!--<i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
                     </i:Interaction.Behaviors>-->
@@ -500,47 +505,53 @@
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="137"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="135"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    <Label Content="(mm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="38,0,0,0"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit="mm"/>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit=""/>
                     </i:Interaction.Behaviors>
                     </TextBlock>
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="130"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="135"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    <Label Content="(mm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="45,0,0,0"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit="mm"/>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit=""/>
                     </i:Interaction.Behaviors>
                     </TextBlock>
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="98"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="135"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Tolerance" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                    <Label Content="(mm)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="77,0,0,0" >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="Tolerance" Unit="mm"/>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="Tolerance" Unit=""/>
                     </i:Interaction.Behaviors>
                     </TextBlock>
                 </Grid>
-                
-                
-                
-                
+
+
+
+
             </StackPanel>
         </Border>
-        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,0,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel2}" MinHeight="120">
+        <Border Grid.Row="0" Grid.Column="5" Grid.ColumnSpan="2" Grid.RowSpan="2" Margin="5,5,0,0" BorderThickness="1" Padding="0" Height="{Binding ActualHeight, ElementName=stackPanel2}" MinHeight="165">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="0.5" ShadowDepth="0.5"/>
             </Border.Effect>
@@ -559,39 +570,43 @@
             <StackPanel x:Name="stackPanel2" >
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="92"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="144"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Duration"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                    <Label Content="(h:mm:ss)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding Duration}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="65,0,0,0"  />
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="140"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="108"/>
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="124"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Remaining"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                    <Label Content="{Binding RemainingTime}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                    <Label Content="(h:mm:ss)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
+                    <TextBlock Text="{Binding RemainingTime}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="30,0,0,0"  />
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="130"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Weight"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                     <Label Content="(g)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
-                    <Label Content="{Binding SpoolWeight}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                    <TextBlock Text="{Binding SpoolWeight}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="75,0,0,0"  />
                 </Grid>
                 <Grid MaxWidth="270" HorizontalAlignment="Left">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="75"/>
                         <ColumnDefinition Width="40"/>
-                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="146"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="Length"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                     <Label Content="(m)"  FontSize="10" HorizontalAlignment="Left" Padding="0,10,5,0" Grid.Column="1" Margin="-7,0,0,0"/>
-                    <Label Content="{Binding FilamentLength}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
+                    <TextBlock Text="{Binding FilamentLength}" Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="80,0,0,0"  />
                 </Grid>
 
             </StackPanel>

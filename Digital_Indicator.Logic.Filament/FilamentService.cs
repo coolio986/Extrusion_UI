@@ -189,6 +189,11 @@ namespace Digital_Indicator.Logic.Filament
 
             PropertyChanged?.Invoke(command, new PropertyChangedEventArgs(command.Command));
 
+            if (command.Command == "FilamentCapture" && command.Value == "1" && !captureStarted)
+            {
+                captureStarted = true;
+            }
+
             ////Expression set (faster than reflection)
             //Type type = this.GetType();
             //PropertyInfo propertyInfo = type.GetProperty(command.Command);

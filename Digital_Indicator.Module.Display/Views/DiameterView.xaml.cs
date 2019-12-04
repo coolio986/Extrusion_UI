@@ -161,7 +161,7 @@ namespace Digital_Indicator.Module.Display.Views
                 updateInProgress = true;
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"] + " mm";
+                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"];
                     this.InvalidateVisual();
 
                 }));

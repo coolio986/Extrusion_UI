@@ -85,7 +85,7 @@ namespace Digital_Indicator.Logic.UI_Intelligence
                             }
                             else
                             {
-                                if ((string)item.Value != command.Value)
+                                if ((string)item.Value != (string)command.Value)
                                 {
                                     item.Value = command.Value;
                                     

@@ -37,8 +37,14 @@ namespace Digital_Indicator.Logic.FileOperations
 
                     if (parentNode != "persistenceData")
                     {
-                        XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
-                        //XElement element = persistentXml.Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+                        XElement element = null;
+
+                        try
+                        {
+                            element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+                        }
+                        catch 
+                        { continue; }
 
                         if (element != null)
                         {
