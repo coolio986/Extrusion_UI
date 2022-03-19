@@ -1,0 +1,13 @@
+﻿<ToggleButton x:Class="ExtrusionUI.Infrastructure.UI.Controls.DashboardItemView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExtrusionUI.Infrastructure.UI.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="76" d:DesignWidth="72" IsChecked="{Binding IsSelected}">
+    <StackPanel Height="76" Width="72">
+        <Image Height="40" Source="{Binding ImageSource}" Margin="0,0,0,3"/>
+        <TextBlock TextWrapping="Wrap" Text="{Binding ParameterName}" HorizontalAlignment="Center" Width="72" FontSize="10" TextAlignment="Center" />
+    </StackPanel>
+</ToggleButton>

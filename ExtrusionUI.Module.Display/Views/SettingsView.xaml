@@ -1,0 +1,231 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:local="clr-namespace:ExtrusionUI.Module.Display.Views"
+             xmlns:helpers="clr-namespace:ExtrusionUI.Logic.Helpers;assembly=ExtrusionUI.Logic.Helpers"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:ei="http://schemas.microsoft.com/xaml/behaviors" x:Name="settingsViewUserControl" x:Class="ExtrusionUI.Module.Display.Views.SettingsView"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             Width="300" 
+             prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
+    <UserControl.Resources>
+        <Storyboard x:Key="Storyboard_Slide_Settings_In">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.X)" Storyboard.TargetName="settingsViewUserControl">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-300">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseInOut"/>
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <SolidColorBrush x:Key="Button.IsChecked.Background" Color="#00ff00"/>
+        <Style x:Key="ButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Opacity" Value="0.3"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <ei:Interaction.Triggers>
+        <ei:StoryboardCompletedTrigger Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
+            <ei:CallMethodAction MethodName="CloseSettings" TargetObject="{Binding}"/>
+        </ei:StoryboardCompletedTrigger>
+    </ei:Interaction.Triggers>
+    <UserControl.RenderTransform>
+        <TransformGroup>
+            <ScaleTransform/>
+            <SkewTransform/>
+            <RotateTransform/>
+            <TranslateTransform/>
+        </TransformGroup>
+    </UserControl.RenderTransform>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.ColumnSpan="2">
+            <Button x:Name="button" MinHeight="45" MaxHeight="45" MinWidth="50" MaxWidth="60" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" BorderBrush="{x:Null}" BorderThickness="0" Command="{Binding CloseSettingsView}"  helpers:CloseOnClickBehaviour.IsEnabled="True" Style="{DynamicResource ButtonStyle}">
+                <Button.Background>
+                    <DrawingBrush>
+                        <DrawingBrush.Drawing>
+
+                            <DrawingGroup xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:svg="http://sharpvectors.codeplex.com/runtime/">
+                                <DrawingGroup x:Name="DrawingLayer">
+                                    <DrawingGroup.ClipGeometry>
+                                        <RectangleGeometry Rect="0,0,140,140" />
+                                    </DrawingGroup.ClipGeometry>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="#00FFFFFF" Thickness="1" />
+                                        </GeometryDrawing.Pen>
+                                        <GeometryDrawing.Geometry>
+                                            <RectangleGeometry Rect="0,0,140,140" />
+                                        </GeometryDrawing.Geometry>
+                                    </GeometryDrawing>
+                                    <DrawingGroup Opacity="1">
+                                        <DrawingGroup Opacity="1">
+                                            <GeometryDrawing>
+                                                <GeometryDrawing.Brush>
+                                                    <LinearGradientBrush StartPoint="70,13" EndPoint="70,125.25" MappingMode="Absolute" SpreadMethod="Pad" Opacity="1">
+                                                        <GradientStop Color="#FFF2F2F2" Offset="0" />
+                                                        <GradientStop Color="#FFEFEFEF" Offset="0.23" />
+                                                        <GradientStop Color="#FFE5E5E5" Offset="0.41" />
+                                                        <GradientStop Color="#FFD4D4D4" Offset="0.58" />
+                                                        <GradientStop Color="#FFBCBCBC" Offset="0.73" />
+                                                        <GradientStop Color="#FF9E9E9E" Offset="0.88" />
+                                                        <GradientStop Color="#FF808080" Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </GeometryDrawing.Brush>
+                                                <GeometryDrawing.Geometry>
+                                                    <RectangleGeometry RadiusX="11.25" RadiusY="11.25" Rect="0.75,0.75,138.5,138.5" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                            <GeometryDrawing Brush="#FF333333">
+                                                <GeometryDrawing.Geometry>
+                                                    <PathGeometry FillRule="Nonzero" Figures="M128,1.5A10.51,10.51,0,0,1,138.5,12L138.5,128A10.51,10.51,0,0,1,128,138.5L12,138.5A10.51,10.51,0,0,1,1.5,128L1.5,12A10.51,10.51,0,0,1,12,1.5L128,1.5 M128,0L12,0A12,12,0,0,0,0,12L0,128A12,12,0,0,0,12,140L128,140A12,12,0,0,0,140,128L140,12A12,12,0,0,0,128,0z" />
+                                                </GeometryDrawing.Geometry>
+                                            </GeometryDrawing>
+                                        </DrawingGroup>
+                                        <DrawingGroup Opacity="1">
+                                            <DrawingGroup Opacity="0.5">
+
+                                            </DrawingGroup>
+                                        </DrawingGroup>
+                                    </DrawingGroup>
+                                    <DrawingGroup Opacity="1">
+                                        <DrawingGroup Opacity="0.25" Transform="0.48,0,0,0.48,39.24,40.2">
+                                            <ImageDrawing Rect="0,0,161,137">
+                                                <ImageDrawing.ImageSource>
+                                                    <svg:EmbeddedBitmapSource Data="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" MimeType="image/png" />
+                                                </ImageDrawing.ImageSource>
+                                            </ImageDrawing>
+                                        </DrawingGroup>
+                                        <GeometryDrawing Brush="#FF000000">
+                                            <GeometryDrawing.Geometry>
+                                                <PathGeometry FillRule="Nonzero" Figures="M38.33,70.2L64.66,96.53A3.23,3.23,0,0,0,70.17,94.24L70.17,80.24 108,80.24 108,55.65 70.17,55.65 70.17,41.65A3.24,3.24,0,0,0,68.17,38.65A3.34,3.34,0,0,0,66.93,38.41A3.19,3.19,0,0,0,64.65,39.35L38.33,65.64A3.21,3.21,0,0,0,38.33,70.2z" />
+                                            </GeometryDrawing.Geometry>
+                                        </GeometryDrawing>
+                                    </DrawingGroup>
+                                </DrawingGroup>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Button.Background>
+                <Button.Triggers>
+                    <EventTrigger RoutedEvent="Button.Click" >
+                        <BeginStoryboard  Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Button.Triggers>
+            </Button>
+        </Grid>
+        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />
+        <StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">
+            <StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
+                <TextBlock Text="Description" FontSize="18" HorizontalAlignment="Center" />
+                <TextBox  FontSize="18"  Text="{Binding FilamentDescription}" MinHeight="75" />
+            </StackPanel>
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Filament Diameter" FontSize="18" VerticalAlignment="Center" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding FilamentDiameter}" />
+                <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Upper Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,53,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding UpperLimit}" />
+                <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Lower Limit" FontSize="18" VerticalAlignment="Center" Margin="0,0,55,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="20,0,0,0" Text="{Binding LowerLimit}" />
+                <TextBlock Text="mm" FontSize="18" Padding="5,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Spool Number" FontSize="18" VerticalAlignment="Center" Margin="0,0,50,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding SpoolNumber}" />
+                <Button MaxWidth="80" Margin="5,0,0,0"  Command="{Binding OpenSpoolDataFolder}" >
+                    <TextBlock Text="Spool Data Folder" TextWrapping="Wrap" TextAlignment="Center" />
+                </Button>
+            </StackPanel>
+            <StackPanel MinHeight="40" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Batch Number" FontSize="18" VerticalAlignment="Center" Margin="0,0,51,0" />
+                <TextBox Width="50" HorizontalAlignment="Right" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontSize="18" Margin="0,0,0,0" Text="{Binding BatchNumber}" />
+            </StackPanel>
+            <StackPanel MinHeight="30" Orientation="Horizontal" Margin="10,0,0,10">
+                <TextBlock Text="Version" FontSize="10" VerticalAlignment="Center" Margin="0,0,15,0" />
+                <TextBlock Text="{Binding VersionNumber}" FontSize="10" VerticalAlignment="Center" Margin="0,0,51,0" />
+            </StackPanel>
+
+        </StackPanel>
+
+    </Grid>
+</UserControl>
