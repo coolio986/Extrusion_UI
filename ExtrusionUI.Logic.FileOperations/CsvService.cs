@@ -18,12 +18,12 @@ namespace ExtrusionUI.Logic.FileOperations
             _fileService = fileService;
         }
 
-        public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string batchNumber, string description)
+        public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string description)
         {
             StringBuilder stringBuilderCsv = new StringBuilder();
             stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
 
-            foreach (DataListXY list in dataList)
+            foreach (DataListXY list in dataList.ToList())
             {
                 stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
             }
@@ -31,17 +31,8 @@ namespace ExtrusionUI.Logic.FileOperations
             string csvString = stringBuilderCsv.ToString();
             csvString = csvString.TrimEnd(','); //remove trailing comma
 
-            if (batchNumber != "0")
-            {
-                batchNumber = "_Batch" + batchNumber;
-            }
-            else
-            {
-                batchNumber = "";
-            }
-
             string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
-                "_" + description + "_" + "Spool" + spoolNumber + batchNumber + ".csv";
+                "_" + description + "_" + "Spool" + spoolNumber + ".csv";
 
             _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
         }

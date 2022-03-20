@@ -476,14 +476,43 @@
             <Image Source="/ExtrusionUI.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
         </Grid>-->
 
-        <Grid Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Right" Margin="0,5,0,0" >
+        <Grid Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
 
         </Grid>
 
-        <Grid Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="9" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Right" Margin="0,0,0,5" >
+        <Grid Grid.Column="3" Grid.Row="6" Grid.ColumnSpan="6" Grid.RowSpan="4" x:Name="zedGraphHistoricalModel" HorizontalAlignment="Stretch" Margin="0,0,0,5" >
             <!--Placeholder for zedgraph -->
 
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Margin="10" HorizontalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center">
+                <TextBlock Text="Spooler Functions" HorizontalAlignment="Center" TextDecorations="Underline" FontSize="16" Margin="0 0 0 10" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                    <Button Content="STOP" Width="60" Height="60" Margin="5" Background="LightPink" Command="{Binding StopCommand}" >
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Home" Width="60" Height="60" Margin="5" Command="{Binding HomeCommand}" >
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                    <Button Content="Run" Width="60" Height="60" Margin="5" Command="{Binding RunCommand}" >
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
         </Grid>
 
 

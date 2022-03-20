@@ -1,4 +1,4 @@
-﻿using Digital_Indicator.Infrastructure.UI.ControlBase;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;

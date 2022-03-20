@@ -124,6 +124,10 @@
       <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
       <Name>ExtrusionUI.Logic.SerialCommunications</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.UI_Intelligence\ExtrusionUI.Logic.UI_Intelligence.csproj">
+      <Project>{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}</Project>
+      <Name>ExtrusionUI.Logic.UI_Intelligence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.WindowForms.ZedGraphUserControl\ExtrusionUI.WindowForms.ZedGraphUserControl.csproj">
       <Project>{4304c760-7374-4c33-90d9-032d798e1254}</Project>
       <Name>ExtrusionUI.WindowForms.ZedGraphUserControl</Name>

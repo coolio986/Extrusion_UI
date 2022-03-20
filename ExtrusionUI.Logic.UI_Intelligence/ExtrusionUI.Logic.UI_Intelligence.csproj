@@ -4,14 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FDD57CAC-B228-496A-8BC7-496F742013C0}</ProjectGuid>
+    <ProjectGuid>{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtrusionUI.Logic.Filament</RootNamespace>
-    <AssemblyName>ExtrusionUI.Logic.Filament</AssemblyName>
+    <RootNamespace>ExtrusionUI.Logic.UI_Intelligence</RootNamespace>
+    <AssemblyName>ExtrusionUI.Logic.UI_Intelligence</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,52 +31,46 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="ZedGraph, Version=5.1.5.28844, Culture=neutral, PublicKeyToken=02a83cbd123fcd60, processorArchitecture=MSIL">
-      <HintPath>..\packages\ZedGraph.5.1.5\lib\ZedGraph.dll</HintPath>
-    </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilamentService.cs" />
-    <Compile Include="IFilamentService.cs" />
+    <Compile Include="IUI_IntelligenceService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingItems.cs" />
+    <Compile Include="UI_IntelligenceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ExtrusionUI.Infrastructure.UI\ExtrusionUI.Infrastructure.UI.csproj">
-      <Project>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</Project>
+      <Project>{3cd37f03-d9b7-426c-8447-3cef0284fabe}</Project>
       <Name>ExtrusionUI.Infrastructure.UI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Infrastructure\ExtrusionUI.Infrastructure.csproj">
-      <Project>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</Project>
-      <Name>ExtrusionUI.Infrastructure</Name>
+    <ProjectReference Include="..\ExtrusionUI.Logic.Filament\ExtrusionUI.Logic.Filament.csproj">
+      <Project>{fdd57cac-b228-496a-8bc7-496f742013c0}</Project>
+      <Name>ExtrusionUI.Logic.Filament</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.Logic.FileOperations\ExtrusionUI.Logic.FileOperations.csproj">
-      <Project>{8035395E-CE20-45CC-8669-F1CBB8CB31BB}</Project>
+      <Project>{8035395e-ce20-45cc-8669-f1cbb8cb31bb}</Project>
       <Name>ExtrusionUI.Logic.FileOperations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.Helpers\ExtrusionUI.Logic.Helpers.csproj">
-      <Project>{49952ABE-8438-4FC1-BC9A-4A4D596E64F5}</Project>
-      <Name>ExtrusionUI.Logic.Helpers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.Logic.SerialCommunications\ExtrusionUI.Logic.SerialCommunications.csproj">
-      <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
+      <Project>{f7861637-3550-49d6-9b8d-f9d38c6a3602}</Project>
       <Name>ExtrusionUI.Logic.SerialCommunications</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.WindowForms.ZedGraphUserControl\ExtrusionUI.WindowForms.ZedGraphUserControl.csproj">
-      <Project>{4304C760-7374-4C33-90D9-032D798E1254}</Project>
-      <Name>ExtrusionUI.WindowForms.ZedGraphUserControl</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

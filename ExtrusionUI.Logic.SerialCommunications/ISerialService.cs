@@ -13,7 +13,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
         void ConnectToSerialPort(string portName);
 
         event EventHandler DiameterChanged;
+        event EventHandler SpoolerDataChanged;
+        event EventHandler TraverseDataChanged;
+        event EventHandler GeneralDataChanged;
 
         bool IsSimulationModeActive { get; set; }
+
+        void SendSerialData(SerialCommand command);
     }
 }

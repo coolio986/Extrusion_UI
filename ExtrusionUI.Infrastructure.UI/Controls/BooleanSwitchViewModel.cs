@@ -1,4 +1,4 @@
-﻿using Digital_Indicator.Infrastructure.UI.ControlBase;
+﻿
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;

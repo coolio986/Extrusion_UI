@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.Toolkits", "Ext
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.VirtualKeyboard", "ExtrusionUI.VirtualKeyboard\ExtrusionUI.VirtualKeyboard.csproj", "{F74B3364-1FF6-4279-A6CB-00DE1C592A00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.Logic.UI_Intelligence", "ExtrusionUI.Logic.UI_Intelligence\ExtrusionUI.Logic.UI_Intelligence.csproj", "{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{F74B3364-1FF6-4279-A6CB-00DE1C592A00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F74B3364-1FF6-4279-A6CB-00DE1C592A00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F74B3364-1FF6-4279-A6CB-00DE1C592A00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

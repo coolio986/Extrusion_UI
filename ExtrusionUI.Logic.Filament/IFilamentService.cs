@@ -10,16 +10,15 @@ namespace ExtrusionUI.Logic.Filament
 {
     public interface IFilamentService
     {
-        string Description { get; set; }
+        //string Description { get; set; }
         //string ActualDiameter { get; set; }
-        string NominalDiameter { get; set; }
-        string UpperLimit { get; set; }
-        string LowerLimit { get; set; }
+        //string NominalDiameter { get; set; }
+        //string UpperLimit { get; set; }
+        //string LowerLimit { get; set; }
         //string HighestValue { get; set; }
         //string LowestValue { get; set; }
-        string SpoolNumber { get; set; }
-        string BatchNumber { get; set; }
-
+        //string SpoolNumber { get; set; }
+        //string SpoolRPM { get; set; }
         Dictionary<string, string> FilamentServiceVariables { get; }
 
         event EventHandler DiameterChanged;
@@ -30,8 +29,11 @@ namespace ExtrusionUI.Logic.Filament
         bool IsSimulationModeActive { get; set; }
 
         void SaveHistoricalData(HashSet<DataListXY> dataPoints);
+        void SaveXmlData();
 
-        Stopwatch stopWatch { get;}
-        
+        Stopwatch DurationClock { get; }
+
+        string RemainingTime { get; }
+
     }
 }

@@ -58,6 +58,14 @@
     <Compile Include="ControlBase\ButtonTypes.cs" />
     <Compile Include="ControlBase\EnumItem.cs" />
     <Compile Include="ControlBase\ParameterMachine.cs" />
+    <Compile Include="Controls\BooleanSwitchViewModel.cs" />
+    <Compile Include="Controls\ButtonPressViewModel.cs" />
+    <Compile Include="Controls\DashboardItemViewModel.cs" />
+    <Compile Include="Controls\DataInputViewModel.cs" />
+    <Compile Include="Controls\DoubleInputViewModel.cs" />
+    <Compile Include="Controls\EnumItemsViewModel.cs" />
+    <Compile Include="Controls\ErrorItemViewModel.cs" />
+    <Compile Include="Controls\LargeDataInputViewModel.cs" />
     <Compile Include="Controls\UserControl1.xaml.cs">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>

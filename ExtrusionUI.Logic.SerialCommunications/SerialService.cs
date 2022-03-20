@@ -21,6 +21,9 @@ namespace ExtrusionUI.Logic.SerialCommunications
         private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
+        public event EventHandler SpoolerDataChanged;
+        public event EventHandler TraverseDataChanged;
+        public event EventHandler GeneralDataChanged;
 
         private IFileService _fileService;
 
