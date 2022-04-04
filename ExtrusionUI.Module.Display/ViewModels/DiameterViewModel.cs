@@ -6,6 +6,7 @@ using ExtrusionUI.Logic.Navigation;
 using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System.Windows.Media;
 using ExtrusionUI.Logic.SerialCommunications;
+using ExtrusionUI.Core;
 
 namespace ExtrusionUI.Module.Display.ViewModels
 {
@@ -28,6 +29,10 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand<object> _stopCommand;
         public DelegateCommand<object> StopCommand => _stopCommand ?? (_stopCommand = new DelegateCommand<object>(ExecuteStopCommand));
 
+        private DelegateCommand<object> _runTraverseToStart;
+        public DelegateCommand<object> RunTraverseToStart => _runTraverseToStart ?? (_runTraverseToStart = new DelegateCommand<object>(ExecuteRunTraverseToStartCommand, CanExecuteRunTraverseToStartCommand));
+
+
         private void ExecuteHomeCommand(object obj)
         {
             _serialService.SendSerialData(new SerialCommand() { Command = "home", DeviceID = "1" });
@@ -41,6 +46,17 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private void ExecuteStopCommand(object obj)
         {
             _serialService.SendSerialData(new SerialCommand() { Command = "stop", DeviceID = "1" });
+        }
+
+        private void ExecuteRunTraverseToStartCommand(object obj)
+        {
+            _serialService.SendSerialData(new SerialCommand() { Command = "RunTraverseToStart", DeviceID = "1" });
+        }
+
+        private bool CanExecuteRunTraverseToStartCommand(object arg)
+        {
+            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] == "Stopped";
+            
         }
 
         private bool settingsOpen;
@@ -64,22 +80,22 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         public string Diameter
         {
-            get { return _filamentService.FilamentServiceVariables["ActualDiameter"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]; }
         }
 
         public string HighestValue
         {
-            get { return _filamentService.FilamentServiceVariables["HighestValue"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.HIGHESTVALUE]; }
         }
 
         public string LowestValue
         {
-            get { return _filamentService.FilamentServiceVariables["LowestValue"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.LOWESTVALUE]; }
         }
 
         public string SpoolNumber
         {
-            get { return _filamentService.FilamentServiceVariables["SpoolNumber"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLNUMBER]; }
         }
 
         public string SpoolRPM
@@ -114,7 +130,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         public string SpoolWeight
         {
-            get { return _filamentService.FilamentServiceVariables["SpoolWeight"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLWEIGHT]; }
         }
 
         public string Feedrate
@@ -129,7 +145,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         public string Duration
         {
-            get { return _filamentService.FilamentServiceVariables["Duration"]; }
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.DURATION]; }
         }
 
         public string RemainingTime
@@ -140,6 +156,11 @@ namespace ExtrusionUI.Module.Display.ViewModels
         public string KeepAlive
         {
             get { return _filamentService.FilamentServiceVariables["KeepAlive"]; }
+        }
+
+        public string TraverseMotionStatus
+        {
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS]; }
         }
 
         //public string Duration
@@ -191,6 +212,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
+            RunTraverseToStart.RaiseCanExecuteChanged();
         }
 
         private void ResetGraph_Click()

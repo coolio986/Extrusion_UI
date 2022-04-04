@@ -53,6 +53,10 @@
     <Compile Include="UI_IntelligenceService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ExtrusionUI.Core\ExtrusionUI.Core.csproj">
+      <Project>{58b80657-9961-4e42-9931-629690417b0a}</Project>
+      <Name>ExtrusionUI.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.Infrastructure.UI\ExtrusionUI.Infrastructure.UI.csproj">
       <Project>{3cd37f03-d9b7-426c-8447-3cef0284fabe}</Project>
       <Name>ExtrusionUI.Infrastructure.UI</Name>

@@ -1,4 +1,5 @@
-﻿using ExtrusionUI.Logic.Filament;
+﻿using ExtrusionUI.Core;
+using ExtrusionUI.Logic.Filament;
 using ExtrusionUI.Logic.Navigation;
 using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System;
@@ -160,19 +161,19 @@ namespace ExtrusionUI.Module.Display.Views
                 Dispatcher.Invoke(new Action(() =>
                 {
                     double actDiameter = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables["ActualDiameter"], out actDiameter);
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER], out actDiameter);
 
                     double UpperLimit = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables["UpperLimit"], out UpperLimit);
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT], out UpperLimit);
 
                     double LowerLimit = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables["LowerLimit"], out LowerLimit);
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT], out LowerLimit);
 
                     double HighestValue = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables["HighestValue"], out HighestValue);
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.HIGHESTVALUE], out HighestValue);
 
                     double LowestValue = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables["LowestValue"], out LowestValue);
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.LOWESTVALUE], out LowestValue);
 
                     if (actDiameter >= UpperLimit || actDiameter <= LowerLimit)
                         textBlockDiameter.Foreground = Brushes.Red;
@@ -180,7 +181,7 @@ namespace ExtrusionUI.Module.Display.Views
                         textBlockDiameter.Foreground = Brushes.Black;
 
 
-                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables["ActualDiameter"];
+                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
 
                     this.InvalidateVisual();
 

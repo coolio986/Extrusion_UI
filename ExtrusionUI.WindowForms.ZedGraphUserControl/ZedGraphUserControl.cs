@@ -136,9 +136,12 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             int index = 0;
             foreach (DataListXY item in diameterList.ToList())
             {
-                dblTime[index] = item.X;
-                dblDiameter[index] = item.Y;
-                index++;
+                if (item != null)
+                {
+                    dblTime[index] = item.X;
+                    dblDiameter[index] = item.Y;
+                    index++;
+                }
             }
 
             if (IsHistorical)

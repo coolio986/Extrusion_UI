@@ -8,7 +8,10 @@
              xmlns:helpers="clr-namespace:ExtrusionUI.Logic.Helpers;assembly=ExtrusionUI.Logic.Helpers"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:ei="http://schemas.microsoft.com/xaml/behaviors" x:Name="settingsViewUserControl" x:Class="ExtrusionUI.Module.Display.Views.SettingsView"
-             mc:Ignorable="d" 
+             xmlns:paramControls="clr-namespace:ExtrusionUI.Infrastructure.UI.Controls;assembly=ExtrusionUI.Infrastructure.UI"
+             xmlns:paramClasses="clr-namespace:ExtrusionUI.Infrastructure.UI.ControlBase;assembly=ExtrusionUI.Infrastructure.UI"
+             xmlns:debug="debug-mode"
+             mc:Ignorable="d mc debug" 
              d:DesignHeight="450" d:DesignWidth="800"
              Width="300" 
              prism:ViewModelLocator.AutoWireViewModel="True" Background="#FFCFCFCF" RenderTransformOrigin="0.5,0.5" BorderBrush="Black" BorderThickness="0,1,1,1" >
@@ -81,6 +84,32 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <DataTemplate DataType="{x:Type paramControls:BooleanSwitchViewModel}">
+            <paramControls:BooleanSwitchView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:DoubleInputViewModel}">
+            <paramControls:DoubleInputView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:DataInputViewModel}">
+            <paramControls:DataInputView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:LargeDataInputViewModel}">
+            <paramControls:LargeDataInputView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:EnumItemsViewModel}">
+            <paramControls:EnumItemsView  />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramClasses:EnumItem}">
+            <Border>
+                <TextBlock Text="{Binding ItemValue}"/>
+            </Border>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type paramControls:ButtonPressViewModel}">
+            <paramControls:ButtonPressView  />
+        </DataTemplate>
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate1">
+            <WrapPanel/>
+        </ItemsPanelTemplate>
     </UserControl.Resources>
     <ei:Interaction.Triggers>
         <ei:StoryboardCompletedTrigger Storyboard="{StaticResource Storyboard_Slide_Settings_In}">
@@ -189,7 +218,62 @@
             </Button>
         </Grid>
         <TextBlock Text="Settings" FontSize="20" FontWeight="Bold" Grid.Column="2" Grid.ColumnSpan="3" HorizontalAlignment="Center" />
-        <StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">
+        <TabControl   BorderThickness="0" Background="LightGray" Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="10" Grid.RowSpan="7">
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TabItem">
+                                <Grid Name="Panel">
+                                    <ContentPresenter x:Name="ContentSite"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center"
+                                        ContentSource="Header"
+                                        Margin="5.6,2" MinHeight="30"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue" />
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter TargetName="Panel" Property="Background" Value="White" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </TabControl.Resources>
+            <TabItem Header ="Production" FontSize="16" Height="45" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Production}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Traverse" FontSize="16" Height="45">
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Traverse}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                </ScrollViewer>
+            </TabItem>
+
+            <mc:AlternateContent>
+                <mc:Choice Requires="debug">
+                    <TabItem Header="Debug" FontSize="16" Height="45">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                            <ItemsControl  ItemsSource="{Binding Debug}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                        </ScrollViewer>
+                    </TabItem>
+                </mc:Choice>
+                <mc:Fallback>
+                </mc:Fallback>
+            </mc:AlternateContent>
+            <!--<TabItem Header="Info" FontSize="16" Height="45" >
+                <ScrollViewer VerticalScrollBarVisibility="Auto"  HorizontalAlignment="Center"  Background="#FF919191" Margin="0,-2,0,0"  >
+                    <ItemsControl  ItemsSource="{Binding Info}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" />
+                    
+                </ScrollViewer>
+            </TabItem>-->
+        </TabControl>
+        <!--<StackPanel Grid.Row="1" Grid.RowSpan="3" Grid.ColumnSpan="7" Grid.Column="0">
             <StackPanel MinHeight="30" Orientation="Vertical" Margin="10,0,10,10">
                 <TextBlock Text="Description" FontSize="18" HorizontalAlignment="Center" />
                 <TextBox  FontSize="18"  Text="{Binding FilamentDescription}" MinHeight="75" />
@@ -225,7 +309,7 @@
                 <TextBlock Text="{Binding VersionNumber}" FontSize="10" VerticalAlignment="Center" Margin="0,0,51,0" />
             </StackPanel>
 
-        </StackPanel>
+        </StackPanel>-->
 
     </Grid>
 </UserControl>

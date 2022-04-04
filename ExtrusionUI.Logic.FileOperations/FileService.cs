@@ -78,7 +78,7 @@ namespace ExtrusionUI.Logic.FileOperations
                     XElement settings = doc.Element("persistenceData").Element("filamentData");
                     settings.Add(new XElement("previousBatchNumber", "0"));
                     settings.Add(new XElement("materialDescription", ""));
-                    settings.Add(new XElement("nominalDiameter", "1.75"));
+                    settings.Add(new XElement("filamentNominalDiameter", "1.75"));
                     settings.Add(new XElement("upperLimit", "1.80"));
                     settings.Add(new XElement("lowerLimit", "1.70"));
                     settings.Add(new XElement("spoolNumber", "0"));

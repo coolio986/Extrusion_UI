@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ExtrusionUI.Toolkits;
 
 namespace ExtrusionUI.Infrastructure.UI.Controls
 {

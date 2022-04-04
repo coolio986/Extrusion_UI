@@ -65,9 +65,12 @@ namespace ExtrusionUI.Module.Display.Views
 
         private void OnRendering(object sender, EventArgs e)
         {
-            var TextValue = FilamentService.FilamentServiceVariables[VariableName];
-            TextValue = TextValue == string.Empty ? "" : TextValue + $" {Unit}";
-            AssociatedObject.Text = TextValue;
+            if (FilamentService.FilamentServiceVariables.ContainsKey(VariableName))
+            {
+                var TextValue = FilamentService.FilamentServiceVariables[VariableName];
+                TextValue = TextValue == string.Empty ? "" : TextValue + $" {Unit}";
+                AssociatedObject.Text = TextValue;
+            }
         }
 
     }

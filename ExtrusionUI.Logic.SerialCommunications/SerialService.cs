@@ -21,6 +21,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
+        
         public event EventHandler SpoolerDataChanged;
         public event EventHandler TraverseDataChanged;
         public event EventHandler GeneralDataChanged;
@@ -333,6 +334,11 @@ namespace ExtrusionUI.Logic.SerialCommunications
                             }
 
                             serialPort.WriteLine(serialCommand);
+                            while (serialPort.BytesToWrite > 0)
+                            {
+                                Console.WriteLine("writing bytes");
+                                Thread.Sleep(10);
+                            }
                         }
 
 
@@ -452,6 +458,62 @@ namespace ExtrusionUI.Logic.SerialCommunications
             catch (Exception oe)
             {
 
+            }
+        }
+
+        public void TraverseMotionStatus(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void FilamentNominalDiameter(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void FilamentUpperLimit(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void FilamentLowerLimit(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void TraverseHomeOffset(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void SpoolWidth(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void TraverseRPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void TraverseLeadRPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void TraverseLeadWidth(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void TraverseStartPosition(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+
+        private void processSerialCommand(string[] splitData)
+        {
+            SerialCommand command = new SerialCommand();
+            
+            if (splitData.Length >= 3)
+            {
+                command.DeviceID = splitData[0];
+                command.Command = splitData[1];
+                command.Value = splitData[2].Replace("\0", string.Empty).Replace("nan", "-1.00"); //remove nulls
+
+                GeneralDataChanged?.Invoke(command, null);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using ExtrusionUI.Infrastructure;
+﻿using ExtrusionUI.Core;
+using ExtrusionUI.Infrastructure;
 using ExtrusionUI.Logic.FileOperations;
 using ExtrusionUI.Logic.Helpers;
 using ExtrusionUI.Logic.SerialCommunications;
@@ -44,11 +45,11 @@ namespace ExtrusionUI.Logic.Filament
 
                 if (captureStarted)
                 {
-                    FilamentServiceVariables["HighestValue"] = FilamentServiceVariables["ActualDiameter"];
-                    FilamentServiceVariables["LowestValue"] = FilamentServiceVariables["ActualDiameter"];
-                    if (FilamentServiceVariables["SpoolNumber"] == string.Empty) { FilamentServiceVariables["SpoolNumber"] = "0"; }
+                    FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+                    FilamentServiceVariables[StaticStrings.LOWESTVALUE] = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+                    if (FilamentServiceVariables[StaticStrings.SPOOLNUMBER] == string.Empty) { FilamentServiceVariables[StaticStrings.SPOOLNUMBER] = "0"; }
 
-                    FilamentServiceVariables["SpoolNumber"] = (FilamentServiceVariables["SpoolNumber"].GetInteger() + 1).ToString();
+                    FilamentServiceVariables[StaticStrings.SPOOLNUMBER] = (FilamentServiceVariables[StaticStrings.SPOOLNUMBER].GetInteger() + 1).ToString();
 
                     SetupPlots();
                     SetupStopwatch();
@@ -83,28 +84,31 @@ namespace ExtrusionUI.Logic.Filament
             _csvService = csvService;
 
             FilamentServiceVariables = new Dictionary<string, string>();
-            FilamentServiceVariables.Add("Description", "");
-            FilamentServiceVariables.Add("ActualDiameter", "");
-            FilamentServiceVariables.Add("HighestValue", "");
-            FilamentServiceVariables.Add("LowestValue", "");
-            FilamentServiceVariables.Add("NominalDiameter", "");
-            FilamentServiceVariables.Add("UpperLimit", "");
-            FilamentServiceVariables.Add("LowerLimit", "");
-            FilamentServiceVariables.Add("Tolerance", "");
-            FilamentServiceVariables.Add("Duration", "");
-            FilamentServiceVariables.Add("SpoolNumber", "");
-            FilamentServiceVariables.Add("SpoolRPM", "");
-            FilamentServiceVariables.Add("SpecificGravity", "");
-            FilamentServiceVariables.Add("SpoolWeightLimit", "");
-            FilamentServiceVariables.Add("PullerRPM", "");
-            FilamentServiceVariables.Add("FilamentLength", "");
-            FilamentServiceVariables.Add("Feedrate", "");
-            FilamentServiceVariables.Add("SpoolWeight", "");
-            FilamentServiceVariables.Add("OutputRate", "");
-            FilamentServiceVariables.Add("RemainingTime", "");
-            FilamentServiceVariables.Add("KeepAlive", "Disconnected");
-            FilamentServiceVariables.Add("DiameterError", "");
-            FilamentServiceVariables.Add("velocity", "0");
+            //FilamentServiceVariables.Add("Description", "");
+            FilamentServiceVariables.Add(StaticStrings.TRAVERSEMOTIONSTATUS, "None");
+            FilamentServiceVariables.Add(StaticStrings.ACTUALDIAMETER, "");
+            FilamentServiceVariables.Add(StaticStrings.HIGHESTVALUE, "");
+            FilamentServiceVariables.Add(StaticStrings.LOWESTVALUE, "");
+            FilamentServiceVariables.Add(StaticStrings.FILAMENTNOMINALDIAMETER, "");
+            FilamentServiceVariables.Add(StaticStrings.FILAMENTUPPERLIMIT, "");
+            FilamentServiceVariables.Add(StaticStrings.FILAMENTLOWERLIMIT, "");
+            FilamentServiceVariables.Add(StaticStrings.TRAVERSEHOMEOFFSET, "Nan");
+            FilamentServiceVariables.Add(StaticStrings.SPOOLWIDTH, "Nan");
+            //FilamentServiceVariables.Add("Tolerance", "");
+            FilamentServiceVariables.Add(StaticStrings.DURATION, "");
+            FilamentServiceVariables.Add(StaticStrings.SPOOLNUMBER, "");
+            //FilamentServiceVariables.Add("SpoolRPM", "");
+            //FilamentServiceVariables.Add("SpecificGravity", "");
+            FilamentServiceVariables.Add(StaticStrings.SPOOLWEIGHTLIMIT, "");
+            //FilamentServiceVariables.Add("PullerRPM", "");
+            //FilamentServiceVariables.Add("FilamentLength", "");
+            //FilamentServiceVariables.Add("Feedrate", "");
+            FilamentServiceVariables.Add(StaticStrings.SPOOLWEIGHT, "");
+            //FilamentServiceVariables.Add("OutputRate", "");
+            //FilamentServiceVariables.Add("RemainingTime", "");
+            //FilamentServiceVariables.Add("KeepAlive", "Disconnected");
+            //FilamentServiceVariables.Add("DiameterError", "");
+            //FilamentServiceVariables.Add("velocity", "0");
 
             BuildXmlData();
             SetupPlots();
@@ -141,14 +145,14 @@ namespace ExtrusionUI.Logic.Filament
 
         private void SetupPlots()
         {
-            if(FilamentServiceVariables["UpperLimit"] == string.Empty)
-                FilamentServiceVariables["UpperLimit"] = "1.80";
-            if (FilamentServiceVariables["LowerLimit"] == string.Empty)
-                FilamentServiceVariables["LowerLimit"] = "1.70";
-            if (FilamentServiceVariables["NominalDiameter"] == string.Empty)
-                FilamentServiceVariables["NominalDiameter"] = "1.75";
+            if(FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT] == string.Empty)
+                FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT] = "1.80";
+            if (FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT] == string.Empty)
+                FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT] = "1.70";
+            if (FilamentServiceVariables[StaticStrings.FILAMENTNOMINALDIAMETER] == string.Empty)
+                FilamentServiceVariables[StaticStrings.FILAMENTNOMINALDIAMETER] = "1.75";
 
-            ZedGraphPlotModel.CreatePlots(FilamentServiceVariables["UpperLimit"], FilamentServiceVariables["NominalDiameter"], FilamentServiceVariables["LowerLimit"]);
+            ZedGraphPlotModel.CreatePlots(FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT], FilamentServiceVariables[StaticStrings.FILAMENTNOMINALDIAMETER], FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT]);
             ZedGraphPlotModel.GetPlot("HistoricalModel").ZedGraph.GraphPane.XAxis.Scale.Min = new ZedGraph.XDate(DateTime.Now.AddMilliseconds(-100));
 
             //ZedGraphPlotModel.CreatePlots(UpperLimit, NominalDiameter, LowerLimit);
@@ -162,10 +166,10 @@ namespace ExtrusionUI.Logic.Filament
 
             double newDiameter = (double)Convert.ChangeType(sender, typeof(double));
 
-            FilamentServiceVariables["ActualDiameter"] = sender.ToString();
+            FilamentServiceVariables[StaticStrings.ACTUALDIAMETER] = sender.ToString();
 
             if (captureStarted)
-                ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables["ActualDiameter"]); return x; }).ToList();
+                ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
 
             DiameterChanged?.Invoke(sender, e);
 
@@ -175,11 +179,11 @@ namespace ExtrusionUI.Logic.Filament
 
         private void UpdateHighsAndLows()
         {
-            string actualDiameter = FilamentServiceVariables["ActualDiameter"];
-            string highestValue = FilamentServiceVariables["HighestValue"];
-            string lowestValue = FilamentServiceVariables["LowestValue"];
-            FilamentServiceVariables["HighestValue"] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
-            FilamentServiceVariables["LowestValue"] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+            string actualDiameter = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+            string highestValue = FilamentServiceVariables[StaticStrings.HIGHESTVALUE];
+            string lowestValue = FilamentServiceVariables[StaticStrings.LOWESTVALUE];
+            FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
+            FilamentServiceVariables[StaticStrings.LOWESTVALUE] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
             FilamentServiceVariables["Tolerance"] = ((highestValue.GetDouble() - lowestValue.GetDouble()) / 2).ToString("0.000");
         }
 
@@ -190,9 +194,9 @@ namespace ExtrusionUI.Logic.Filament
             if (zedGraphPlotModel != null)
                 zedGraphPlotModel.Select(x =>
                 {
-                    x.UpperLimitDiameter = FilamentServiceVariables["UpperLimit"];
-                    x.NominalDiameter = FilamentServiceVariables["NominalDiameter"];
-                    x.LowerLimitDiameter = FilamentServiceVariables["LowerLimit"];
+                    x.UpperLimitDiameter = FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT];
+                    x.NominalDiameter = FilamentServiceVariables[StaticStrings.FILAMENTNOMINALDIAMETER];
+                    x.LowerLimitDiameter = FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT];
                     return x;
                 }).ToList();
         }
@@ -237,14 +241,14 @@ namespace ExtrusionUI.Logic.Filament
 
 
 
-                    FilamentServiceVariables["Duration"] = DurationClock.Elapsed.Hours.ToString("0") + ":" +
+                    FilamentServiceVariables[StaticStrings.DURATION] = DurationClock.Elapsed.Hours.ToString("0") + ":" +
                                                           DurationClock.Elapsed.Minutes.ToString("0#") + ":" +
                                                           DurationClock.Elapsed.Seconds.ToString("0#");
 
                     double actSpoolWeight = 0.0;
-                    double.TryParse(FilamentServiceVariables["SpoolWeight"], out actSpoolWeight);
+                    double.TryParse(FilamentServiceVariables[StaticStrings.SPOOLWEIGHT], out actSpoolWeight);
                     double spoolWeightLimit = 0;
-                    double.TryParse(FilamentServiceVariables["SpoolWeightLimit"], out spoolWeightLimit);
+                    double.TryParse(FilamentServiceVariables[StaticStrings.SPOOLWEIGHTLIMIT], out spoolWeightLimit);
 
 
                     double timePerWeight = (DurationClock.ElapsedMilliseconds / actSpoolWeight) * spoolWeightLimit;
@@ -288,7 +292,9 @@ namespace ExtrusionUI.Logic.Filament
 
         public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
         {
-            _csvService.SaveSettings(dataPoints, FilamentServiceVariables["SpoolNumber"], FilamentServiceVariables["Description"]);
+
+            //_csvService.SaveSettings(dataPoints, FilamentServiceVariables[StaticStrings.SPOOLNUMBER], FilamentServiceVariables["Description"]);
+            _csvService.SaveSettings(dataPoints, FilamentServiceVariables[StaticStrings.SPOOLNUMBER], "");
         }
     }
 

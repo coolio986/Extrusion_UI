@@ -13,6 +13,7 @@ using Prism.Mvvm;
 using System.Reflection;
 using System.Windows;
 using ExtrusionUI.Logic.FileOperations;
+using ExtrusionUI.Core;
 
 namespace ExtrusionUI.Logic.UI_Intelligence
 {
@@ -62,16 +63,20 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
             //_serialService.SendSerialData(new SerialCommand() { Command = "GetFullUpdate", DeviceID = "100" });
 
-            foreach (ViewModelBase item in Settings)
+            foreach (ViewModelBase item in Settings.Where(x => x.IsSerialCommand))
             {
 
                 item.PropertyChanged += ItemChange_Handler;
                 item.EnterCommand = new DelegateCommand<ViewModelBase>(UpdateItem);
 
-                if (item.GetType() == typeof(ButtonPressViewModel))
-                {
-                    ((ButtonPressViewModel)item).ButtonCommand = new DelegateCommand<ButtonPressViewModel>(OnButtonPressed);
-                }
+
+                _serialService.SendSerialData(new SerialCommand() { Command = "Get" + item.SerialCommand, DeviceID = item.HardwareType });
+                //break;
+
+                //if (item.GetType() == typeof(ButtonPressViewModel))
+                //{
+                //    ((ButtonPressViewModel)item).ButtonCommand = new DelegateCommand<ButtonPressViewModel>(OnButtonPressed);
+                //}
             }
             
         }
@@ -111,11 +116,11 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                     }
                 }
 
-                ViewModelBase spoolNumberItem = Settings.First(x => x.XmlParameterName == "SpoolNumber");
+                ViewModelBase spoolNumberItem = Settings.First(x => x.XmlParameterName == StaticStrings.SPOOLNUMBER);
 
                 //TODO fix this, doesnt belong here
                 spoolNumberItem.PropertyChanged -= ItemChange_Handler;
-                spoolNumberItem.Value = _filamentService.FilamentServiceVariables["SpoolNumber"];
+                spoolNumberItem.Value = _filamentService.FilamentServiceVariables[StaticStrings.SPOOLNUMBER];
                 spoolNumberItem.PropertyChanged += ItemChange_Handler;
             }
 
@@ -174,7 +179,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
             if (objectItem.HardwareType != string.Empty)
             {
-                _serialService.SendSerialData(new SerialCommand() { Command = objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType });
+                _serialService.SendSerialData(new SerialCommand() { Command = "Set" + objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType });
             }
 
             if (objectItem.IsXmLParameter)

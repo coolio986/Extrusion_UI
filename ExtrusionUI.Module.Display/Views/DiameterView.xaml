@@ -7,6 +7,7 @@
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:core="clr-namespace:ExtrusionUI.Core;assembly=ExtrusionUI.Core"
              xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
              x:Name="diameterView" x:Class="ExtrusionUI.Module.Display.Views.DiameterView"
              mc:Ignorable="d" 
@@ -431,7 +432,7 @@
                 <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="HighestValue" Unit="mm"/>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.HIGHESTVALUE}" Unit="mm"/>
                     </i:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
@@ -443,7 +444,7 @@
                 <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
                     <i:Interaction.Behaviors>
-                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="LowestValue" Unit="mm"/>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.LOWESTVALUE}" Unit="mm"/>
                     </i:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
@@ -455,14 +456,14 @@
                 <Label Content="Spool Number"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                 <Label Content="{Binding SpoolNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
             </Grid>
-            <Grid MaxWidth="270" HorizontalAlignment="Left">
+            <!--<Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Batch Number" FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
                 <Label Content="{Binding BatchNumber}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Padding="1,0,5,0"  />
-            </Grid>
+            </Grid>-->
             <Grid MaxWidth="270" HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="140"/>
@@ -489,6 +490,30 @@
         <Grid Grid.Row="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Margin="10" HorizontalAlignment="Center">
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="Spooler Functions" HorizontalAlignment="Center" TextDecorations="Underline" FontSize="16" Margin="0 0 0 10" />
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="Motion Status: " />
+                    <TextBlock Margin="50 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEMOTIONSTATUS}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0"  >
+                    <TextBlock Text="Traverse Home Offset: " />
+                    <TextBlock Margin="10 0 0 0" >
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEHOMEOFFSET}"  Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="Spool Width: " />
+                    <TextBlock Margin="52 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.SPOOLWIDTH}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                     <Button Content="STOP" Width="60" Height="60" Margin="5" Background="LightPink" Command="{Binding StopCommand}" >
                         <Button.Resources>
@@ -505,6 +530,18 @@
                         </Button.Resources>
                     </Button>
                     <Button Content="Run" Width="60" Height="60" Margin="5" Command="{Binding RunCommand}" >
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="3"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" >
+                    <Button  Width="60" Height="60" Margin="5" Command="{Binding RunTraverseToStart}" >
+                        <Button.Content>
+                            <TextBlock Text="Run Traverse To Start" Width="60" TextWrapping="Wrap" TextAlignment="Center" FontSize="13" Margin="-2.5 0 0 0" />
+                        </Button.Content>
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="3"/>

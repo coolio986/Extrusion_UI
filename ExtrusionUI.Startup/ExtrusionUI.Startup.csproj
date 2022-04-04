@@ -138,6 +138,14 @@
       <Project>{17d124ea-f1e0-4a24-810f-81151c48638b}</Project>
       <Name>ExtrusionUI.Module.Display</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj">
+      <Project>{5be0334f-ecf2-4af9-bb78-e1d48a2e9af8}</Project>
+      <Name>ExtrusionUI.Toolkits</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.VirtualKeyboard\ExtrusionUI.VirtualKeyboard.csproj">
+      <Project>{f74b3364-1ff6-4279-a6cb-00de1c592a00}</Project>
+      <Name>ExtrusionUI.VirtualKeyboard</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.WebService\ExtrusionUI.Logic.WebService.csproj">
       <Project>{020EED02-5E4C-4D59-B74F-062D5D2C1C8E}</Project>
       <Name>ExtrusionUI.Logic.WebService</Name>

@@ -1,4 +1,5 @@
-﻿using ExtrusionUI.Infrastructure.UI.Controls;
+﻿using ExtrusionUI.Core;
+using ExtrusionUI.Infrastructure.UI.Controls;
 using ExtrusionUI.Logic.Filament;
 using ExtrusionUI.Logic.FileOperations;
 using ExtrusionUI.Logic.Navigation;
@@ -26,9 +27,9 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand closeSettingsView;
         public ObservableCollection<ViewModelBase> settingItems;
 
-        public ObservableCollection<ViewModelBase> Machine
+        public ObservableCollection<ViewModelBase> Traverse
         {
-            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()["Machine"]; }
+            get { return (ObservableCollection<ViewModelBase>)_iui_IntelligenceService.GetSettings()[StaticStrings.TRAVERSE]; }
         }
 
         public ObservableCollection<ViewModelBase> Production
