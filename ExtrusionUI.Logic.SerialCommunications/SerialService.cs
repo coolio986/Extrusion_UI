@@ -465,6 +465,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
         {
             processSerialCommand(splitData);
         }
+        public void SpoolMotionStatus(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
         public void FilamentNominalDiameter(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);

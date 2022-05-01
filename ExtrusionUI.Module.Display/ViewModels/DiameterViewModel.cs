@@ -7,6 +7,8 @@ using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System.Windows.Media;
 using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.Core;
+using ExtrusionUI.Logic.UI_Intelligence;
+using System.Windows;
 
 namespace ExtrusionUI.Module.Display.ViewModels
 {
@@ -14,6 +16,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
     {
 
         private readonly ISerialService _serialService;
+        private readonly IUI_IntelligenceService _iui_IntelligenceService;
         public IFilamentService _filamentService { get; }
         public DelegateCommand ResetGraph { get; private set; }
         public DelegateCommand StartCapture { get; private set; }
@@ -32,7 +35,13 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand<object> _runTraverseToStart;
         public DelegateCommand<object> RunTraverseToStart => _runTraverseToStart ?? (_runTraverseToStart = new DelegateCommand<object>(ExecuteRunTraverseToStartCommand, CanExecuteRunTraverseToStartCommand));
 
+        public bool HomeTraverseIsVisible
+        {
+            get { return CanStartCapture(); }
+            
+        }
 
+        private bool startButtonMask = false;
         private void ExecuteHomeCommand(object obj)
         {
             _serialService.SendSerialData(new SerialCommand() { Command = "home", DeviceID = "1" });
@@ -56,7 +65,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private bool CanExecuteRunTraverseToStartCommand(object arg)
         {
             return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] == "Stopped";
-            
+
         }
 
         private bool settingsOpen;
@@ -163,6 +172,11 @@ namespace ExtrusionUI.Module.Display.ViewModels
             get { return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS]; }
         }
 
+        public string SpoolMotionStatus
+        {
+            get { return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS]; }
+        }
+
         //public string Duration
         //{
         //    get
@@ -180,7 +194,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
             private set { settingsView = value; RaisePropertyChanged(); }
         }
 
-        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService)
+        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService, IUI_IntelligenceService iui_IntelligenceService)
         {
             _filamentService = filamentService;
             _navigationService = navigationService;
@@ -188,12 +202,17 @@ namespace ExtrusionUI.Module.Display.ViewModels
             _filamentService.PropertyChanged += _filamentService_PropertyChanged;
             _filamentService.StopWatchedTimeChanged += _filamentService_StopWatchedTimeChanged;
             _serialService = serialService;
+            _iui_IntelligenceService = iui_IntelligenceService;
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
-            StartCapture = new DelegateCommand(StartCapture_Click);
-            StopCapture = new DelegateCommand(StopCapture_Click);
+            StartCapture = new DelegateCommand(StartCapture_Click, CanStartCapture);
+            StopCapture = new DelegateCommand(StopCapture_Click, CanStopCapture);
             Settings = new DelegateCommand(Settings_Click);
+
+            StartCapture.RaiseCanExecuteChanged();
         }
+
+
 
         private void _filamentService_StopWatchedTimeChanged(object sender, EventArgs e)
         {
@@ -212,7 +231,34 @@ namespace ExtrusionUI.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
-            RunTraverseToStart.RaiseCanExecuteChanged();
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                RunTraverseToStart.RaiseCanExecuteChanged();
+                StartCapture.RaiseCanExecuteChanged();
+                StopCapture.RaiseCanExecuteChanged();
+
+                if(HomeTraverseIsVisible)
+                    RaisePropertyChanged("HomeTraverseIsVisible");
+            }));
+            
+
+            if (_filamentService.CaptureStarted && 
+                (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped" ||
+                _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None"))
+            {
+                if(startButtonMask)
+                {
+                    startButtonMask = false;
+                    return;
+                }
+                _filamentService.CaptureStarted = false;
+                RaisePropertyChanged("CaptureStarted");
+                RaisePropertyChanged("StartButtonGradientCollection");
+                RaisePropertyChanged("StopButtonGradientCollection");
+                RaisePropertyChanged("SpoolNumber");
+            }
+
         }
 
         private void ResetGraph_Click()
@@ -224,25 +270,38 @@ namespace ExtrusionUI.Module.Display.ViewModels
         {
             if (!_filamentService.CaptureStarted)
             {
+                startButtonMask = true;
                 _filamentService.CaptureStarted = true;
                 RaisePropertyChanged("CaptureStarted");
                 RaisePropertyChanged("RealTimeModel");
                 RaisePropertyChanged("StartButtonGradientCollection");
                 RaisePropertyChanged("StopButtonGradientCollection");
                 RaisePropertyChanged("SpoolNumber");
+                ExecuteRunCommand(null);
             }
+        }
+
+        private bool CanStartCapture()
+        {
+            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "None" && _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "Homing";
         }
 
         private void StopCapture_Click()
         {
             if (_filamentService.CaptureStarted)
             {
-                _filamentService.CaptureStarted = false;
-                RaisePropertyChanged("CaptureStarted");
-                RaisePropertyChanged("StartButtonGradientCollection");
-                RaisePropertyChanged("StopButtonGradientCollection");
-                RaisePropertyChanged("SpoolNumber");
+                //_filamentService.CaptureStarted = false;
+                //RaisePropertyChanged("CaptureStarted");
+                //RaisePropertyChanged("StartButtonGradientCollection");
+                //RaisePropertyChanged("StopButtonGradientCollection");
+                //RaisePropertyChanged("SpoolNumber");
+                ExecuteStopCommand(null);
             }
+        }
+
+        private bool CanStopCapture()
+        {
+            return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] != "None" && _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] != "Stopping";
         }
 
         private void Settings_Click()

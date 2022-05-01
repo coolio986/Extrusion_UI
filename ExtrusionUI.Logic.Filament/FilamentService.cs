@@ -86,6 +86,7 @@ namespace ExtrusionUI.Logic.Filament
             FilamentServiceVariables = new Dictionary<string, string>();
             //FilamentServiceVariables.Add("Description", "");
             FilamentServiceVariables.Add(StaticStrings.TRAVERSEMOTIONSTATUS, "None");
+            FilamentServiceVariables.Add(StaticStrings.SPOOLMOTIONSTATUS, "None");
             FilamentServiceVariables.Add(StaticStrings.ACTUALDIAMETER, "");
             FilamentServiceVariables.Add(StaticStrings.HIGHESTVALUE, "");
             FilamentServiceVariables.Add(StaticStrings.LOWESTVALUE, "");

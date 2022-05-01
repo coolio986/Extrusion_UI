@@ -132,6 +132,10 @@
       <Project>{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}</Project>
       <Name>ExtrusionUI.Logic.UI_Intelligence</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj">
+      <Project>{5be0334f-ecf2-4af9-bb78-e1d48a2e9af8}</Project>
+      <Name>ExtrusionUI.Toolkits</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.WindowForms.ZedGraphUserControl\ExtrusionUI.WindowForms.ZedGraphUserControl.csproj">
       <Project>{4304c760-7374-4c33-90d9-032d798e1254}</Project>
       <Name>ExtrusionUI.WindowForms.ZedGraphUserControl</Name>

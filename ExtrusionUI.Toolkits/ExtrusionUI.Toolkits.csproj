@@ -114,6 +114,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Wpf\Converter.cs" />
     <Compile Include="Wpf\EnumToVisibilityConverter.cs" />
     <Compile Include="Wpf\FalseToCollapsedConverter.cs" />
     <Compile Include="Wpf\FalseToHiddenConverter.cs" />

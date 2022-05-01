@@ -4,7 +4,7 @@ namespace ExtrusionUI.Startup.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Filalogger - Filament Diameter Measurement";
+        private string _title = "Fusion Filaments - Extrusion UI";
         public string Title
         {
             get { return _title; }

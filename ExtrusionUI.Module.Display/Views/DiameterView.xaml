@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+                xmlns:conv="clr-namespace:ExtrusionUI.Toolkits.Wpf;assembly=ExtrusionUI.Toolkits"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:core="clr-namespace:ExtrusionUI.Core;assembly=ExtrusionUI.Core"
@@ -473,9 +474,10 @@
                 <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <!--<Grid Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="4" Grid.RowSpan="2" Margin="20">
-            <Image Source="/ExtrusionUI.Module.Display;component/Images/FILABOT_LOGO_2017.png" />
-        </Grid>-->
+        <Grid Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0">
+            <!--<Image Source="/ExtrusionUI.Module.Display;component/Images/FILABOT_LOGO_2017.png" />-->
+            <TextBlock Text="PLEASE HOME TRAVERSE" FontSize="40" Foreground="Red" Visibility="{Binding HomeTraverseIsVisible, Converter={x:Static  conv:Converter.TrueToCollapsedConverter}}" />
+        </Grid>
 
         <Grid Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
@@ -491,10 +493,18 @@
             <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="Spooler Functions" HorizontalAlignment="Center" TextDecorations="Underline" FontSize="16" Margin="0 0 0 10" />
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                    <TextBlock Text="Motion Status: " />
+                    <TextBlock Text="Traverse Motion Status: " />
                     <TextBlock Margin="50 0 0 0">
                         <i:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEMOTIONSTATUS}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="Spool Motion Status: " />
+                    <TextBlock Margin="50 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.SPOOLMOTIONSTATUS}" Unit=""/>
                         </i:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
