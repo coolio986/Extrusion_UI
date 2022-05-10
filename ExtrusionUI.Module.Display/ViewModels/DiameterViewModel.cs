@@ -32,6 +32,9 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand<object> _stopCommand;
         public DelegateCommand<object> StopCommand => _stopCommand ?? (_stopCommand = new DelegateCommand<object>(ExecuteStopCommand));
 
+        private DelegateCommand<object> _eStopCommand;
+        public DelegateCommand<object> EStopCommand => _eStopCommand ?? (_eStopCommand = new DelegateCommand<object>(ExecuteEStopCommand));
+
         private DelegateCommand<object> _runTraverseToStart;
         public DelegateCommand<object> RunTraverseToStart => _runTraverseToStart ?? (_runTraverseToStart = new DelegateCommand<object>(ExecuteRunTraverseToStartCommand, CanExecuteRunTraverseToStartCommand));
 
@@ -55,6 +58,11 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private void ExecuteStopCommand(object obj)
         {
             _serialService.SendSerialData(new SerialCommand() { Command = "stop", DeviceID = "1" });
+        }
+
+        private void ExecuteEStopCommand(object obj)
+        {
+            _serialService.SendSerialData(new SerialCommand() { Command = "estop", DeviceID = "1" });
         }
 
         private void ExecuteRunTraverseToStartCommand(object obj)
@@ -257,8 +265,21 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 RaisePropertyChanged("StartButtonGradientCollection");
                 RaisePropertyChanged("StopButtonGradientCollection");
                 RaisePropertyChanged("SpoolNumber");
-            }
+                _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] = "StopCapture";
 
+            }
+            if(_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
+                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "RunCapture" 
+                && !_filamentService.CaptureStarted)
+            {
+                StartCapture_Click();
+            }
+            if (_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
+                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture"
+                && _filamentService.CaptureStarted)
+            {
+                StopCapture_Click();
+            }
         }
 
         private void ResetGraph_Click()
@@ -277,6 +298,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 RaisePropertyChanged("StartButtonGradientCollection");
                 RaisePropertyChanged("StopButtonGradientCollection");
                 RaisePropertyChanged("SpoolNumber");
+                _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] = "RunCapture";
                 ExecuteRunCommand(null);
             }
         }

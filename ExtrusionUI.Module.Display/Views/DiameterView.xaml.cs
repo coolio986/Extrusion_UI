@@ -181,7 +181,7 @@ namespace ExtrusionUI.Module.Display.Views
                         textBlockDiameter.Foreground = Brushes.Black;
 
 
-                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER] + " mm";
 
                     this.InvalidateVisual();
 

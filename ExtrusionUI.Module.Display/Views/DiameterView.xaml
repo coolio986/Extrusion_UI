@@ -490,11 +490,11 @@
         </Grid>
 
         <Grid Grid.Row="3" Grid.ColumnSpan="3" Grid.RowSpan="7" Margin="10" HorizontalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" Width="240">
                 <TextBlock Text="Spooler Functions" HorizontalAlignment="Center" TextDecorations="Underline" FontSize="16" Margin="0 0 0 10" />
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Traverse Motion Status: " />
-                    <TextBlock Margin="50 0 0 0">
+                    <TextBlock Margin="10 0 0 0">
                         <i:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEMOTIONSTATUS}" Unit=""/>
                         </i:Interaction.Behaviors>
@@ -502,7 +502,7 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Spool Motion Status: " />
-                    <TextBlock Margin="50 0 0 0">
+                    <TextBlock Margin="23 0 0 0">
                         <i:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.SPOOLMOTIONSTATUS}" Unit=""/>
                         </i:Interaction.Behaviors>
@@ -525,7 +525,7 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                    <Button Content="STOP" Width="60" Height="60" Margin="5" Background="LightPink" Command="{Binding StopCommand}" >
+                    <Button Content="E-STOP" Width="60" Height="60" Margin="5" Background="LightPink" Command="{Binding EStopCommand}" >
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="3"/>

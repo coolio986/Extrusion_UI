@@ -123,9 +123,9 @@ namespace ExtrusionUI.Logic.Filament
 
             PropertyChanged?.Invoke(command, new PropertyChangedEventArgs(command.Command));
 
-            if (command.Command == "FilamentCapture" && command.Value == "1" && !captureStarted)
+            if (command.Command == "LoggerMotionState" && command.Value == "Start" && !captureStarted)
             {
-                captureStarted = true;
+                //captureStarted = true;
             }
 
             ////Expression set (faster than reflection)

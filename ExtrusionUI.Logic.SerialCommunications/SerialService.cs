@@ -506,6 +506,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
+        public void LoggerMotionState(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
 
         private void processSerialCommand(string[] splitData)
         {
