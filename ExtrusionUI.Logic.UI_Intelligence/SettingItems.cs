@@ -34,6 +34,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
         private EnumItemsViewModel TraverseStartPosition;
         private LargeDataInputViewModel MotherboardRestartReason;
         private ButtonPressViewModel OpenSpoolerFolder;
+        private DataInputViewModel TraverseMotionStatus;
 
         IFileService _fileService;
 
@@ -63,6 +64,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseStartPosition = new EnumItemsViewModel();
             MotherboardRestartReason = new LargeDataInputViewModel();
             OpenSpoolerFolder = new ButtonPressViewModel();
+            TraverseMotionStatus = new DataInputViewModel();
 
             //Description.ParameterName = "Description";
             //Description.IsXmLParameter = true;
@@ -227,6 +229,14 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             OpenSpoolerFolder.ButtonType = Infrastructure.UI.ButtonTypes.OpenFolderType;
             OpenSpoolerFolder.ButtonPathLocation = _fileService.EnvironmentDirectory;
 
+            TraverseMotionStatus.HardwareType = "1";
+            TraverseMotionStatus.ParameterName = "Traverse Motion Status";
+            TraverseMotionStatus.IsSerialCommand = true;
+            TraverseMotionStatus.SerialCommand = "TraverseMotionStatus";
+            TraverseMotionStatus.Value = "";
+            TraverseMotionStatus.Unit = "";
+            TraverseMotionStatus.ParameterType = StaticStrings.TRAVERSE;
+
 
             //settings.Add(Description);
             settings.Add(FilamentDiameter);
@@ -245,6 +255,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             settings.Add(TraverseStartPosition);
             //settings.Add(MotherboardRestartReason);
             settings.Add(OpenSpoolerFolder);
+            settings.Add(TraverseMotionStatus);
 
 
             foreach (ViewModelBase item in settings)

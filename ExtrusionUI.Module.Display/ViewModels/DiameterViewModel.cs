@@ -185,15 +185,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
             get { return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS]; }
         }
 
-        //public string Duration
-        //{
-        //    get
-        //    {
-        //        return (_filamentService.stopWatch.Elapsed.Hours.ToString("0") + ":" +
-        //          _filamentService.stopWatch.Elapsed.Minutes.ToString("0#") + ":" +
-        //          _filamentService.stopWatch.Elapsed.Seconds.ToString("0#"));
-        //    }
-        //}
+        
 
         private object settingsView;
         public object SettingsView
@@ -305,7 +297,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         private bool CanStartCapture()
         {
-            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "None" && _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "Homing";
+            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "None"
+                && _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] != "Homing";
         }
 
         private void StopCapture_Click()
