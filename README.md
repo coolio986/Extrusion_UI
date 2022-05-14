@@ -1,10 +1,8 @@
-# Digital_Indicator
-A WPF software for displaying SPC data
+# Extrusion_UI
+A WPF software for displaying and controlling inprocess extrusion
 
 ## Authors
 
 * **Anthony Kaul** - *Architect & Programmer* - [coolio986](https://github.com/coolio986)
-* **Joshua Bergin** - *Visual Designer*
-* **The Filabot Team** - *Testing* - [Filabot](https://www.filabot.com)
 
 Special thanks to Joshua Bergin for designing the vector based buttons!
