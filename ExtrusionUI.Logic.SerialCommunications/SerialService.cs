@@ -21,10 +21,11 @@ namespace ExtrusionUI.Logic.SerialCommunications
         private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
-        
+
         public event EventHandler SpoolerDataChanged;
         public event EventHandler TraverseDataChanged;
         public event EventHandler GeneralDataChanged;
+        public event EventHandler SerialBufferSizeChanged;
 
         private IFileService _fileService;
 
@@ -55,6 +56,22 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 BindHandlers();
             }
         }
+
+
+        private int serialBufferSize = 0;
+        public int SerialBufferSize
+        {
+            get => serialBufferSize;
+            set
+            {
+                if (serialBufferSize != value)
+                {
+                    serialBufferSize = value;
+                    SerialBufferSizeChanged?.Invoke(serialBufferSize, null);
+                }
+            }
+        }
+
 
         public bool IsSimulationModeActive { get; set; }
 
@@ -94,10 +111,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
             serialPort.BaudRate = 115200;
             serialPort.Handshake = Handshake.None;
             serialPort.DtrEnable = true;
-            serialPort.ReadTimeout = 500;
-            serialPort.WriteTimeout = 10;
+            serialPort.ReadTimeout = 100;
+            serialPort.WriteTimeout = 20;
             serialPort.NewLine = Environment.NewLine;
-            serialPort.ReceivedBytesThreshold = 1024;
+            serialPort.ReceivedBytesThreshold = 2048;
             PortDataIsSet = true;
         }
 
@@ -106,34 +123,36 @@ namespace ExtrusionUI.Logic.SerialCommunications
         private void StartSerialReceive()
         {
 
-            Task.Factory.StartNew(() =>
+            //Task.Factory.StartNew(() =>
+            //{
+            if (PortDataIsSet)
             {
-                if (PortDataIsSet)
-                {
-                    byte[] buffer = new byte[5];
-                    string ret = string.Empty;
-                    Action kickoffRead = null;
-                    LineSplitter lineSplitter = new LineSplitter();
+                byte[] buffer = new byte[5000];
+                string ret = string.Empty;
+                Action kickoffRead = null;
+                LineSplitter lineSplitter = new LineSplitter();
 
-                    kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
-                    {
-                        int count = serialPort.BaseStream.EndRead(ar);
-                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
-                        OnDataReceived(dst);
-                        kickoffRead();
-                    }, null)); kickoffRead();
-                }
-            });
+                kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                {
+                    int count = serialPort.BaseStream.EndRead(ar);
+                    //SerialBufferSizeChanged?.Invoke(count, null);
+                    //Debug.WriteLine(count);
+                    byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
+                    OnDataReceived(dst);
+                    kickoffRead();
+                }, null)); kickoffRead();
+            }
+            //});
         }
 
         public virtual void OnDataReceived(byte[] data)
         {
             string dataIn = string.Empty;
-
+            
             if (null != data)
             {
                 dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
-
+                //Debug.WriteLine(dataIn);
                 string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
                 if (splitData.Length == 5)
                 {
@@ -173,13 +192,19 @@ namespace ExtrusionUI.Logic.SerialCommunications
             public byte[] OnIncomingBinaryBlock(object sender, byte[] buffer, int bytesInBuffer)
             {
                 leftover = ConcatArray(leftover, buffer, 0, bytesInBuffer);
+
+                if (sender is SerialService serialService)
+                    serialService.SerialBufferSize = leftover.Length;
+
+
                 int newLineIndex = Array.IndexOf(leftover, Delimiter);
                 if (newLineIndex >= 0)
                 {
                     byte[] result = new byte[newLineIndex + 1];
                     Array.Copy(leftover, result, result.Length);
                     byte[] newLeftover = new byte[leftover.Length - result.Length];
-                    Array.Copy(leftover, newLineIndex + 1, newLeftover, 0, newLeftover.Length);
+                    System.Buffer.BlockCopy(leftover, newLineIndex + 1, newLeftover, 0, newLeftover.Length);
+                    //Array.Copy(leftover, newLineIndex + 1, newLeftover, 0, newLeftover.Length);
                     leftover = newLeftover;
 
                     return result;
@@ -190,6 +215,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             static byte[] ConcatArray(byte[] head, byte[] tail, int tailOffset, int tailCount)
             {
                 byte[] result;
+
                 if (head == null)
                 {
                     result = new byte[tailCount];
@@ -198,7 +224,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 else
                 {
                     result = new byte[head.Length + tailCount];
-                    head.CopyTo(result, 0);
+                    //int size = sizeof(byte);
+                    //int length = head.Length * size;
+                    System.Buffer.BlockCopy(head, 0, result, 0, head.Length);
+
+
+                    //head.CopyTo(result, 0);
                     Array.Copy(tail, tailOffset, result, head.Length, tailCount);
                 }
 
@@ -337,7 +368,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
                             while (serialPort.BytesToWrite > 0)
                             {
                                 Console.WriteLine("writing bytes");
-                                Thread.Sleep(10);
+                                Thread.Sleep(15);
                             }
                         }
 
@@ -468,6 +499,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public void SpoolMotionStatus(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
+            Debug.WriteLine("Spool Motion Status: {0};{1};{2};{3}", splitData[0], splitData[1], splitData[2], splitData[3]);
         }
         public void FilamentNominalDiameter(string[] splitData) //reflection calls this
         {
@@ -509,12 +541,18 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public void LoggerMotionState(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
+            Debug.WriteLine("Logger Motion State: {0};{1};{2};{3}", splitData[0], splitData[1], splitData[2], splitData[3]);
+        }
+
+        public void TraversePositionStatus(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
         }
 
         private void processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();
-            
+
             if (splitData.Length >= 3)
             {
                 command.DeviceID = splitData[0];

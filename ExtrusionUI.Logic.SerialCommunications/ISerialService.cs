@@ -16,8 +16,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
         event EventHandler SpoolerDataChanged;
         event EventHandler TraverseDataChanged;
         event EventHandler GeneralDataChanged;
+        event EventHandler SerialBufferSizeChanged;
 
         bool IsSimulationModeActive { get; set; }
+        int SerialBufferSize { get; }
 
         void SendSerialData(SerialCommand command);
     }

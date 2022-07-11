@@ -8,7 +8,7 @@ using Prism.Regions;
 using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.Logic.Filament;
 using ExtrusionUI.Logic.FileOperations;
-using ExtrusionUI.Logic.WebService;
+//using ExtrusionUI.Logic.WebService;
 using ExtrusionUI.Logic.UI_Intelligence;
 
 namespace ExtrusionUI.Startup
@@ -57,11 +57,11 @@ namespace ExtrusionUI.Startup
             Container.RegisterType<IFileService, FileService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IXmlService, XmlService>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IWebService, Logic.WebService.WebService>(new ContainerControlledLifetimeManager());
+            //Container.RegisterType<IWebService, Logic.WebService.WebService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IUI_IntelligenceService, UI_IntelligenceService>(new ContainerControlledLifetimeManager());
 
             StartFilamentService();
-            StartWebService();
+            //StartWebService();
 
         }
 
@@ -82,7 +82,7 @@ namespace ExtrusionUI.Startup
 
         private void StartWebService()
         {
-            IWebService filamentService = Container.Resolve<IWebService>();
+            //IWebService filamentService = Container.Resolve<IWebService>();
 
 
         }

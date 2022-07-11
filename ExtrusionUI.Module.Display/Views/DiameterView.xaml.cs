@@ -1,6 +1,7 @@
 ﻿using ExtrusionUI.Core;
 using ExtrusionUI.Logic.Filament;
 using ExtrusionUI.Logic.Navigation;
+using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System;
 using System.Diagnostics;
@@ -18,12 +19,15 @@ namespace ExtrusionUI.Module.Display.Views
     /// </summary>
     public partial class DiameterView : UserControl
     {
-        IFilamentService _filamentService;
-        INavigationService _navigationService;
+        private readonly IFilamentService _filamentService;
+        private readonly INavigationService _navigationService;
+        private readonly ISerialService _serialService;
         Stopwatch timer;
         long previousHistoricalMillis;
         long previousRealTimeMillis;
         long previousScanMillis;
+        private int timeDelayMultiplier = 33;
+        private int minTimeDelayMultiplier = 33;
 
         Storyboard plotStoryboard;
 
@@ -33,7 +37,7 @@ namespace ExtrusionUI.Module.Display.Views
         bool settingsWindowOpen;
         bool updateInProgress;
 
-        public DiameterView(IFilamentService filamentService, INavigationService navigationService)
+        public DiameterView(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService)
         {
             InitializeComponent();
 
@@ -43,6 +47,7 @@ namespace ExtrusionUI.Module.Display.Views
             _filamentService.DiameterChanged += _filamentService_DiameterChanged;
             _navigationService = navigationService;
             _navigationService.RegionCleared += _navigationService_RegionCleared;
+            _serialService = serialService;
 
             zgraphHistorical = ZedGraphPlotModel.GetPlot("HistoricalModel");
             zgraphRealTime = ZedGraphPlotModel.GetPlot("RealTimeModel");
@@ -190,15 +195,33 @@ namespace ExtrusionUI.Module.Display.Views
                 updateInProgress = false;
             }
 
-            if (timer.ElapsedMilliseconds >= previousRealTimeMillis + 10 && _filamentService.CaptureStarted && !updateInProgress)
+
+            if (_serialService.SerialBufferSize >= 1000)
+            {
+                timeDelayMultiplier++;
+                timeDelayMultiplier = timeDelayMultiplier > 1000 ? 1000 : timeDelayMultiplier;
+            }
+            else
+            {
+                if (!_filamentService.CaptureStarted)
+                    timeDelayMultiplier = minTimeDelayMultiplier;
+
+                timeDelayMultiplier--;
+                timeDelayMultiplier = timeDelayMultiplier < minTimeDelayMultiplier ? minTimeDelayMultiplier : timeDelayMultiplier;
+            }
+            //Debug.WriteLine("timeDelayMultiplier: " + timeDelayMultiplier);
+            if (timer.ElapsedMilliseconds >= previousRealTimeMillis + timeDelayMultiplier  && _filamentService.CaptureStarted && !updateInProgress)
             {
                 updateInProgress = true;
                 Dispatcher.Invoke(new Action(() =>
                 {
-                    zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Min = new XDate(DateTime.Now.AddMilliseconds(-5000));
-                    zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(2));
+                    //zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Min = new XDate(DateTime.Now.AddMilliseconds(-5000));
+                    //zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(2));
                     zgraphRealTime.ZedGraph.AxisChange();
                     zgraphRealTime.ZedGraph.Refresh();
+                    
+                    //zgraphRealTime.ZedGraph.Invalidate();
+                    //zgraphRealTime.ZedGraph.Update();
 
                 }));
                 previousRealTimeMillis = timer.ElapsedMilliseconds;

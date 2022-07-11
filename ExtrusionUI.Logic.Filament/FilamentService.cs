@@ -170,7 +170,13 @@ namespace ExtrusionUI.Logic.Filament
             FilamentServiceVariables[StaticStrings.ACTUALDIAMETER] = sender.ToString();
 
             if (captureStarted)
-                ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
+            {
+                Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
+                {
+                    zedGraphUserControl.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]);
+                });
+            }
+                //ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
 
             DiameterChanged?.Invoke(sender, e);
 

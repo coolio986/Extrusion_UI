@@ -21,6 +21,11 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         private LineItem diameterCurve;
         private FilteredPointList filteredDiameter;
 
+        //private double[] dblTime = new double[1];
+        //private double[] dblDiameter = new double[1];
+        ResizableArray<double> resizableArrayDateTime = new ResizableArray<double>();
+        ResizableArray<double> resizableArrayDiameter = new ResizableArray<double>();
+
 
         public ZedGraphControl ZedGraph { get; set; }
         public bool IsZoomed { get; private set; }
@@ -104,6 +109,9 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         public void ClearPlots()
         {
             diameterList.Clear();
+            resizableArrayDateTime = new ResizableArray<double>();
+            resizableArrayDiameter = new ResizableArray<double>();
+            diameterCurve = new LineItem("");
         }
 
         private void AddNominalDiameter()
@@ -126,29 +134,33 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         {
             //if (!stopwatch.IsRunning)
             //    stopwatch.Start();
+            DateTime dateTime = DateTime.Now;
 
-            diameterList.Add(new DataListXY(new XDate(DateTime.Now), Convert.ToDouble(diameter)));
+            double dblDateTime = new XDate(dateTime);
+            double dblDiameter = Convert.ToDouble(diameter);
             //diameterList.Add(new DataListXY(stopwatch.ElapsedMilliseconds, Convert.ToDouble(diameter)));
 
-            double[] dblTime = new double[diameterList.Count];
-            double[] dblDiameter = new double[diameterList.Count];
+            int timeLength = diameterList.Count;
+            
+            diameterList.Add(new DataListXY(dblDateTime, dblDiameter));
 
-            int index = 0;
-            foreach (DataListXY item in diameterList.ToList())
-            {
-                if (item != null)
-                {
-                    dblTime[index] = item.X;
-                    dblDiameter[index] = item.Y;
-                    index++;
-                }
-            }
+            resizableArrayDateTime.Add(dblDateTime);
+            resizableArrayDiameter.Add(dblDiameter);
+
+            double dblLowerLimitDiameter = Convert.ToDouble(lowerLimitDiameter) - 0.025;
+            double dblUpperLimitDiameter = Convert.ToDouble(upperLimitDiameter) + 0.025;
+
+            if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min != dblLowerLimitDiameter)
+                this.zedGraphControl1.GraphPane.YAxis.Scale.Min = dblLowerLimitDiameter;
+
+            if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max != dblUpperLimitDiameter)
+                this.zedGraphControl1.GraphPane.YAxis.Scale.Max = dblUpperLimitDiameter;
 
             if (IsHistorical)
             {
                 if (!IsZoomed)
                 {
-                    filteredDiameter = new FilteredPointList(dblTime, dblDiameter);
+                    filteredDiameter = new FilteredPointList(resizableArrayDateTime.InternalArray, resizableArrayDiameter.InternalArray);
                     filteredDiameter.SetBounds(this.zedGraphControl1.GraphPane.XAxis.Scale.Min, new XDate(DateTime.Now.AddMilliseconds(2)), (int)this.zedGraphControl1.GraphPane.Rect.Width);
 
                     this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
@@ -160,7 +172,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
                     if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
                     {
-                        upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(upperLimitDiameter));
+                        upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(upperLimitDiameter), resizableArrayDateTime.InternalArray[resizableArrayDateTime.Count - 1], Convert.ToDouble(upperLimitDiameter));
                         upperLimitLine.Line.Width = 2.0F;
                         this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
                     }
@@ -168,7 +180,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
                     if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(lowerLimitDiameter))
                     {
-                        lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(lowerLimitDiameter));
+                        lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(lowerLimitDiameter), resizableArrayDateTime.InternalArray[resizableArrayDateTime.Count - 1], Convert.ToDouble(lowerLimitDiameter));
                         lowerLimitLine.Line.Width = 2.0F;
                         this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
                     }
@@ -176,7 +188,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
                     if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(nominalDiameter) && this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(nominalDiameter))
                     {
-                        nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), dblTime[dblTime.Count() - 1], Convert.ToDouble(nominalDiameter));
+                        nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), this.zedGraphControl1.GraphPane.XAxis.Scale.Min, Convert.ToDouble(nominalDiameter), resizableArrayDateTime.InternalArray[resizableArrayDateTime.Count - 1], Convert.ToDouble(nominalDiameter));
                         nominalLine.Line.Width = 2.0F;
                         this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
                     }
@@ -186,12 +198,37 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             }
             else
             {
-                filteredDiameter = new FilteredPointList(dblTime, dblDiameter);
-                filteredDiameter.SetBounds(new XDate(DateTime.Now.AddMilliseconds(-5000)), new XDate(DateTime.Now.AddMilliseconds(2)), (int)this.zedGraphControl1.GraphPane.Rect.Width);
+                double lowerBoundTime = new XDate(dateTime.AddMilliseconds(-5000));
+                //double higherBoundTime = new XDate(dateTime.AddMilliseconds(2));
+                double higherBoundTime = new XDate(dateTime.AddMilliseconds(2));
+
+
+                ResizableArray<double> realTimeGraphTimes = new ResizableArray<double>();
+                ResizableArray<double> realTimeDiameters = new ResizableArray<double>();
+
+
+                for (int i = resizableArrayDateTime.Count - 1; i > 0; i--)
+                {
+                    if (resizableArrayDateTime.InternalArray[i] > lowerBoundTime)
+                    {
+                        realTimeGraphTimes.Add(resizableArrayDateTime.InternalArray[i]);
+                        realTimeDiameters.Add(resizableArrayDiameter.InternalArray[i]);
+                    }
+                    else
+                        break;
+                }
+
+                filteredDiameter = new FilteredPointList(realTimeGraphTimes.InternalArray, realTimeDiameters.InternalArray);
+                filteredDiameter.SetBounds(lowerBoundTime, higherBoundTime, (int)this.zedGraphControl1.GraphPane.Rect.Width);
 
                 this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
 
                 diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", filteredDiameter, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
+
+                
+
+                zedGraphControl1.GraphPane.XAxis.Scale.Min = lowerBoundTime;
+                zedGraphControl1.GraphPane.XAxis.Scale.Max = higherBoundTime;
 
 
                 //***********************//
@@ -199,7 +236,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
                 if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
                 {
-                    upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
+                    upperLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), lowerBoundTime, Convert.ToDouble(upperLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(upperLimitDiameter));
                     upperLimitLine.Line.Width = 2.0F;
                     this.zedGraphControl1.GraphPane.GraphObjList.Add(upperLimitLine);
                 }
@@ -207,7 +244,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(lowerLimitLine);
                 if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(lowerLimitDiameter))
                 {
-                    lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
+                    lowerLimitLine = new LineObj(System.Drawing.Color.FromArgb(255, 0, 0), lowerBoundTime, Convert.ToDouble(lowerLimitDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(lowerLimitDiameter));
                     lowerLimitLine.Line.Width = 2.0F;
                     this.zedGraphControl1.GraphPane.GraphObjList.Add(lowerLimitLine);
                 }
@@ -215,7 +252,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 this.zedGraphControl1.GraphPane.GraphObjList.Remove(nominalLine);
                 if (this.zedGraphControl1.GraphPane.YAxis.Scale.Min <= Convert.ToDouble(nominalDiameter) && this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(nominalDiameter))
                 {
-                    nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), new XDate(DateTime.Now.AddMilliseconds(-5000)), Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
+                    nominalLine = new LineObj(System.Drawing.Color.FromArgb(64, 191, 67), lowerBoundTime, Convert.ToDouble(nominalDiameter), this.zedGraphControl1.GraphPane.XAxis.Scale.Max, Convert.ToDouble(nominalDiameter));
                     nominalLine.Line.Width = 2.0F;
                     this.zedGraphControl1.GraphPane.GraphObjList.Add(nominalLine);
                 }
@@ -264,4 +301,31 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             }
         }
     }
+    public class ResizableArray<T>
+    {
+        T[] m_array;
+        int m_count;
+
+        public ResizableArray(int? initialCapacity = null)
+        {
+            m_array = new T[initialCapacity ?? 4]; // or whatever
+        }
+
+        internal T[] InternalArray { get { return m_array; } }
+
+        public int Count { get { return m_count; } }
+
+        public void Add(T element)
+        {
+            if (m_count == m_array.Length)
+            {
+                Array.Resize(ref m_array, m_array.Length * 2);
+                //Array.Resize(ref m_array, m_array.Length + 1);
+            }
+
+            m_array[m_count++] = element;
+        }
+    }
 }
+
+

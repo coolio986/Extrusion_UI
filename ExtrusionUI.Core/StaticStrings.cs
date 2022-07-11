@@ -12,6 +12,7 @@ namespace ExtrusionUI.Core
         public static readonly string TRAVERSEMOTIONSTATUS = "TraverseMotionStatus";
         public static readonly string SPOOLMOTIONSTATUS = "SpoolMotionStatus";
         public static readonly string LOGGERMOTIONSTATE = "LoggerMotionState";
+        public static readonly string TRAVERSEPOSITIONSTATUS = "TraversePositionStatus";
         public static readonly string ACTUALDIAMETER = "ActualDiameter";
         public static readonly string HIGHESTVALUE = "HighestValue";
         public static readonly string LOWESTVALUE = "LowestValue";

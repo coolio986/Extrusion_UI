@@ -38,6 +38,18 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand<object> _runTraverseToStart;
         public DelegateCommand<object> RunTraverseToStart => _runTraverseToStart ?? (_runTraverseToStart = new DelegateCommand<object>(ExecuteRunTraverseToStartCommand, CanExecuteRunTraverseToStartCommand));
 
+        private int _serialBufferSize;
+        public int SerialBufferSize
+        {
+            get { return _serialBufferSize; }
+            set { SetProperty(ref _serialBufferSize, value); }
+        }
+        private int _serialBufferLargestSize;
+        public int SerialBufferLargestSize
+        {
+            get { return _serialBufferLargestSize; }
+            set { SetProperty(ref _serialBufferLargestSize, value); }
+        }
         public bool HomeTraverseIsVisible
         {
             get { return CanStartCapture(); }
@@ -210,9 +222,17 @@ namespace ExtrusionUI.Module.Display.ViewModels
             Settings = new DelegateCommand(Settings_Click);
 
             StartCapture.RaiseCanExecuteChanged();
+            _serialService.SerialBufferSizeChanged += _serialService_SerialBufferSizeChanged;
         }
 
-
+        private void _serialService_SerialBufferSizeChanged(object sender, EventArgs e)
+        {
+            SerialBufferSize = (int)sender;
+            if (_filamentService.CaptureStarted)
+                SerialBufferLargestSize = SerialBufferSize > SerialBufferLargestSize ? SerialBufferSize : SerialBufferLargestSize;
+            else
+                SerialBufferLargestSize = 0;
+        }
 
         private void _filamentService_StopWatchedTimeChanged(object sender, EventArgs e)
         {
@@ -241,17 +261,22 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 if(HomeTraverseIsVisible)
                     RaisePropertyChanged("HomeTraverseIsVisible");
             }));
-            
 
+            if(_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped")
+            {
+                
+            }
             if (_filamentService.CaptureStarted && 
                 (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped" ||
-                _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None"))
+                _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None") 
+                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture")
             {
-                if(startButtonMask)
-                {
-                    startButtonMask = false;
-                    return;
-                }
+                //if(startButtonMask)
+                //{
+                //    startButtonMask = false;
+                //    return;
+                //}
+                
                 _filamentService.CaptureStarted = false;
                 RaisePropertyChanged("CaptureStarted");
                 RaisePropertyChanged("StartButtonGradientCollection");
@@ -262,16 +287,18 @@ namespace ExtrusionUI.Module.Display.ViewModels
             }
             if(_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
                 && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "RunCapture" 
-                && !_filamentService.CaptureStarted)
+                )
             {
                 StartCapture_Click();
             }
             if (_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
                 && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture"
-                && _filamentService.CaptureStarted)
+                && _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] != "Stopping"
+                )
             {
                 StopCapture_Click();
             }
+
         }
 
         private void ResetGraph_Click()
@@ -283,7 +310,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
         {
             if (!_filamentService.CaptureStarted)
             {
-                startButtonMask = true;
+                //startButtonMask = true;
                 _filamentService.CaptureStarted = true;
                 RaisePropertyChanged("CaptureStarted");
                 RaisePropertyChanged("RealTimeModel");
