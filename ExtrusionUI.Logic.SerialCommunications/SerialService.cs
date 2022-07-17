@@ -18,7 +18,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
 {
     public class SerialService : ISerialService
     {
-        private SerialPort serialPort;
+        //private SerialPort serialPort;
 
         public event EventHandler DiameterChanged;
 
@@ -26,36 +26,32 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler TraverseDataChanged;
         public event EventHandler GeneralDataChanged;
         public event EventHandler SerialBufferSizeChanged;
+        bool autoDetectionCheckFinished = false;
 
         private IFileService _fileService;
 
-        ConcurrentQueue<SerialCommand> serialQueue;
-        int CCqueueCount = 0;
+        //ConcurrentQueue<SerialCommand> serialQueue;
+        //int CCqueueCount = 0;
 
-        private static ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
+        //private static ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
 
         public SerialService(IFileService fileService)
         {
             _fileService = fileService;
 
-            if (!IsSimulationModeActive)
-                serialPort = new SerialPort();
+            //if (!IsSimulationModeActive)
+            //    serialPort = new SerialPort();
 
-            serialQueue = new ConcurrentQueue<SerialCommand>();
+            //serialQueue = new ConcurrentQueue<SerialCommand>();
         }
 
-        private string portName;
-        public string PortName
-        {
-            get { return portName; }
-            set
-            {
-                portName = value;
-                UnbindHandlers();
-                SetPort();
-                BindHandlers();
-            }
-        }
+        //private string portName;
+        //public string PortName
+        //{
+        //    get { return portName; }
+        //    set
+        //    {
+        //        portName = value;
 
 
         private int serialBufferSize = 0;
@@ -75,7 +71,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         public bool IsSimulationModeActive { get; set; }
 
-        public bool PortDataIsSet { get; private set; }
+        //public bool PortDataIsSet { get; private set; }
 
         public void BindHandlers()
         {
@@ -88,10 +84,17 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         public void ConnectToSerialPort(string portName)
         {
+            SerialPort serialPort = null;
             if (!IsSimulationModeActive)
             {
-                PortName = portName;
-                StartSerialQueue();
+                //PortName = portName;
+                //UnbindHandlers();
+                serialPort = SetPort(portName);
+                //BindHandlers();
+                ConcurrentQueue<SerialCommand> serialQueue = new ConcurrentQueue<SerialCommand>();
+                int CCqueueCount = 0;
+                ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
+                StartSerialQueue(serialPort, serialQueue, CCqueueCount, lock_);
                 //serialPort.BaudRate = 115200;
                 serialPort.Open();
             }
@@ -100,11 +103,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 RunSimulation();
             }
 
-            StartSerialReceive();
+            StartSerialReceive(serialPort, null);
         }
 
-        private void SetPort()
+        private SerialPort SetPort(string portName)
         {
+            SerialPort serialPort = new SerialPort();
             serialPort.PortName = portName;
             //serialPort.DtrEnable = true;
             //serialPort.RtsEnable = true;
@@ -115,17 +119,70 @@ namespace ExtrusionUI.Logic.SerialCommunications
             serialPort.WriteTimeout = 20;
             serialPort.NewLine = Environment.NewLine;
             serialPort.ReceivedBytesThreshold = 2048;
-            PortDataIsSet = true;
+            //PortDataIsSet = true;
+            return serialPort;
         }
 
-        //int serialCounter = 0;
-
-        private void StartSerialReceive()
+        public async Task<SerialCommand> CheckIfDeviceExists(string portName, string[] deviceTypes)
         {
+            SerialPort serialPort = SetPort(portName);
+            serialPort.Open();
 
-            //Task.Factory.StartNew(() =>
-            //{
-            if (PortDataIsSet)
+            SerialCommand returnCommand = new SerialCommand();
+            StartSerialReceive(serialPort, returnCommand, ReturnIDFunction);
+
+            SerialCommand command = new SerialCommand() { Command = "GetHardwareID", DeviceID = "100" };
+            string serialCommand = command.AssembleCommand();
+            int checksum = GetCheckSum(serialCommand);
+            serialCommand += checksum.ToString() + ";";
+
+
+            serialPort.WriteLine(serialCommand);
+            while (serialPort.BytesToWrite > 0)
+            {
+                Console.WriteLine("writing bytes");
+                Thread.Sleep(10);
+            }
+
+            var myTask = Task.Run(() =>
+            {
+                int counterInMillis = 0;
+                int timeDelay = 500;
+                while (autoDetectionCheckFinished == false)
+                {
+                    if (counterInMillis >= timeDelay)
+                        break;
+
+                    Thread.Sleep(1);
+                    counterInMillis++;
+                }
+                serialPort.Close();
+                autoDetectionCheckFinished = false;
+                return returnCommand;
+
+            });
+            return await myTask.ConfigureAwait(false);
+
+        }
+        private object ReturnIDFunction(object sender, SerialPort serialPort, SerialCommand returnCommand)
+        {
+            string[] returnData = sender as string[];
+
+            if (returnData[1] != "HardwareID")
+                return null;
+
+            returnCommand.Command = returnData[1];
+            returnCommand.DeviceID = returnData[0];
+            returnCommand.Value = returnData[2];
+
+            autoDetectionCheckFinished = true;
+            //serialPort.Close();
+            return sender;
+
+        }
+        private void StartSerialReceive(SerialPort serialPort, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null)
+        {
+            if (serialPort.IsOpen)
             {
                 byte[] buffer = new byte[5000];
                 string ret = string.Empty;
@@ -134,25 +191,27 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                 kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                 {
-                    int count = serialPort.BaseStream.EndRead(ar);
-                    //SerialBufferSizeChanged?.Invoke(count, null);
-                    //Debug.WriteLine(count);
-                    byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
-                    OnDataReceived(dst);
-                    kickoffRead();
+                    if (serialPort.IsOpen)
+                    {
+                        int count = serialPort.BaseStream.EndRead(ar);
+                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
+                        OnDataReceived(dst, returnCommand, serialPort, func);
+
+                        if (serialPort.IsOpen)
+                            kickoffRead();
+                    }
                 }, null)); kickoffRead();
             }
-            //});
         }
 
-        public virtual void OnDataReceived(byte[] data)
+        public virtual void OnDataReceived(byte[] data, SerialCommand returnCommand, SerialPort serialPort = null, Func<object, SerialPort, SerialCommand, object> func = null)
         {
             string dataIn = string.Empty;
-            
+
             if (null != data)
             {
                 dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
-                //Debug.WriteLine(dataIn);
+
                 string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
                 if (splitData.Length == 5)
                 {
@@ -166,16 +225,23 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                     if (!checkSumError)
                     {
-                        Type type = this.GetType();
-                        MethodInfo method = type.GetMethod(splitData[1]);
-
-                        if (method == null) //try indirect GetMethod
+                        if (func == null)
                         {
-                            //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
-                            method = type.GetMethod("ProcessIndirectFunction");
+                            Type type = this.GetType();
+                            MethodInfo method = type.GetMethod(splitData[1]);
+
+                            if (method == null) //try indirect GetMethod
+                            {
+                                //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
+                                method = type.GetMethod("ProcessIndirectFunction");
+                            }
+                            if (method == null) { throw new Exception(); }
+                            method.Invoke(this, new object[] { splitData });
                         }
-                        if (method == null) { throw new Exception(); }
-                        method.Invoke(this, new object[] { splitData });
+                        else
+                        {
+                            func(splitData, serialPort, returnCommand);
+                        }
 
                     }
                 }
@@ -243,51 +309,51 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         }
 
-        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            string dataIn = serialPort.ReadLine();
+        //private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        //{
+        //    string dataIn = serialPort.ReadLine();
 
-            string asciiConvertedBytes = string.Empty;
+        //    string asciiConvertedBytes = string.Empty;
 
-            asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
+        //    asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
 
-            if (asciiConvertedBytes.Length == 52) //if data is valid
-            {
-                byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
+        //    if (asciiConvertedBytes.Length == 52) //if data is valid
+        //    {
+        //        byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
 
-                for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
-                {
-                    bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
-                }
+        //        for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
+        //        {
+        //            bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
+        //        }
 
-                string diameterStringBuilder = string.Empty;
-                for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
-                {
-                    diameterStringBuilder += bytes[i].ToString();
-                }
+        //        string diameterStringBuilder = string.Empty;
+        //        for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
+        //        {
+        //            diameterStringBuilder += bytes[i].ToString();
+        //        }
 
-                try //if anything fails, skip it and wait for the next serial event
-                {
-                    //bytes[11] is the decmial position from right
-                    diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
+        //        try //if anything fails, skip it and wait for the next serial event
+        //        {
+        //            //bytes[11] is the decmial position from right
+        //            diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
 
-                    double diameter = 0;
+        //            double diameter = 0;
 
-                    if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
-                    {
-                        string formatString = "0.";
-                        for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
-                        {
-                            formatString += "0";
-                        }
+        //            if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
+        //            {
+        //                string formatString = "0.";
+        //                for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
+        //                {
+        //                    formatString += "0";
+        //                }
 
-                        DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-                    }
+        //                DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+        //            }
 
-                }
-                catch { }
-            }
-        }
+        //        }
+        //        catch { }
+        //    }
+        //}
 
         private void RunSimulation()
         {
@@ -321,12 +387,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public void SendSerialData(SerialCommand command)
         {
 
-            serialQueue.Enqueue(command);
-            Interlocked.Increment(ref CCqueueCount);
+            //serialQueue.Enqueue(command);
+            //Interlocked.Increment(ref CCqueueCount);
 
         }
 
-        private void StartSerialQueue()
+        private void StartSerialQueue(SerialPort serialPort, ConcurrentQueue<SerialCommand> serialQueue, int CCqueueCount, ReaderWriterLockSlim lock_)
         {
             Task.Factory.StartNew(() =>
             {

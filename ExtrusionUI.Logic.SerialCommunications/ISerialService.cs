@@ -22,5 +22,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
         int SerialBufferSize { get; }
 
         void SendSerialData(SerialCommand command);
+        Task<SerialCommand> CheckIfDeviceExists(string portName, string[] deviceTypes);
     }
 }

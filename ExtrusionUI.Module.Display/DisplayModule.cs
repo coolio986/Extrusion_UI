@@ -26,10 +26,13 @@ namespace ExtrusionUI.Module.Display
             _container.RegisterTypeForNavigation<DiameterView>();
             _container.RegisterTypeForNavigation<SerialPortSelectionView>();
             _container.RegisterTypeForNavigation<SettingsView>();
+            _container.RegisterTypeForNavigation<AutoDetectSerialPort>();
 
             //_naviService.NavigateTo("DiameterView");
 
-            _naviService.NavigateTo("SerialPortSelectionView");
+            //_naviService.NavigateTo("SerialPortSelectionView");
+            _naviService.NavigateTo("AutoDetectSerialPort");
+            
         }
     }
 }
