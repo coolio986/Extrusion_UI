@@ -39,7 +39,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private void SetSerialPort()
         {
             if (serialPortSelection != null)
-                _serialService.ConnectToSerialPort(serialPortSelection.SerialPort_PortName);
+                _serialService.ConnectToSerialPort(serialPortSelection.SerialPort_PortName, (int)HARDWARETYPES.Spooler);
         }
 
         private void NextScreen_Click()

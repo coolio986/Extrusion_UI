@@ -31,13 +31,6 @@ namespace ExtrusionUI.Module.Display.ViewModels
             set { SetProperty(ref _bufferPortNumber, value); }
         }
 
-        private enum HARDWARETYPES
-        {
-            Spooler = 1,
-            Buffer = 2,
-            InternalDevice = 100,
-        }
-
         public ObservableCollection<SerialPortClass> SerialPortList { get; private set; }
 
         private DelegateCommand<object> _autoDetectDevices;
@@ -81,9 +74,9 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private void ExecuteAcceptDevices(object obj)
         {
             if (!string.IsNullOrEmpty(SpoolerPortNumber))
-                _serialService.ConnectToSerialPort(SpoolerPortNumber);
+                _serialService.ConnectToSerialPort(SpoolerPortNumber, (int)HARDWARETYPES.Spooler);
             if (!string.IsNullOrEmpty(BufferPortNumber))
-                _serialService.ConnectToSerialPort(BufferPortNumber);
+                _serialService.ConnectToSerialPort(BufferPortNumber, (int)HARDWARETYPES.Buffer);
 
             _naviService.NavigateTo("DiameterView");
         }

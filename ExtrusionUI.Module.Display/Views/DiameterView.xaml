@@ -540,6 +540,14 @@
                     <TextBlock Text="Rx Buffer Highest: " />
                     <TextBlock Margin="15 0 0 0" Text="{Binding SerialBufferLargestSize}" />
                 </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="TestCode: " />
+                    <TextBlock Margin="29 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TESTCODE}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
                     <Button Content="E-STOP" Width="60" Height="60" Margin="5" Background="LightPink" Command="{Binding EStopCommand}" >
                         <Button.Resources>

@@ -27,7 +27,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler GeneralDataChanged;
         public event EventHandler SerialBufferSizeChanged;
         bool autoDetectionCheckFinished = false;
-
+       
         private IFileService _fileService;
 
         //ConcurrentQueue<SerialCommand> serialQueue;
@@ -82,7 +82,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             //serialPort.DataReceived -= SerialPort_DataReceived;
         }
 
-        public void ConnectToSerialPort(string portName)
+        public void ConnectToSerialPort(string portName, int deviceId)
         {
             SerialPort serialPort = null;
             if (!IsSimulationModeActive)
@@ -94,7 +94,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 ConcurrentQueue<SerialCommand> serialQueue = new ConcurrentQueue<SerialCommand>();
                 int CCqueueCount = 0;
                 ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
-                StartSerialQueue(serialPort, serialQueue, CCqueueCount, lock_);
+                StartSerialQueue(serialPort, deviceId, serialQueue, CCqueueCount, lock_);
                 //serialPort.BaudRate = 115200;
                 serialPort.Open();
             }
@@ -386,16 +386,17 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         public void SendSerialData(SerialCommand command)
         {
-
+            SerialQueueClass.Enqueue(command);
             //serialQueue.Enqueue(command);
             //Interlocked.Increment(ref CCqueueCount);
 
         }
 
-        private void StartSerialQueue(SerialPort serialPort, ConcurrentQueue<SerialCommand> serialQueue, int CCqueueCount, ReaderWriterLockSlim lock_)
+        private void StartSerialQueue(SerialPort serialPort, int deviceId, ConcurrentQueue<SerialCommand> serialQueue, int CCqueueCount, ReaderWriterLockSlim lock_)
         {
             Task.Factory.StartNew(() =>
             {
+                SerialQueueClass.AddSerialPortToQueue(serialPort, deviceId, serialQueue, CCqueueCount, lock_);
 
                 while (true)
                 {
@@ -407,7 +408,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
                         while (serialQueue.TryDequeue(out command))
                         {
 
-                            Interlocked.Decrement(ref CCqueueCount);
+                            //Interlocked.Decrement(ref CCqueueCount);
+                            SerialQueueClass.DecrementQueueLock(command);
                             string serialCommand = command.AssembleCommand();
 
                             int checksum = GetCheckSum(serialCommand);
@@ -611,6 +613,11 @@ namespace ExtrusionUI.Logic.SerialCommunications
         }
 
         public void TraversePositionStatus(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void testCode(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
         }

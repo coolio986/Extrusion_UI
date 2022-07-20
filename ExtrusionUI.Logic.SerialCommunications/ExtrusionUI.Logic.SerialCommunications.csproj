@@ -42,10 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HardwareTypes.cs" />
     <Compile Include="ISerialService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialCommand.cs" />
     <Compile Include="SerialPortClass.cs" />
+    <Compile Include="SerialQueueClass.cs" />
     <Compile Include="SerialService.cs" />
   </ItemGroup>
   <ItemGroup>
