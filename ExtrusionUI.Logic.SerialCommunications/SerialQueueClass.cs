@@ -66,7 +66,5 @@ namespace ExtrusionUI.Logic.SerialCommunications
             }
             return null;
         }
-
-        
     }
 }

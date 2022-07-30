@@ -533,6 +533,22 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="Buffer Position: " />
+                    <TextBlock Margin="29 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.BUFFERPOSITION}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="Buffer Status: " />
+                    <TextBlock Margin="29 0 0 0">
+                        <i:Interaction.Behaviors>
+                            <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.BUFFERSTATUS}" Unit=""/>
+                        </i:Interaction.Behaviors>
+                    </TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Serial RX Buffer: " />
                     <TextBlock Margin="29 0 0 0" Text="{Binding SerialBufferSize}" />
                 </StackPanel>

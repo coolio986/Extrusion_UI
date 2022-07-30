@@ -25,6 +25,8 @@ namespace ExtrusionUI.Core
         public static readonly string SPOOLWEIGHTLIMIT = "SpoolWeightLimit";
         public static readonly string SPOOLWEIGHT = "SpoolWeight";
         public static readonly string TRAVERSE = "Traverse";
+        public static readonly string BUFFERSTATUS = "BufferStatus";
+        public static readonly string BUFFERPOSITION = "BufferPosition";
         public static readonly string TESTCODE = "testCode";
 
     }

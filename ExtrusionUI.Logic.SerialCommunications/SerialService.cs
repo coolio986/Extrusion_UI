@@ -416,7 +416,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
 
                             serialCommand += checksum.ToString() + ";";
-                            Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
+                            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
 
                             lock_.EnterWriteLock();
                             try
@@ -605,12 +605,40 @@ namespace ExtrusionUI.Logic.SerialCommunications
         {
             processSerialCommand(splitData);
         }
+        public void BufferStatus(string[] splitData) //reflection calls this
+        {
+            SerialCommand serialCommand = processSerialCommand(splitData);
+
+            //need to sent to spooler
+            serialCommand.DeviceID = ((int)HARDWARETYPES.Spooler).ToString();
+            serialCommand.Command = "From" + serialCommand.Command;
+            sendToDevice(serialCommand);
+        }
+        public void BufferPosition(string[] splitData) //reflection calls this
+        {
+            SerialCommand serialCommand = processSerialCommand(splitData);
+
+            //need to sent to spooler
+            serialCommand.DeviceID = ((int)HARDWARETYPES.Spooler).ToString();
+            serialCommand.Command = "From" + serialCommand.Command;
+            sendToDevice(serialCommand);
+        }
+
+        public void BufferStatusTEST(string[] splitData) //reflection calls this
+        {
+            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
+        }
+
+        public void BufferPositionTEST(string[] splitData) //reflection calls this
+        {
+            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
+        }
 
         public void LoggerMotionState(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
             Debug.WriteLine("Logger Motion State: {0};{1};{2};{3}", splitData[0], splitData[1], splitData[2], splitData[3]);
-        }
+        } 
 
         public void TraversePositionStatus(string[] splitData) //reflection calls this
         {
@@ -622,7 +650,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
-        private void processSerialCommand(string[] splitData)
+        private SerialCommand processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();
 
@@ -633,7 +661,14 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 command.Value = splitData[2].Replace("\0", string.Empty).Replace("nan", "-1.00"); //remove nulls
 
                 GeneralDataChanged?.Invoke(command, null);
+                return command;
             }
+            return null;
+        }
+
+        private void sendToDevice(SerialCommand serialCommand)
+        {
+            SendSerialData(serialCommand);
         }
     }
 }

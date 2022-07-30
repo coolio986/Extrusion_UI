@@ -177,7 +177,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
 
 
-            if (objectItem.HardwareType != string.Empty)
+            if (objectItem.HardwareType != string.Empty && objectItem.IsSerialCommand)
             {
                 _serialService.SendSerialData(new SerialCommand() { Command = "Set" + objectItem.SerialCommand, Value = itemValue, DeviceID = objectItem.HardwareType });
             }
