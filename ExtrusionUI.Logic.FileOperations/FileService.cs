@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml.Linq;
@@ -34,9 +35,20 @@ namespace ExtrusionUI.Logic.FileOperations
             return contents;
         }
 
-        public void WriteFile(string filename, string filedata)
+        public void WriteFile(string filename, string filedata, int retryCount = 0)
         {
-            File.WriteAllText(filename, filedata);
+            try
+            {
+                File.WriteAllText(filename, filedata);
+            }
+            catch
+            {
+                //if it fails to write due to a lock, try again 5 times
+                Thread.Sleep(10);
+                if (retryCount < 5)
+                    WriteFile(filename, filedata, retryCount++);
+            }
+
         }
 
         public void AppendFile(string filename, string filedata)
@@ -62,7 +74,7 @@ namespace ExtrusionUI.Logic.FileOperations
 
             if (!File.Exists(EnvironmentDirectory + @"\persistence.xml"))
                 File.Create(EnvironmentDirectory + @"\persistence.xml").Close();
-            
+
 
             try
             {

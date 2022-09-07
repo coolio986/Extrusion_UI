@@ -10,7 +10,7 @@ namespace ExtrusionUI.Logic.FileOperations
     {
         string EnvironmentDirectory { get; }
         string ReadFile(string filename);
-        void WriteFile(string filename, string filedata);
+        void WriteFile(string filename, string filedata, int retryCounts = 0);
         void AppendFile(string filename, string filedata);
         void AppendLog(string filedata);
     }

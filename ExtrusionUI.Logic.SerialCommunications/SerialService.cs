@@ -624,16 +624,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
             sendToDevice(serialCommand);
         }
 
-        public void BufferStatusTEST(string[] splitData) //reflection calls this
-        {
-            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
-        }
-
-        public void BufferPositionTEST(string[] splitData) //reflection calls this
-        {
-            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
-        }
-
         public void LoggerMotionState(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
@@ -645,11 +635,37 @@ namespace ExtrusionUI.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
-        public void testCode(string[] splitData) //reflection calls this
+        public void BufPos1RPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void BufPos2RPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void BufPos3RPM(string[] splitData) //reflection calls this
+        {
+            processSerialCommand(splitData);
+        }
+        public void BufPos4RPM(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
         }
 
+        public void SpoolKp(string[] splitData)
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void SpoolKi(string[] splitData)
+        {
+            processSerialCommand(splitData);
+        }
+
+        public void SpoolKd(string[] splitData)
+        {
+            processSerialCommand(splitData);
+        }
         private SerialCommand processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();
