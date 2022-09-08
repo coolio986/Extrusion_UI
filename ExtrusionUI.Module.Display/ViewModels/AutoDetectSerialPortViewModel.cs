@@ -53,16 +53,19 @@ namespace ExtrusionUI.Module.Display.ViewModels
             foreach (var serialPort in SerialPortList)
             {
                 SerialCommand serialCommand = null;
-                serialCommand = _serialService.CheckIfDeviceExists(serialPort.SerialPort_PortName, hardwareTypes).Result;
+                serialCommand = _serialService.CheckIfDeviceExists(serialPort, hardwareTypes).Result;
+                
                 if (serialCommand != null && serialCommand.DeviceID != "0" && !string.IsNullOrEmpty(serialCommand.DeviceID))
                 {
                     switch (Convert.ToInt32(serialCommand.DeviceID))
                     {
                         case (int)HARDWARETYPES.Spooler:
                             SpoolerPortNumber = serialPort.SerialPort_PortName;
+                            serialPort.MyHardwareType = HARDWARETYPES.Spooler;
                             break;
                         case (int)HARDWARETYPES.Buffer:
                             BufferPortNumber = serialPort.SerialPort_PortName;
+                            serialPort.MyHardwareType = HARDWARETYPES.Buffer;
                             break;
                         default:
                             break;

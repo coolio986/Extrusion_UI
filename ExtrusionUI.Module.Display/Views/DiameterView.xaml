@@ -431,7 +431,7 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Foreground="{Binding HighestForgroundColor}"  >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.HIGHESTVALUE}" Unit="mm"/>
                     </i:Interaction.Behaviors>
@@ -443,7 +443,7 @@
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
+                <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Foreground="{Binding LowestForgroundColor}"   >
                     <i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.LOWESTVALUE}" Unit="mm"/>
                     </i:Interaction.Behaviors>
@@ -549,12 +549,20 @@
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                    <TextBlock Text="Serial RX Buffer: " />
-                    <TextBlock Margin="29 0 0 0" Text="{Binding SerialBufferSize}" />
+                    <TextBlock Text="COM Spooler Frame: " />
+                    <TextBlock Margin="29 0 0 0" Text="{Binding COMSpoolerFrameSize}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                    <TextBlock Text="Rx Buffer Highest: " />
-                    <TextBlock Margin="15 0 0 0" Text="{Binding SerialBufferLargestSize}" />
+                    <TextBlock Text="COM Buffer Frame: " />
+                    <TextBlock Margin="29 0 0 0" Text="{Binding COMBufferFrameSize}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="COM Spooler Highest: " />
+                    <TextBlock Margin="15 0 0 0" Text="{Binding COMSpoolerFrameHighest}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                    <TextBlock Text="COM Buffer Highest: " />
+                    <TextBlock Margin="15 0 0 0" Text="{Binding COMBufferFrameHighest}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="TestCode: " />

@@ -49,11 +49,14 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                     if (vmb.IsXmLParameter)
                     {
                         PropertyInfo prop = _filamentService.GetType().GetProperty(vmb.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
-                        vmb.Value = _filamentService.FilamentServiceVariables[vmb.XmlParameterName];
-
-                        if (prop != null)
+                        if (_filamentService.FilamentServiceVariables.ContainsKey(vmb.XmlParameterName))
                         {
-                            vmb.Value = prop.GetValue(_filamentService, null);
+                            vmb.Value = _filamentService.FilamentServiceVariables[vmb.XmlParameterName];
+
+                            if (prop != null)
+                            {
+                                vmb.Value = prop.GetValue(_filamentService, null);
+                            }
                         }
                     }
                     Settings.Add(vmb);

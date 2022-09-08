@@ -27,7 +27,9 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler GeneralDataChanged;
         public event EventHandler SerialBufferSizeChanged;
         bool autoDetectionCheckFinished = false;
-       
+
+        private List<SerialPortClass> SerialPortList { get; set; }
+
         private IFileService _fileService;
 
         //ConcurrentQueue<SerialCommand> serialQueue;
@@ -45,28 +47,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
             //serialQueue = new ConcurrentQueue<SerialCommand>();
         }
 
-        //private string portName;
-        //public string PortName
-        //{
-        //    get { return portName; }
-        //    set
-        //    {
-        //        portName = value;
 
 
-        private int serialBufferSize = 0;
-        public int SerialBufferSize
-        {
-            get => serialBufferSize;
-            set
-            {
-                if (serialBufferSize != value)
-                {
-                    serialBufferSize = value;
-                    SerialBufferSizeChanged?.Invoke(serialBufferSize, null);
-                }
-            }
-        }
 
 
         public bool IsSimulationModeActive { get; set; }
@@ -90,20 +72,34 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 //PortName = portName;
                 //UnbindHandlers();
                 serialPort = SetPort(portName);
-                //BindHandlers();
+                SerialPortClass serialPortClass = new SerialPortClass(serialPort);
+
+                if (SerialPortList.Any(x => x.SerialPort_PortName == serialPort.PortName))
+                {
+                    var existingSerialPortClass = SerialPortList.FirstOrDefault(x => x.SerialPort_PortName == serialPort.PortName);
+                    if (existingSerialPortClass != null && existingSerialPortClass.GetSerialPort() == null)
+                    {
+                        serialPortClass.MyHardwareType = existingSerialPortClass.MyHardwareType;
+                        serialPortClass.SerialPort_FriendlyName = existingSerialPortClass.SerialPort_FriendlyName;
+                        serialPortClass.SerialPort_PortName = existingSerialPortClass.SerialPort_PortName;
+
+                        SerialPortList.Remove(existingSerialPortClass);
+                        SerialPortList.Add(serialPortClass);
+                    }
+                }
                 ConcurrentQueue<SerialCommand> serialQueue = new ConcurrentQueue<SerialCommand>();
                 int CCqueueCount = 0;
                 ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
                 StartSerialQueue(serialPort, deviceId, serialQueue, CCqueueCount, lock_);
                 //serialPort.BaudRate = 115200;
                 serialPort.Open();
+
+                StartSerialReceive(serialPortClass, null);
             }
             else
             {
                 RunSimulation();
             }
-
-            StartSerialReceive(serialPort, null);
         }
 
         private SerialPort SetPort(string portName)
@@ -123,13 +119,20 @@ namespace ExtrusionUI.Logic.SerialCommunications
             return serialPort;
         }
 
-        public async Task<SerialCommand> CheckIfDeviceExists(string portName, string[] deviceTypes)
+        public async Task<SerialCommand> CheckIfDeviceExists(SerialPortClass serialPortClass, string[] deviceTypes)
         {
-            SerialPort serialPort = SetPort(portName);
+            SerialPort serialPort = SetPort(serialPortClass.SerialPort_PortName);
             serialPort.Open();
+            serialPortClass = new SerialPortClass(serialPort)
+            {
+                MyHardwareType = serialPortClass.MyHardwareType,
+                SerialPort_FriendlyName = serialPortClass.SerialPort_FriendlyName,
+                SerialPort_PortName = serialPortClass.SerialPort_PortName,
+            };
+
 
             SerialCommand returnCommand = new SerialCommand();
-            StartSerialReceive(serialPort, returnCommand, ReturnIDFunction);
+            StartSerialReceive(serialPortClass, returnCommand, ReturnIDFunction);
 
             SerialCommand command = new SerialCommand() { Command = "GetHardwareID", DeviceID = "100" };
             string serialCommand = command.AssembleCommand();
@@ -180,21 +183,26 @@ namespace ExtrusionUI.Logic.SerialCommunications
             return sender;
 
         }
-        private void StartSerialReceive(SerialPort serialPort, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null)
+        private void StartSerialReceive(SerialPortClass serialPortClass, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null)
         {
+            SerialPort serialPort = serialPortClass.GetSerialPort();
             if (serialPort.IsOpen)
             {
                 byte[] buffer = new byte[5000];
                 string ret = string.Empty;
                 Action kickoffRead = null;
                 LineSplitter lineSplitter = new LineSplitter();
-
+                
                 kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                 {
                     if (serialPort.IsOpen)
                     {
                         int count = serialPort.BaseStream.EndRead(ar);
-                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
+                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(
+                            this,
+                            serialPortClass,
+                            buffer,
+                            count);
                         OnDataReceived(dst, returnCommand, serialPort, func);
 
                         if (serialPort.IsOpen)
@@ -255,13 +263,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
             byte[] leftover;
 
 
-            public byte[] OnIncomingBinaryBlock(object sender, byte[] buffer, int bytesInBuffer)
+            public byte[] OnIncomingBinaryBlock(object sender, SerialPortClass serialPort, byte[] buffer, int bytesInBuffer)
             {
                 leftover = ConcatArray(leftover, buffer, 0, bytesInBuffer);
-
+                serialPort.BufferSize = leftover.Length;
                 if (sender is SerialService serialService)
-                    serialService.SerialBufferSize = leftover.Length;
-
+                    serialService.SerialBufferSizeChanged?.Invoke(serialPort, null);
 
                 int newLineIndex = Array.IndexOf(leftover, Delimiter);
                 if (newLineIndex >= 0)
@@ -421,7 +428,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
                             lock_.EnterWriteLock();
                             try
                             {
-                                _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
+                                if (!IsInterMCUCommunication(command))
+                                    _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
                             }
                             catch (Exception oe)
                             {
@@ -436,8 +444,9 @@ namespace ExtrusionUI.Logic.SerialCommunications
                             while (serialPort.BytesToWrite > 0)
                             {
                                 Console.WriteLine("writing bytes");
-                                Thread.Sleep(15);
+                                //Thread.Sleep(15);
                             }
+                            Thread.Sleep(10);
                         }
 
 
@@ -528,9 +537,22 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     });
             }
 
+            SerialPortList = ListOfSerialPortClass;
             return ListOfSerialPortClass;
         }
 
+        public List<SerialPortClass> GetComPorts()
+        => SerialPortList;
+
+        private bool IsInterMCUCommunication(SerialCommand serialCommand)
+        {
+            if (serialCommand.DeviceID == Convert.ToInt32(HARDWARETYPES.Spooler).ToString())
+            {
+                return serialCommand.Command == "FromBufferPosition" || serialCommand.Command == "FromBufferStatus";
+            }
+
+            return false;
+        }
         public void diameter(string[] splitData) //reflection calls this
         {
             double diameter = 0;
@@ -628,7 +650,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         {
             processSerialCommand(splitData);
             Debug.WriteLine("Logger Motion State: {0};{1};{2};{3}", splitData[0], splitData[1], splitData[2], splitData[3]);
-        } 
+        }
 
         public void TraversePositionStatus(string[] splitData) //reflection calls this
         {
@@ -652,20 +674,16 @@ namespace ExtrusionUI.Logic.SerialCommunications
             processSerialCommand(splitData);
         }
 
-        public void SpoolKp(string[] splitData)
+        public void SpoolWindUp(string[] splitData)
         {
             processSerialCommand(splitData);
         }
 
-        public void SpoolKi(string[] splitData)
+        public void SpoolWindDown(string[] splitData)
         {
             processSerialCommand(splitData);
         }
 
-        public void SpoolKd(string[] splitData)
-        {
-            processSerialCommand(splitData);
-        }
         private SerialCommand processSerialCommand(string[] splitData)
         {
             SerialCommand command = new SerialCommand();

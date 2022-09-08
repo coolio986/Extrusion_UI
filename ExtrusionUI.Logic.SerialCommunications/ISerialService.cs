@@ -9,6 +9,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
     public interface ISerialService
     {
         List<SerialPortClass> GetSerialPortList();
+        List<SerialPortClass> GetComPorts();
 
         void ConnectToSerialPort(string portName, int deviceId);
 
@@ -19,9 +20,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
         event EventHandler SerialBufferSizeChanged;
 
         bool IsSimulationModeActive { get; set; }
-        int SerialBufferSize { get; }
 
         void SendSerialData(SerialCommand command);
-        Task<SerialCommand> CheckIfDeviceExists(string portName, string[] deviceTypes);
+        Task<SerialCommand> CheckIfDeviceExists(SerialPortClass serialport, string[] deviceTypes);
     }
 }

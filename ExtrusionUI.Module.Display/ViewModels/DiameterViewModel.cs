@@ -38,22 +38,38 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private DelegateCommand<object> _runTraverseToStart;
         public DelegateCommand<object> RunTraverseToStart => _runTraverseToStart ?? (_runTraverseToStart = new DelegateCommand<object>(ExecuteRunTraverseToStartCommand, CanExecuteRunTraverseToStartCommand));
 
-        private int _serialBufferSize;
-        public int SerialBufferSize
+        private int _comSpoolerFrameSize;
+        public int COMSpoolerFrameSize
         {
-            get { return _serialBufferSize; }
-            set { SetProperty(ref _serialBufferSize, value); }
+            get { return _comSpoolerFrameSize; }
+            set { SetProperty(ref _comSpoolerFrameSize, value); }
         }
-        private int _serialBufferLargestSize;
-        public int SerialBufferLargestSize
+
+        private int _comBufferFrameSize;
+        public int COMBufferFrameSize
         {
-            get { return _serialBufferLargestSize; }
-            set { SetProperty(ref _serialBufferLargestSize, value); }
+            get { return _comBufferFrameSize; }
+            set { SetProperty(ref _comBufferFrameSize, value); }
         }
+
+        private int _comSpoolerFrameHighest;
+        public int COMSpoolerFrameHighest
+        {
+            get { return _comSpoolerFrameHighest; }
+            set { SetProperty(ref _comSpoolerFrameHighest, value); }
+        }
+
+        private int _comBufferFrameHighest;
+        public int COMBufferFrameHighest
+        {
+            get { return _comBufferFrameHighest; }
+            set { SetProperty(ref _comBufferFrameHighest, value); }
+        }
+
         public bool HomeTraverseIsVisible
         {
             get { return CanStartCapture(); }
-            
+
         }
 
         private bool startButtonMask = false;
@@ -197,7 +213,35 @@ namespace ExtrusionUI.Module.Display.ViewModels
             get { return _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS]; }
         }
 
-        
+        public object HighestForgroundColor
+        {
+            get
+            {
+                
+                double highLimit = Convert.ToDouble(_filamentService.FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT]);
+                if (!string.IsNullOrEmpty(HighestValue))
+                {
+                    double highestValue = Convert.ToDouble(HighestValue);
+                    return highestValue > highLimit ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.Black;
+                }
+                return System.Windows.Media.Brushes.Black;
+            }
+        }
+
+        public object LowestForgroundColor
+        {
+            get
+            {
+                double lowLimit = Convert.ToDouble(_filamentService.FilamentServiceVariables[StaticStrings.FILAMENTLOWERLIMIT]);
+                if (!string.IsNullOrEmpty(LowestValue))
+                {
+                    double lowestValue = Convert.ToDouble(LowestValue);
+                    return lowestValue < lowLimit ? System.Windows.Media.Brushes.Red : System.Windows.Media.Brushes.Black;
+                }
+                return System.Windows.Media.Brushes.Black;
+            }
+        }
+
 
         private object settingsView;
         public object SettingsView
@@ -227,11 +271,31 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         private void _serialService_SerialBufferSizeChanged(object sender, EventArgs e)
         {
-            SerialBufferSize = (int)sender;
-            if (_filamentService.CaptureStarted)
-                SerialBufferLargestSize = SerialBufferSize > SerialBufferLargestSize ? SerialBufferSize : SerialBufferLargestSize;
-            else
-                SerialBufferLargestSize = 0;
+            if (sender is SerialPortClass comPort)
+            {
+
+                switch (comPort.MyHardwareType)
+                {
+                    case HARDWARETYPES.Spooler:
+                        COMSpoolerFrameSize = comPort.BufferSize;
+                        break;
+                    case HARDWARETYPES.Buffer:
+                        COMBufferFrameSize = comPort.BufferSize;
+                        break;
+                    default:
+                        break;
+                }
+                if (_filamentService.CaptureStarted)
+                {
+                    COMSpoolerFrameHighest = COMSpoolerFrameSize > COMSpoolerFrameHighest ? COMSpoolerFrameSize : COMSpoolerFrameHighest;
+                    COMBufferFrameHighest = COMBufferFrameSize > COMBufferFrameHighest ? COMBufferFrameSize : COMBufferFrameHighest;
+                }
+                else
+                {
+                    COMSpoolerFrameHighest = 0;
+                    COMBufferFrameHighest = 0;
+                }
+            }
         }
 
         private void _filamentService_StopWatchedTimeChanged(object sender, EventArgs e)
@@ -251,24 +315,27 @@ namespace ExtrusionUI.Module.Display.ViewModels
         {
             RaisePropertyChanged("SpoolNumber");
             RaisePropertyChanged("BatchNumber");
+            RaisePropertyChanged("HighestForgroundColor");
+            RaisePropertyChanged("LowestForgroundColor");
 
-            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            //Console.WriteLine(((SerialCommand)sender).Command);
+            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
             {
                 RunTraverseToStart.RaiseCanExecuteChanged();
                 StartCapture.RaiseCanExecuteChanged();
                 StopCapture.RaiseCanExecuteChanged();
 
-                if(HomeTraverseIsVisible)
+                if (HomeTraverseIsVisible)
                     RaisePropertyChanged("HomeTraverseIsVisible");
             }));
 
-            if(_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped")
+            if (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped")
             {
-                
+
             }
-            if (_filamentService.CaptureStarted && 
+            if (_filamentService.CaptureStarted &&
                 (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped" ||
-                _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None") 
+                _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None")
                 && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture")
             {
                 //if(startButtonMask)
@@ -276,7 +343,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 //    startButtonMask = false;
                 //    return;
                 //}
-                
+
                 _filamentService.CaptureStarted = false;
                 RaisePropertyChanged("CaptureStarted");
                 RaisePropertyChanged("StartButtonGradientCollection");
@@ -285,8 +352,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] = "StopCapture";
 
             }
-            if(_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
-                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "RunCapture" 
+            if (_filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE)
+                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "RunCapture"
                 )
             {
                 StartCapture_Click();
@@ -298,7 +365,6 @@ namespace ExtrusionUI.Module.Display.ViewModels
             {
                 StopCapture_Click();
             }
-
         }
 
         private void ResetGraph_Click()

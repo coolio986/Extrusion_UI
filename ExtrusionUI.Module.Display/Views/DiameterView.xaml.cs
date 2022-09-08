@@ -11,6 +11,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using ZedGraph;
+using System.Linq;
 
 namespace ExtrusionUI.Module.Display.Views
 {
@@ -195,8 +196,9 @@ namespace ExtrusionUI.Module.Display.Views
                 updateInProgress = false;
             }
 
+            int highestBufferSize = _serialService.GetComPorts().Select(x => x.BufferSize).Max();
 
-            if (_serialService.SerialBufferSize >= 1000)
+            if (highestBufferSize >= 1000)
             {
                 timeDelayMultiplier++;
                 timeDelayMultiplier = timeDelayMultiplier > 1000 ? 1000 : timeDelayMultiplier;

@@ -39,9 +39,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
         private DataInputViewModel BufferPosition2SpoolSpeed;
         private DataInputViewModel BufferPosition3SpoolSpeed;
         private DataInputViewModel BufferPosition4SpoolSpeed;
-        private DataInputViewModel SpoolKp;
-        private DataInputViewModel SpoolKi;
-        private DataInputViewModel SpoolKd;
+        private DataInputViewModel SpoolWindUp;
+        private DataInputViewModel SpoolWindDown;
 
 
         IFileService _fileService;
@@ -77,9 +76,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             BufferPosition2SpoolSpeed = new DataInputViewModel();
             BufferPosition3SpoolSpeed = new DataInputViewModel();
             BufferPosition4SpoolSpeed = new DataInputViewModel();
-            SpoolKp = new DataInputViewModel();
-            SpoolKi = new DataInputViewModel();
-            SpoolKd = new DataInputViewModel();
+            SpoolWindUp = new DataInputViewModel();
+            SpoolWindDown = new DataInputViewModel();
 
 
             //Description.ParameterName = "Description";
@@ -153,6 +151,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseHomeOffset.HardwareType = "1";
             TraverseHomeOffset.ParameterName = "Traverse Home Offset";
             TraverseHomeOffset.IsSerialCommand = true;
+            TraverseHomeOffset.IsXmLParameter = true;
+            TraverseHomeOffset.XmlParameterName = StaticStrings.TRAVERSEHOMEOFFSET;
             TraverseHomeOffset.SerialCommand = StaticStrings.TRAVERSEHOMEOFFSET;
             TraverseHomeOffset.Value = "0.00";
             TraverseHomeOffset.Unit = "mm";
@@ -161,6 +161,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseSpoolWidth.HardwareType = "1";
             TraverseSpoolWidth.ParameterName = "Spool Width";
             TraverseSpoolWidth.IsSerialCommand = true;
+            TraverseSpoolWidth.IsXmLParameter = true;
+            TraverseSpoolWidth.XmlParameterName = StaticStrings.SPOOLWIDTH;
             TraverseSpoolWidth.SerialCommand = StaticStrings.SPOOLWIDTH;
             TraverseSpoolWidth.Value = "0.00";
             TraverseSpoolWidth.Unit = "mm";
@@ -169,6 +171,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseLeadWidth.HardwareType = "1";
             TraverseLeadWidth.ParameterName = "Traverse Lead Width";
             TraverseLeadWidth.IsSerialCommand = true;
+            TraverseLeadWidth.IsXmLParameter = true;
+            TraverseLeadWidth.XmlParameterName = "TraverseLeadWidth";
             TraverseLeadWidth.SerialCommand = "TraverseLeadWidth";
             TraverseLeadWidth.Value = "0.00";
             TraverseLeadWidth.Unit = "mm";
@@ -177,6 +181,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseSpeed.HardwareType = "1";
             TraverseSpeed.ParameterName = "Traverse Speed";
             TraverseSpeed.IsSerialCommand = true;
+            TraverseSpeed.IsXmLParameter = true;
+            TraverseSpeed.XmlParameterName = "TraverseRPM";
             TraverseSpeed.SerialCommand = "TraverseRPM";
             TraverseSpeed.Value = "0.00";
             TraverseSpeed.Unit = "rpm";
@@ -185,6 +191,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseLeadSpeed.HardwareType = "1";
             TraverseLeadSpeed.ParameterName = "Traverse Lead Speed";
             TraverseLeadSpeed.IsSerialCommand = true;
+            TraverseLeadSpeed.IsXmLParameter = true;
+            TraverseLeadSpeed.XmlParameterName = "TraverseLeadRPM";
             TraverseLeadSpeed.SerialCommand = "TraverseLeadRPM";
             TraverseLeadSpeed.Value = "0.00";
             TraverseLeadSpeed.Unit = "rpm";
@@ -193,6 +201,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             BufferPosition1SpoolSpeed.HardwareType = "1";
             BufferPosition1SpoolSpeed.ParameterName = "Buffer Pos 1 RPM";
             BufferPosition1SpoolSpeed.IsSerialCommand = true;
+            BufferPosition1SpoolSpeed.IsXmLParameter = true;
+            BufferPosition1SpoolSpeed.XmlParameterName = "BufPos1RPM";
             BufferPosition1SpoolSpeed.SerialCommand = "BufPos1RPM";
             BufferPosition1SpoolSpeed.Value = "0.00";
             BufferPosition1SpoolSpeed.Unit = "rpm";
@@ -201,6 +211,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             BufferPosition2SpoolSpeed.HardwareType = "1";
             BufferPosition2SpoolSpeed.ParameterName = "Buffer Pos 2 RPM";
             BufferPosition2SpoolSpeed.IsSerialCommand = true;
+            BufferPosition2SpoolSpeed.IsXmLParameter = true;
+            BufferPosition2SpoolSpeed.XmlParameterName = "BufPos2RPM";
             BufferPosition2SpoolSpeed.SerialCommand = "BufPos2RPM";
             BufferPosition2SpoolSpeed.Value = "0.00";
             BufferPosition2SpoolSpeed.Unit = "rpm";
@@ -209,6 +221,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             BufferPosition3SpoolSpeed.HardwareType = "1";
             BufferPosition3SpoolSpeed.ParameterName = "Buffer Pos 3 RPM";
             BufferPosition3SpoolSpeed.IsSerialCommand = true;
+            BufferPosition3SpoolSpeed.IsXmLParameter = true;
+            BufferPosition3SpoolSpeed.XmlParameterName = "BufPos3RPM";
             BufferPosition3SpoolSpeed.SerialCommand = "BufPos3RPM";
             BufferPosition3SpoolSpeed.Value = "0.00";
             BufferPosition3SpoolSpeed.Unit = "rpm";
@@ -217,34 +231,33 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             BufferPosition4SpoolSpeed.HardwareType = "1";
             BufferPosition4SpoolSpeed.ParameterName = "Buffer Pos 4 RPM";
             BufferPosition4SpoolSpeed.IsSerialCommand = true;
+            BufferPosition4SpoolSpeed.IsXmLParameter = true;
+            BufferPosition4SpoolSpeed.XmlParameterName = "BufPos4RPM";
             BufferPosition4SpoolSpeed.SerialCommand = "BufPos4RPM";
             BufferPosition4SpoolSpeed.Value = "0.00";
             BufferPosition4SpoolSpeed.Unit = "rpm";
             BufferPosition4SpoolSpeed.ParameterType = StaticStrings.TRAVERSE;
 
-            SpoolKp.HardwareType = "1";
-            SpoolKp.ParameterName = "Spooler Kp";
-            SpoolKp.IsSerialCommand = true;
-            SpoolKp.SerialCommand = "SpoolKp";
-            SpoolKp.Value = "0.00";
-            SpoolKp.Unit = "";
-            SpoolKp.ParameterType = StaticStrings.TRAVERSE;
+            SpoolWindUp.HardwareType = "1";
+            SpoolWindUp.ParameterName = "Spooler WindUp";
+            SpoolWindUp.IsSerialCommand = true;
+            SpoolWindUp.IsXmLParameter = true;
+            SpoolWindUp.XmlParameterName = "SpoolWindUp";
+            SpoolWindUp.SerialCommand = "SpoolWindUp";
+            SpoolWindUp.Value = "0.00";
+            SpoolWindUp.Unit = "";
+            SpoolWindUp.ParameterType = StaticStrings.TRAVERSE;
 
-            SpoolKi.HardwareType = "1";
-            SpoolKi.ParameterName = "Spooler Ki";
-            SpoolKi.IsSerialCommand = true;
-            SpoolKi.SerialCommand = "SpoolKi";
-            SpoolKi.Value = "0.00";
-            SpoolKi.Unit = "";
-            SpoolKi.ParameterType = StaticStrings.TRAVERSE;
+            SpoolWindDown.HardwareType = "1";
+            SpoolWindDown.ParameterName = "Spooler WindDown";
+            SpoolWindDown.IsSerialCommand = true;
+            SpoolWindDown.IsXmLParameter = true;
+            SpoolWindDown.XmlParameterName = "SpoolWindDown";
+            SpoolWindDown.SerialCommand = "SpoolWindDown";
+            SpoolWindDown.Value = "0.00";
+            SpoolWindDown.Unit = "";
+            SpoolWindDown.ParameterType = StaticStrings.TRAVERSE;
 
-            SpoolKd.HardwareType = "1";
-            SpoolKd.ParameterName = "Spooler Kd";
-            SpoolKd.IsSerialCommand = true;
-            SpoolKd.SerialCommand = "SpoolKd";
-            SpoolKd.Value = "0.00";
-            SpoolKd.Unit = "";
-            SpoolKd.ParameterType = StaticStrings.TRAVERSE;
             //TraverseRunMode.HardwareType = "1";
             //TraverseRunMode.ParameterName = "Traverse Run Mode";
             //TraverseRunMode.IsSerialCommand = false;
@@ -331,9 +344,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             settings.Add(BufferPosition2SpoolSpeed);
             settings.Add(BufferPosition3SpoolSpeed);
             settings.Add(BufferPosition4SpoolSpeed);
-            settings.Add(SpoolKp);
-            settings.Add(SpoolKi);
-            settings.Add(SpoolKd);
+            settings.Add(SpoolWindUp);
+            settings.Add(SpoolWindDown);
 
 
             foreach (ViewModelBase item in settings)
