@@ -192,23 +192,47 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 string ret = string.Empty;
                 Action kickoffRead = null;
                 LineSplitter lineSplitter = new LineSplitter();
-                
-                kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                try
                 {
-                    if (serialPort.IsOpen)
-                    {
-                        int count = serialPort.BaseStream.EndRead(ar);
-                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(
-                            this,
-                            serialPortClass,
-                            buffer,
-                            count);
-                        OnDataReceived(dst, returnCommand, serialPort, func);
 
-                        if (serialPort.IsOpen)
-                            kickoffRead();
-                    }
-                }, null)); kickoffRead();
+                    kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                    {
+                        try
+                        {
+                            if (serialPort.IsOpen)
+                            {
+                                int count = serialPort.BaseStream.EndRead(ar);
+                                byte[] dst = lineSplitter.OnIncomingBinaryBlock(
+                                    this,
+                                    serialPortClass,
+                                    buffer,
+                                    count);
+                                OnDataReceived(dst, returnCommand, serialPort, func);
+
+                                if (serialPort.IsOpen)
+                                    kickoffRead();
+                            }
+                        }
+                        catch (Exception oe)
+                        {
+                            Console.WriteLine("Serial Port: " + serialPort.PortName);
+                            Console.WriteLine("An error has occurred while reading data from serialPort" + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
+                            
+                        }
+                        
+
+                    }, null)); kickoffRead();
+                }
+                catch (Exception oe)
+                {
+                    Console.WriteLine("Serial Port: " + serialPort.PortName);
+                    Console.WriteLine("An error has occurred " + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
+                }
+                finally
+                {
+                    Console.WriteLine("Serial Port: " + serialPort.PortName);
+                    Console.WriteLine("kickOffRead Ended");
+                }
             }
         }
 
@@ -443,7 +467,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
                             serialPort.WriteLine(serialCommand);
                             while (serialPort.BytesToWrite > 0)
                             {
-                                Console.WriteLine("writing bytes");
+                                //Console.WriteLine("writing bytes");
                                 //Thread.Sleep(15);
                             }
                             Thread.Sleep(10);

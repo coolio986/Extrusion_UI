@@ -100,7 +100,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         private bool CanExecuteRunTraverseToStartCommand(object arg)
         {
-            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] == "Stopped";
+            return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] == "Stopped" && 
+                   _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped";
 
         }
 
