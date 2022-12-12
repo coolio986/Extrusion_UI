@@ -45,9 +45,12 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public static void Enqueue(SerialCommand serialCommand)
         {
             SerialQueueClass serialQueueClass = GetMyQueueById(serialCommand);
+            if (serialQueueClass != null)
+            {
 
-            serialQueueClass.SerialQueue.Enqueue(serialCommand);
-            serialQueueClass.IncrementQueueLock();
+                serialQueueClass.SerialQueue.Enqueue(serialCommand);
+                serialQueueClass.IncrementQueueLock();
+            }
         }
 
         public static void DecrementQueueLock(SerialCommand serialCommand)

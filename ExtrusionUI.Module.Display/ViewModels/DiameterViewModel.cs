@@ -101,7 +101,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private bool CanExecuteRunTraverseToStartCommand(object arg)
         {
             return _filamentService.FilamentServiceVariables[StaticStrings.TRAVERSEMOTIONSTATUS] == "Stopped" && 
-                   _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped";
+                   (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped" ||
+                   _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None");
 
         }
 
@@ -334,10 +335,11 @@ namespace ExtrusionUI.Module.Display.ViewModels
             {
 
             }
-            if (_filamentService.CaptureStarted &&
+            if (_filamentService.CaptureStarted && _filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.SPOOLMOTIONSTATUS) &&
                 (_filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "Stopped" ||
                 _filamentService.FilamentServiceVariables[StaticStrings.SPOOLMOTIONSTATUS] == "None")
-                && _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture")
+                && _filamentService.FilamentServiceVariables.ContainsKey(StaticStrings.LOGGERMOTIONSTATE) && 
+                _filamentService.FilamentServiceVariables[StaticStrings.LOGGERMOTIONSTATE] == "StopCapture")
             {
                 //if(startButtonMask)
                 //{

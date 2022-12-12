@@ -28,6 +28,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler SerialBufferSizeChanged;
         bool autoDetectionCheckFinished = false;
 
+        private System.Timers.Timer timer = new System.Timers.Timer(250);
         private List<SerialPortClass> SerialPortList { get; set; }
 
         private IFileService _fileService;
@@ -40,6 +41,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public SerialService(IFileService fileService)
         {
             _fileService = fileService;
+            timer.Elapsed += Timer_Elapsed1;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+           
 
             //if (!IsSimulationModeActive)
             //    serialPort = new SerialPort();
@@ -47,9 +52,17 @@ namespace ExtrusionUI.Logic.SerialCommunications
             //serialQueue = new ConcurrentQueue<SerialCommand>();
         }
 
-
-
-
+        private void Timer_Elapsed1(object sender, ElapsedEventArgs e)
+        {
+            
+            //SerialCommand serialCommand = new SerialCommand()
+            //{
+            //    Command = "GetLoggerMotionState",
+            //    DeviceID = Convert.ToInt32(HARDWARETYPES.Spooler).ToString(),
+            //    Value = "",
+            //};
+            //sendToDevice(serialCommand);
+        }
 
         public bool IsSimulationModeActive { get; set; }
 
@@ -110,7 +123,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             //serialPort.RtsEnable = true;
             serialPort.BaudRate = 115200;
             serialPort.Handshake = Handshake.None;
-            serialPort.DtrEnable = true;
+            //serialPort.DtrEnable = true;
             serialPort.ReadTimeout = 100;
             serialPort.WriteTimeout = 20;
             serialPort.NewLine = Environment.NewLine;
@@ -141,9 +154,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
 
             serialPort.WriteLine(serialCommand);
+            Console.WriteLine(serialCommand);
             while (serialPort.BytesToWrite > 0)
             {
-                Console.WriteLine("writing bytes");
+                //Console.WriteLine("writing bytes");
                 Thread.Sleep(10);
             }
 
@@ -198,7 +212,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                     {
                         try
-                        {
+                        { 
                             if (serialPort.IsOpen)
                             {
                                 int count = serialPort.BaseStream.EndRead(ar);
@@ -228,55 +242,50 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     Console.WriteLine("Serial Port: " + serialPort.PortName);
                     Console.WriteLine("An error has occurred " + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
                 }
-                finally
-                {
-                    Console.WriteLine("Serial Port: " + serialPort.PortName);
-                    Console.WriteLine("kickOffRead Ended");
-                }
             }
         }
 
         public virtual void OnDataReceived(byte[] data, SerialCommand returnCommand, SerialPort serialPort = null, Func<object, SerialPort, SerialCommand, object> func = null)
         {
             string dataIn = string.Empty;
-
-            if (null != data)
-            {
-                dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
-
-                string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
-                if (splitData.Length == 5)
+            
+                if (null != data)
                 {
-                    bool checkSumError = !ChecksumPassed(splitData[3], dataIn);
-                    if (checkSumError)
-                    {
-                        //Console.WriteLine("Checksum Error");
-                        _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + dataIn + " Checksum Error");
+                    dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
 
-                    }
-
-                    if (!checkSumError)
+                    string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
+                    if (splitData.Length == 5)
                     {
-                        if (func == null)
+                        bool checkSumError = !ChecksumPassed(splitData[3], dataIn);
+                        if (checkSumError)
                         {
-                            Type type = this.GetType();
-                            MethodInfo method = type.GetMethod(splitData[1]);
+                            Console.WriteLine("Checksum Error");
+                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + dataIn + " Checksum Error");
 
-                            if (method == null) //try indirect GetMethod
+                        }
+
+                        if (!checkSumError)
+                        {
+                            if (func == null)
                             {
-                                //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
-                                method = type.GetMethod("ProcessIndirectFunction");
-                            }
-                            if (method == null) { throw new Exception(); }
-                            method.Invoke(this, new object[] { splitData });
-                        }
-                        else
-                        {
-                            func(splitData, serialPort, returnCommand);
-                        }
+                                Type type = this.GetType();
+                                MethodInfo method = type.GetMethod(splitData[1]);
 
+                                if (method == null) //try indirect GetMethod
+                                {
+                                    //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
+                                    method = type.GetMethod("ProcessIndirectFunction");
+                                }
+                                if (method == null) { throw new Exception("Unable to find matching function from firmware->software, function name: " + splitData[1]); }
+                                method.Invoke(this, new object[] { splitData });
+                            }
+                            else
+                            {
+                                func(splitData, serialPort, returnCommand);
+                            }
+
+                        }
                     }
-                }
             }
         }
 
