@@ -12,6 +12,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         List<SerialPortClass> GetComPorts();
 
         void ConnectToSerialPort(string portName, int deviceId);
+        void ConnectToSerialPort2(string portName, int deviceId);
 
         event EventHandler DiameterChanged;
         event EventHandler SpoolerDataChanged;

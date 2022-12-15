@@ -5,6 +5,7 @@ using ExtrusionUI.Logic.Helpers;
 using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -171,10 +172,14 @@ namespace ExtrusionUI.Logic.Filament
 
             if (captureStarted)
             {
-                Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
+                foreach(var plots in ZedGraphPlotModel.GetPlots())
                 {
-                    zedGraphUserControl.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]);
-                });
+                    plots.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]);
+                }
+                //Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
+                //{
+                //    zedGraphUserControl.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]);
+                //});
             }
                 //ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
 
@@ -297,7 +302,14 @@ namespace ExtrusionUI.Logic.Filament
         }
 
 
-        public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
+        //public void SaveHistoricalData(HashSet<DataListXY> dataPoints)
+        //{
+
+        //    //_csvService.SaveSettings(dataPoints, FilamentServiceVariables[StaticStrings.SPOOLNUMBER], FilamentServiceVariables["Description"]);
+        //    _csvService.SaveSettings(dataPoints, FilamentServiceVariables[StaticStrings.SPOOLNUMBER], "");
+        //}
+
+        public void SaveHistoricalData(ArrayList dataPoints)
         {
 
             //_csvService.SaveSettings(dataPoints, FilamentServiceVariables[StaticStrings.SPOOLNUMBER], FilamentServiceVariables["Description"]);

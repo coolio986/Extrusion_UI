@@ -28,7 +28,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler SerialBufferSizeChanged;
         bool autoDetectionCheckFinished = false;
 
-        private System.Timers.Timer timer = new System.Timers.Timer(250);
         private List<SerialPortClass> SerialPortList { get; set; }
 
         private IFileService _fileService;
@@ -41,11 +40,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public SerialService(IFileService fileService)
         {
             _fileService = fileService;
-            timer.Elapsed += Timer_Elapsed1;
-            timer.AutoReset = true;
-            timer.Enabled = true;
-           
-
             //if (!IsSimulationModeActive)
             //    serialPort = new SerialPort();
 
@@ -54,7 +48,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         private void Timer_Elapsed1(object sender, ElapsedEventArgs e)
         {
-            
+
             //SerialCommand serialCommand = new SerialCommand()
             //{
             //    Command = "GetLoggerMotionState",
@@ -115,6 +109,44 @@ namespace ExtrusionUI.Logic.SerialCommunications
             }
         }
 
+        public void ConnectToSerialPort2(string portName, int deviceId)
+        {
+            SerialPort serialPort = null;
+            if (!IsSimulationModeActive)
+            {
+                //PortName = portName;
+                //UnbindHandlers();
+                serialPort = SetPort(portName);
+                SerialPortClass serialPortClass = new SerialPortClass(serialPort);
+
+                if (SerialPortList.Any(x => x.SerialPort_PortName == serialPort.PortName))
+                {
+                    var existingSerialPortClass = SerialPortList.FirstOrDefault(x => x.SerialPort_PortName == serialPort.PortName);
+                    if (existingSerialPortClass != null && existingSerialPortClass.GetSerialPort() == null)
+                    {
+                        serialPortClass.MyHardwareType = existingSerialPortClass.MyHardwareType;
+                        serialPortClass.SerialPort_FriendlyName = existingSerialPortClass.SerialPort_FriendlyName;
+                        serialPortClass.SerialPort_PortName = existingSerialPortClass.SerialPort_PortName;
+
+                        SerialPortList.Remove(existingSerialPortClass);
+                        SerialPortList.Add(serialPortClass);
+                    }
+                }
+                ConcurrentQueue<SerialCommand> serialQueue = new ConcurrentQueue<SerialCommand>();
+                int CCqueueCount = 0;
+                ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
+                StartSerialQueue2(serialPort, deviceId, serialQueue, CCqueueCount, lock_);
+                //serialPort.BaudRate = 115200;
+                serialPort.Open();
+
+                StartSerialReceive2(serialPortClass, null);
+            }
+            else
+            {
+                RunSimulation();
+            }
+        }
+
         private SerialPort SetPort(string portName)
         {
             SerialPort serialPort = new SerialPort();
@@ -127,7 +159,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             serialPort.ReadTimeout = 100;
             serialPort.WriteTimeout = 20;
             serialPort.NewLine = Environment.NewLine;
-            serialPort.ReceivedBytesThreshold = 2048;
+            serialPort.ReceivedBytesThreshold = 32;
             //PortDataIsSet = true;
             return serialPort;
         }
@@ -212,7 +244,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                     {
                         try
-                        { 
+                        {
+
                             if (serialPort.IsOpen)
                             {
                                 int count = serialPort.BaseStream.EndRead(ar);
@@ -224,16 +257,24 @@ namespace ExtrusionUI.Logic.SerialCommunications
                                 OnDataReceived(dst, returnCommand, serialPort, func);
 
                                 if (serialPort.IsOpen)
+                                {
                                     kickoffRead();
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("com port closed: " + serialPort.PortName);
+                                }
+
                             }
                         }
                         catch (Exception oe)
                         {
                             Console.WriteLine("Serial Port: " + serialPort.PortName);
                             Console.WriteLine("An error has occurred while reading data from serialPort" + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
-                            
+
                         }
-                        
+
 
                     }, null)); kickoffRead();
                 }
@@ -242,50 +283,164 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     Console.WriteLine("Serial Port: " + serialPort.PortName);
                     Console.WriteLine("An error has occurred " + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
                 }
+
+                Console.WriteLine("Port has ended: " + serialPort.PortName);
+            }
+        }
+
+        private void StartSerialReceive2(SerialPortClass serialPortClass, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null)
+        {
+            SerialPort serialPort = serialPortClass.GetSerialPort();
+            if (serialPort.IsOpen)
+            {
+                byte[] buffer = new byte[5000];
+                string ret = string.Empty;
+                Action kickoffRead = null;
+                LineSplitter lineSplitter = new LineSplitter();
+                try
+                {
+
+                    kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                    {
+                        try
+                        {
+
+                            if (serialPort.IsOpen)
+                            {
+                                int count = serialPort.BaseStream.EndRead(ar);
+                                byte[] dst = lineSplitter.OnIncomingBinaryBlock(
+                                    this,
+                                    serialPortClass,
+                                    buffer,
+                                    count);
+                                OnDataReceived2(dst, returnCommand, serialPort, func);
+
+                                if (serialPort.IsOpen)
+                                {
+                                    kickoffRead();
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("com port closed: " + serialPort.PortName);
+                                }
+
+                            }
+                        }
+                        catch (Exception oe)
+                        {
+                            Console.WriteLine("Serial Port: " + serialPort.PortName);
+                            Console.WriteLine("An error has occurred while reading data from serialPort" + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
+
+                        }
+
+
+                    }, null)); kickoffRead();
+                }
+                catch (Exception oe)
+                {
+                    Console.WriteLine("Serial Port: " + serialPort.PortName);
+                    Console.WriteLine("An error has occurred " + oe.Message?.ToString() + "\r\n" + "Inner exception " + oe.InnerException?.Message?.ToString());
+                }
+
+                Console.WriteLine("Port has ended: " + serialPort.PortName);
             }
         }
 
         public virtual void OnDataReceived(byte[] data, SerialCommand returnCommand, SerialPort serialPort = null, Func<object, SerialPort, SerialCommand, object> func = null)
         {
             string dataIn = string.Empty;
-            
-                if (null != data)
+
+            if (null != data)
+            {
+                dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
+
+                string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
+                if (splitData.Length == 5)
                 {
-                    dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
-
-                    string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
-                    if (splitData.Length == 5)
+                    bool checkSumError = !ChecksumPassed(splitData[3], dataIn);
+                    if (checkSumError)
                     {
-                        bool checkSumError = !ChecksumPassed(splitData[3], dataIn);
-                        if (checkSumError)
-                        {
-                            Console.WriteLine("Checksum Error");
-                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + dataIn + " Checksum Error");
+                        Console.WriteLine("Checksum Error");
+                        _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + dataIn + " Checksum Error");
 
-                        }
-
-                        if (!checkSumError)
-                        {
-                            if (func == null)
-                            {
-                                Type type = this.GetType();
-                                MethodInfo method = type.GetMethod(splitData[1]);
-
-                                if (method == null) //try indirect GetMethod
-                                {
-                                    //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
-                                    method = type.GetMethod("ProcessIndirectFunction");
-                                }
-                                if (method == null) { throw new Exception("Unable to find matching function from firmware->software, function name: " + splitData[1]); }
-                                method.Invoke(this, new object[] { splitData });
-                            }
-                            else
-                            {
-                                func(splitData, serialPort, returnCommand);
-                            }
-
-                        }
                     }
+
+                    if (!checkSumError)
+                    {
+                        if (func == null)
+                        {
+                            Type type = this.GetType();
+                            MethodInfo method = type.GetMethod(splitData[1]);
+
+                            if (method == null) //try indirect GetMethod
+                            {
+                                //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
+                                method = type.GetMethod("ProcessIndirectFunction");
+                            }
+                            if (method == null) { throw new Exception("Unable to find matching function from firmware->software, function name: " + splitData[1]); }
+                            method.Invoke(this, new object[] { splitData });
+                        }
+                        else
+                        {
+                            func(splitData, serialPort, returnCommand);
+                        }
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(dataIn);
+                }
+
+            }
+        }
+
+        public virtual void OnDataReceived2(byte[] data, SerialCommand returnCommand, SerialPort serialPort = null, Func<object, SerialPort, SerialCommand, object> func = null)
+        {
+            string dataIn = string.Empty;
+
+            if (null != data)
+            {
+                dataIn = Encoding.ASCII.GetString(data).TrimEnd('\r', '\n');
+
+                string[] splitData = dataIn.Replace("\r", "").Replace("\n", "").Replace("\0", "").Split(';');
+                if (splitData.Length == 5)
+                {
+                    bool checkSumError = !ChecksumPassed(splitData[3], dataIn);
+                    if (checkSumError)
+                    {
+                        Console.WriteLine("Checksum Error");
+                        _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + dataIn + " Checksum Error");
+
+                    }
+
+                    if (!checkSumError)
+                    {
+                        if (func == null)
+                        {
+                            Type type = this.GetType();
+                            MethodInfo method = type.GetMethod(splitData[1]);
+
+                            if (method == null) //try indirect GetMethod
+                            {
+                                //Console.WriteLine(splitData[1] + " Trying indirect method, no function defined");
+                                method = type.GetMethod("ProcessIndirectFunction");
+                            }
+                            if (method == null) { throw new Exception("Unable to find matching function from firmware->software, function name: " + splitData[1]); }
+                            method.Invoke(this, new object[] { splitData });
+                        }
+                        else
+                        {
+                            func(splitData, serialPort, returnCommand);
+                        }
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(dataIn);
+                }
             }
         }
 
@@ -343,11 +498,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
             }
         }
 
-        private void Timer_Elapsed(object serialCounter, ElapsedEventArgs e)
-        {
-
-
-        }
 
         //private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         //{
@@ -433,6 +583,64 @@ namespace ExtrusionUI.Logic.SerialCommunications
         }
 
         private void StartSerialQueue(SerialPort serialPort, int deviceId, ConcurrentQueue<SerialCommand> serialQueue, int CCqueueCount, ReaderWriterLockSlim lock_)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                SerialQueueClass.AddSerialPortToQueue(serialPort, deviceId, serialQueue, CCqueueCount, lock_);
+
+                while (true)
+                {
+                    SerialCommand command;
+
+                    if (serialPort.IsOpen)
+                    {
+
+                        while (serialQueue.TryDequeue(out command))
+                        {
+
+                            //Interlocked.Decrement(ref CCqueueCount);
+                            SerialQueueClass.DecrementQueueLock(command);
+                            string serialCommand = command.AssembleCommand();
+
+                            int checksum = GetCheckSum(serialCommand);
+
+
+                            serialCommand += checksum.ToString() + ";";
+                            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
+
+                            lock_.EnterWriteLock();
+                            try
+                            {
+                                if (!IsInterMCUCommunication(command))
+                                    _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial out-> " + serialCommand);
+                            }
+                            catch (Exception oe)
+                            {
+                                Console.WriteLine("serial error " + oe.Message);
+                            }
+                            finally
+                            {
+                                lock_.ExitWriteLock();
+                            }
+
+                            serialPort.WriteLine(serialCommand);
+                            while (serialPort.BytesToWrite > 0)
+                            {
+                                //Console.WriteLine("writing bytes");
+                                //Thread.Sleep(15);
+                            }
+                            Thread.Sleep(10);
+                        }
+
+
+                    }
+                    Thread.Sleep(10);
+                }
+            });
+
+        }
+
+        private void StartSerialQueue2(SerialPort serialPort, int deviceId, ConcurrentQueue<SerialCommand> serialQueue, int CCqueueCount, ReaderWriterLockSlim lock_)
         {
             Task.Factory.StartNew(() =>
             {

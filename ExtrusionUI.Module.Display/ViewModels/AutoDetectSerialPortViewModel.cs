@@ -79,7 +79,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
             if (!string.IsNullOrEmpty(SpoolerPortNumber))
                 _serialService.ConnectToSerialPort(SpoolerPortNumber, (int)HARDWARETYPES.Spooler);
             if (!string.IsNullOrEmpty(BufferPortNumber))
-                _serialService.ConnectToSerialPort(BufferPortNumber, (int)HARDWARETYPES.Buffer);
+                _serialService.ConnectToSerialPort2(BufferPortNumber, (int)HARDWARETYPES.Buffer);
 
             _naviService.NavigateTo("DiameterView");
         }

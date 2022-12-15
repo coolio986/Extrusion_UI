@@ -161,7 +161,7 @@ namespace ExtrusionUI.Module.Display.Views
         private void _filamentService_DiameterChanged(object sender, EventArgs e)
         {
 
-            if (timer.ElapsedMilliseconds >= previousScanMillis + 1 && !updateInProgress)
+            if (timer.ElapsedMilliseconds >= previousScanMillis + 10 && !updateInProgress)
             {
                 updateInProgress = true;
                 Dispatcher.Invoke(new Action(() =>

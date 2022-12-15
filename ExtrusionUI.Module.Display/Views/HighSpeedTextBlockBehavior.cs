@@ -1,6 +1,7 @@
 ﻿using ExtrusionUI.Logic.Filament;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,12 @@ namespace ExtrusionUI.Module.Display.Views
 {
     public sealed class HighSpeedTextBlockBehavior : Behavior<TextBlock>
     {
+        private Stopwatch timer = new Stopwatch();
+        private long previousRealTimeMillis;
+        private bool updateInProgress;
         public HighSpeedTextBlockBehavior()
         {
-            
+            timer.Start();
         }
 
         public static readonly DependencyProperty FilamentServiceProperty =
@@ -65,11 +69,17 @@ namespace ExtrusionUI.Module.Display.Views
 
         private void OnRendering(object sender, EventArgs e)
         {
-            if (FilamentService.FilamentServiceVariables.ContainsKey(VariableName))
+            if (timer.ElapsedMilliseconds >= previousRealTimeMillis + 33 && !updateInProgress)
             {
-                var TextValue = FilamentService.FilamentServiceVariables[VariableName];
-                TextValue = TextValue == string.Empty ? "" : TextValue + $" {Unit}";
-                AssociatedObject.Text = TextValue;
+                updateInProgress = true;
+                if (FilamentService.FilamentServiceVariables.ContainsKey(VariableName))
+                {
+                    var TextValue = FilamentService.FilamentServiceVariables[VariableName];
+                    TextValue = TextValue == string.Empty ? "" : TextValue + $" {Unit}";
+                    AssociatedObject.Text = TextValue;
+                }
+                previousRealTimeMillis = timer.ElapsedMilliseconds;
+                updateInProgress = false;
             }
         }
 

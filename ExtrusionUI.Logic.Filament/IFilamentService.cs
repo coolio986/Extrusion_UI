@@ -1,5 +1,6 @@
 ﻿using ExtrusionUI.Infrastructure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -28,7 +29,8 @@ namespace ExtrusionUI.Logic.Filament
         bool CaptureStarted { get; set; }
         bool IsSimulationModeActive { get; set; }
 
-        void SaveHistoricalData(HashSet<DataListXY> dataPoints);
+        //void SaveHistoricalData(HashSet<DataListXY> dataPoints);
+        void SaveHistoricalData(ArrayList dataPoints);
         void SaveXmlData();
 
         Stopwatch DurationClock { get; }

@@ -9,17 +9,21 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ZedGraph;
 using ExtrusionUI.Infrastructure;
+using System.Collections;
+using HPCsharp.ParallelAlgorithms;
 
 namespace ExtrusionUI.WindowForms.ZedGraphUserControl
 {
     public partial class ZedGraphUserControl : UserControl
     {
-        private HashSet<DataListXY> diameterList;
+        private ArrayList diameterList;
         private LineObj nominalLine;
         private LineObj upperLimitLine;
         private LineObj lowerLimitLine;
         private LineItem diameterCurve;
         private FilteredPointList filteredDiameter;
+
+        private readonly object hashSetLock = new object();
 
         //private double[] dblTime = new double[1];
         //private double[] dblDiameter = new double[1];
@@ -79,7 +83,8 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             InitializeComponent();
             ZedGraph = this.zedGraphControl1;
 
-            diameterList = new HashSet<DataListXY>();
+            //diameterList = new HashSet<DataListXY>();
+            diameterList = new ArrayList();
 
             //add static reference lines
             AddNominalDiameter();
@@ -98,7 +103,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 // The maximum number of point to displayed is based on the width of the graphpane, and the visible range of the X axis
                 if (filteredDiameter != null)
                     filteredDiameter.SetBounds(sender.GraphPane.XAxis.Scale.Min, sender.GraphPane.XAxis.Scale.Max, (int)sender.GraphPane.Rect.Width);
-                
+
                 ReZoomLineObjs();
 
                 // This refreshes the graph when the button is released after a panning operation
@@ -109,10 +114,11 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
 
         public void ClearPlots()
         {
-            diameterList.Clear();
+            //diameterList = new HashSet<DataListXY>();
+            diameterList = new ArrayList();
             resizableArrayDateTime = new ResizableArray<double>();
             resizableArrayDiameter = new ResizableArray<double>();
-            
+
             this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
         }
 
@@ -142,9 +148,15 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             double dblDiameter = Convert.ToDouble(diameter);
             //diameterList.Add(new DataListXY(stopwatch.ElapsedMilliseconds, Convert.ToDouble(diameter)));
 
-            int timeLength = diameterList.Count;
-            
-            diameterList.Add(new DataListXY(dblDateTime, dblDiameter));
+            //int timeLength = diameterList.Count;
+
+
+
+            lock (hashSetLock)
+            {
+                DataListXY dataListXY = new DataListXY(dblDateTime, dblDiameter);
+                diameterList.Add(dataListXY);
+            }
 
             resizableArrayDateTime.Add(dblDateTime);
             resizableArrayDiameter.Add(dblDiameter);
@@ -152,10 +164,10 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             double dblLowerLimitDiameter = Convert.ToDouble(lowerLimitDiameter) - 0.025;
             double dblUpperLimitDiameter = Convert.ToDouble(upperLimitDiameter) + 0.025;
 
-            if (this.zedGraphControl1.GraphPane !=null && this.zedGraphControl1.GraphPane?.YAxis.Scale.Min != dblLowerLimitDiameter)
+            if (this.zedGraphControl1.GraphPane != null && this.zedGraphControl1.GraphPane?.YAxis.Scale.Min != dblLowerLimitDiameter)
                 this.zedGraphControl1.GraphPane.YAxis.Scale.Min = dblLowerLimitDiameter;
 
-            if (this.zedGraphControl1.GraphPane!= null && this.zedGraphControl1.GraphPane?.YAxis.Scale.Max != dblUpperLimitDiameter)
+            if (this.zedGraphControl1.GraphPane != null && this.zedGraphControl1.GraphPane?.YAxis.Scale.Max != dblUpperLimitDiameter)
                 this.zedGraphControl1.GraphPane.YAxis.Scale.Max = dblUpperLimitDiameter;
 
             if (IsHistorical)
@@ -165,10 +177,36 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     //sometimes zedgraph gets an invalid index while starting. Need to investigate
                     //for now just skip and continue
 
+                    var xDateTime = resizableArrayDateTime.InternalArray.ToArrayPar();
+                    int dateTimeArraySize;
+                    for(dateTimeArraySize = xDateTime.Length - 1; dateTimeArraySize >= 0; dateTimeArraySize--)
+                    {
+                        if (xDateTime[dateTimeArraySize] != 0)
+                            break;
+                    }
+                    dateTimeArraySize++;
+                    double[] ddateTime = new double[dateTimeArraySize];
+                    xDateTime.CopyPar(ddateTime, dateTimeArraySize);
+
+
+
+                    var xDiameter = resizableArrayDiameter.InternalArray.ToArrayPar();
+
+                    int diameterArraySize;
+                    for (diameterArraySize = xDiameter.Length - 1; diameterArraySize >= 0; diameterArraySize--)
+                    {
+                        if (xDiameter[diameterArraySize] != 0)
+                            break;
+                    }
+                    diameterArraySize++;
+                    double[] ddiameter = new double[diameterArraySize];
+                    xDiameter.CopyPar(ddiameter, diameterArraySize);
+
 
                     if (this.zedGraphControl1.GraphPane != null)
                     {
-                        filteredDiameter = new FilteredPointList(resizableArrayDateTime.InternalArray.Where(x => x != 0).ToArray(), resizableArrayDiameter.InternalArray.Where(y => y != 0).ToArray());
+                        //filteredDiameter = new FilteredPointList(resizableArrayDateTime.InternalArray.Where(x => x != 0).ToArray(), resizableArrayDiameter.InternalArray.Where(y => y != 0).ToArray());
+                        filteredDiameter = new FilteredPointList(ddateTime, ddiameter);
                         filteredDiameter.SetBounds(this.zedGraphControl1.GraphPane.XAxis.Scale.Min, new XDate(DateTime.Now.AddMilliseconds(2)), (int)this.zedGraphControl1.GraphPane.Rect.Width);
 
 
@@ -179,7 +217,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                         //***********************//
                         //Adding the reference lines here updates the visual faster than adding them in a function
                         this.zedGraphControl1.GraphPane.GraphObjList.Remove(upperLimitLine);
-                        if (resizableArrayDateTime.InternalArray.Count() > 1)
+                        if (resizableArrayDateTime.InternalArray.Count() > 1 && resizableArrayDateTime.Count > 0)
                         {
                             if (this.zedGraphControl1.GraphPane.YAxis.Scale.Max >= Convert.ToDouble(upperLimitDiameter))
                             {
@@ -206,8 +244,8 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                         }
 
                     }
-                        
-                 
+
+
                     //***********************//
 
                 }
@@ -287,9 +325,16 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             IsZoomed = false;
         }
 
-        public HashSet<DataListXY> GetDataPoints()
+        //public HashSet<DataListXY> GetDataPoints()
+        //{
+        //    // return diameterList;
+        //    return null;
+        //}
+
+        public ArrayList GetDataPoints()
         {
             return diameterList;
+            
         }
 
         public void ReZoomLineObjs()
