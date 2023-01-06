@@ -11,6 +11,8 @@ using ZedGraph;
 using ExtrusionUI.Infrastructure;
 using System.Collections;
 using HPCsharp.ParallelAlgorithms;
+using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace ExtrusionUI.WindowForms.ZedGraphUserControl
 {
@@ -29,7 +31,6 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         //private double[] dblDiameter = new double[1];
         ResizableArray<double> resizableArrayDateTime = new ResizableArray<double>();
         ResizableArray<double> resizableArrayDiameter = new ResizableArray<double>();
-
 
         public ZedGraphControl ZedGraph { get; set; }
         public bool IsZoomed { get; private set; }
@@ -119,6 +120,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             resizableArrayDateTime = new ResizableArray<double>();
             resizableArrayDiameter = new ResizableArray<double>();
 
+
             this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
         }
 
@@ -158,8 +160,76 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 diameterList.Add(dataListXY);
             }
 
+
             resizableArrayDateTime.Add(dblDateTime);
             resizableArrayDiameter.Add(dblDiameter);
+
+            var xDateTime = resizableArrayDateTime.InternalArray;
+            int dateTimeArraySize = xDateTime.Length;
+            var vectors = MemoryMarshal.Cast<double, Vector<double>>(xDateTime);
+
+            bool shouldBreak = false;
+
+            for (int vec = vectors.Length - 1; vec >= 0; vec--)
+            {
+                if (shouldBreak)
+                    break;
+                for (var i = Vector<double>.Count - 1; i >= 0; i--)
+                {
+                    var dataByte = ((byte)vectors[vec][i]);
+                    if (0 != dataByte << 1)
+                    {
+                        shouldBreak = true;
+                        break;
+                    }
+                    dateTimeArraySize--;
+                }
+            }
+
+            double[] ddateTime = new double[dateTimeArraySize];
+            //Span<double> sdateTime = new Span<double>(xDateTime, 0, dateTimeArraySize);
+
+            //var ddateTime = sdateTime.ToArray();
+            //unsafe
+            //{
+            //    fixed (double* foo = xDateTime)  // foo now points to the first element in the array...
+            //    {
+            //        double* pfoo = foo;
+            //        var remaining = dateTimeArraySize;
+            //        while (remaining-- > 0)
+            //        {
+            //            ddateTime[remaining] = *pfoo;
+            //            pfoo++;  // foo now points to the next element in the array...
+            //        }
+            //    }
+
+            //}
+            xDateTime.CopyPar(ddateTime, dateTimeArraySize);
+            //Array.Copy(xDateTime, ddateTime, dateTimeArraySize);
+
+
+
+            double[] ddiameter = new double[dateTimeArraySize];
+
+            //unsafe
+            //{
+            //    fixed (double* foo = resizableArrayDiameter.InternalArray)  // foo now points to the first element in the array...
+            //    {
+            //        double* pfoo = foo;
+            //        var remaining = dateTimeArraySize;
+            //        while (remaining-- > 0)
+            //        {
+            //            ddiameter[remaining] = *pfoo;
+            //            pfoo++;  // foo now points to the next element in the array...
+            //        }
+            //    }
+
+            //}
+            //Span<double> ddiameter = new Span<double>(resizableArrayDiameter.InternalArray, 0, dateTimeArraySize);
+
+            resizableArrayDiameter.InternalArray.CopyPar(ddiameter, dateTimeArraySize);
+            //Array.Copy(resizableArrayDiameter.InternalArray, ddiameter, dateTimeArraySize);
+
 
             double dblLowerLimitDiameter = Convert.ToDouble(lowerLimitDiameter) - 0.025;
             double dblUpperLimitDiameter = Convert.ToDouble(upperLimitDiameter) + 0.025;
@@ -174,35 +244,6 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
             {
                 if (!IsZoomed)
                 {
-                    //sometimes zedgraph gets an invalid index while starting. Need to investigate
-                    //for now just skip and continue
-
-                    var xDateTime = resizableArrayDateTime.InternalArray.ToArrayPar();
-                    int dateTimeArraySize;
-                    for(dateTimeArraySize = xDateTime.Length - 1; dateTimeArraySize >= 0; dateTimeArraySize--)
-                    {
-                        if (xDateTime[dateTimeArraySize] != 0)
-                            break;
-                    }
-                    dateTimeArraySize++;
-                    double[] ddateTime = new double[dateTimeArraySize];
-                    xDateTime.CopyPar(ddateTime, dateTimeArraySize);
-
-
-
-                    var xDiameter = resizableArrayDiameter.InternalArray.ToArrayPar();
-
-                    int diameterArraySize;
-                    for (diameterArraySize = xDiameter.Length - 1; diameterArraySize >= 0; diameterArraySize--)
-                    {
-                        if (xDiameter[diameterArraySize] != 0)
-                            break;
-                    }
-                    diameterArraySize++;
-                    double[] ddiameter = new double[diameterArraySize];
-                    xDiameter.CopyPar(ddiameter, diameterArraySize);
-
-
                     if (this.zedGraphControl1.GraphPane != null)
                     {
                         //filteredDiameter = new FilteredPointList(resizableArrayDateTime.InternalArray.Where(x => x != 0).ToArray(), resizableArrayDiameter.InternalArray.Where(y => y != 0).ToArray());
@@ -261,12 +302,12 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                 ResizableArray<double> realTimeDiameters = new ResizableArray<double>();
 
 
-                for (int i = resizableArrayDateTime.Count - 1; i > 0; i--)
+                for (int i = dateTimeArraySize - 1; i >= 0; i--)
                 {
-                    if (resizableArrayDateTime.InternalArray[i] > lowerBoundTime)
+                    if (ddateTime[i] > lowerBoundTime)
                     {
-                        realTimeGraphTimes.Add(resizableArrayDateTime.InternalArray[i]);
-                        realTimeDiameters.Add(resizableArrayDiameter.InternalArray[i]);
+                        realTimeGraphTimes.Add(ddateTime[i]);
+                        realTimeDiameters.Add(ddiameter[i]);
                     }
                     else
                         break;
@@ -315,6 +356,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     //***********************//
                 }
 
+
             }
         }
 
@@ -334,7 +376,7 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         public ArrayList GetDataPoints()
         {
             return diameterList;
-            
+
         }
 
         public void ReZoomLineObjs()
@@ -383,8 +425,8 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
         {
             if (m_count == m_array.Length)
             {
-                Array.Resize(ref m_array, m_array.Length * 2);
-                //Array.Resize(ref m_array, m_array.Length + 1);
+                //Array.Resize(ref m_array, m_array.Length * 2);
+                Array.Resize(ref m_array, m_count + 512);
             }
 
             m_array[m_count++] = element;

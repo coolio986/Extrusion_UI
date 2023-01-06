@@ -10,6 +10,7 @@ namespace ExtrusionUI.Logic.FileOperations
     public class XmlService : IXmlService
     {
         IFileService _fileService;
+        private object xmlSettingsLock;
 
         public Dictionary<string, string> XmlSettings { get; set; }
 
@@ -29,20 +30,22 @@ namespace ExtrusionUI.Logic.FileOperations
             if (persistentXml == null)
                 return;
 
-            foreach (KeyValuePair<string, string> kvp in XmlSettings) //flat XML for now
+            lock (xmlSettingsLock)
             {
-                if (kvp.Key.Contains(".") && kvp.Value != null)
+                foreach (KeyValuePair<string, string> kvp in XmlSettings.ToList()) //flat XML for now
                 {
-                    string parentNode = kvp.Key.Substring(0, kvp.Key.IndexOf("."));
-                    XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
+                    if (kvp.Key.Contains(".") && kvp.Value != null)
+                    {
+                        string parentNode = kvp.Key.Substring(0, kvp.Key.IndexOf("."));
+                        XElement element = persistentXml.Element("persistenceData").Element(parentNode).Element(kvp.Key.Replace(parentNode + ".", ""));
 
-                    if (element != null)
-                        element.Value = kvp.Value;
+                        if (element != null)
+                            element.Value = kvp.Value;
+                    }
+
                 }
-
             }
             _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\persistence.xml", GetXmlData());
-
         }
 
         private void BuildXmlSettings()
