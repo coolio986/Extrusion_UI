@@ -176,12 +176,21 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     break;
                 for (var i = Vector<double>.Count - 1; i >= 0; i--)
                 {
-                    var dataByte = ((byte)vectors[vec][i]);
-                    if (0 != dataByte << 1)
+                    //var test = vectors[vec][i];
+
+
+                    //var dataByte = ((byte)vectors[vec][i]);
+                    var dataByte = vectors[vec][i];
+                    if (dataByte != 0)
                     {
                         shouldBreak = true;
-                        break;
+                         break;
                     }
+                    //if (0 != dataByte << 1)
+                    //{
+                    //    shouldBreak = true;
+                    //    break;
+                    //}
                     dateTimeArraySize--;
                 }
             }
@@ -321,8 +330,6 @@ namespace ExtrusionUI.WindowForms.ZedGraphUserControl
                     this.zedGraphControl1.GraphPane.CurveList.Remove(diameterCurve);
 
                     diameterCurve = this.zedGraphControl1.GraphPane.AddCurve("Diameter", filteredDiameter, System.Drawing.Color.FromArgb(0, 153, 255), SymbolType.None);
-
-
 
                     zedGraphControl1.GraphPane.XAxis.Scale.Min = lowerBoundTime;
                     zedGraphControl1.GraphPane.XAxis.Scale.Max = higherBoundTime;

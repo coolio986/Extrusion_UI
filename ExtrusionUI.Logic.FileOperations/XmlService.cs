@@ -10,7 +10,7 @@ namespace ExtrusionUI.Logic.FileOperations
     public class XmlService : IXmlService
     {
         IFileService _fileService;
-        private object xmlSettingsLock;
+        private readonly object xmlSettingsLock;
 
         public Dictionary<string, string> XmlSettings { get; set; }
 
@@ -18,6 +18,7 @@ namespace ExtrusionUI.Logic.FileOperations
 
         public XmlService(IFileService fileService)
         {
+            xmlSettingsLock = new object();
             _fileService = fileService;
 
             XmlSettings = new Dictionary<string, string>();
