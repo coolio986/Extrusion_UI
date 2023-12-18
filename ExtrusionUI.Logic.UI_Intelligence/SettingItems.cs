@@ -71,7 +71,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             //Description.XmlParameterName = "Description";
             //Description.ParameterType = "Production";
 
-            FilamentDiameter.HardwareType = "1";
+            FilamentDiameter.HardwareType = "3";
             FilamentDiameter.ParameterName = "Filament Diameter";
             FilamentDiameter.IsXmLParameter = true;
             FilamentDiameter.XmlParameterName = StaticStrings.FILAMENTNOMINALDIAMETER;
@@ -81,7 +81,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             FilamentDiameter.IsSerialCommand = true;
             FilamentDiameter.SerialCommand = StaticStrings.FILAMENTNOMINALDIAMETER;
 
-            UpperLimit.HardwareType = "1";
+            UpperLimit.HardwareType = "3";
             UpperLimit.ParameterName = "Upper Limit";
             UpperLimit.IsXmLParameter = true;
             UpperLimit.XmlParameterName = StaticStrings.FILAMENTUPPERLIMIT;
@@ -91,7 +91,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             UpperLimit.IsSerialCommand = true;
             UpperLimit.SerialCommand = StaticStrings.FILAMENTUPPERLIMIT;
 
-            LowerLimit.HardwareType = "1";
+            LowerLimit.HardwareType = "3";
             LowerLimit.ParameterName = "Lower Limit";
             LowerLimit.IsXmLParameter = true;
             LowerLimit.XmlParameterName = StaticStrings.FILAMENTLOWERLIMIT;
@@ -106,7 +106,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             SpoolNumber.XmlParameterName = StaticStrings.SPOOLNUMBER;
             SpoolNumber.ParameterType = "Production";
 
-            SpoolerRpm.HardwareType = "1";
+            SpoolerRpm.HardwareType = "3";
             SpoolerRpm.ParameterName = "Pull Rpm";
             SpoolerRpm.IsSerialCommand = false;
             SpoolerRpm.SerialCommand = "velocity";
@@ -114,7 +114,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             SpoolerRpm.Unit = "rpm";
             SpoolerRpm.ParameterType = "Production";
 
-            SpecificGravity.HardwareType = "1";
+            SpecificGravity.HardwareType = "3";
             SpecificGravity.ParameterName = "Specific Gravity";
             SpecificGravity.IsSerialCommand = false;
             SpecificGravity.SerialCommand = "SpecificGravity";
@@ -124,7 +124,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             SpecificGravity.Unit = "g/cc";
             //SpecificGravity.XmlParameterName = "SpecificGravity";
 
-            SpoolWeightLimit.HardwareType = "1";
+            SpoolWeightLimit.HardwareType = "3";
             SpoolWeightLimit.ParameterName = "Spool Weight Limit";
             SpoolWeightLimit.Value = "0";
             SpoolWeightLimit.ParameterType = "Production";
@@ -134,7 +134,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             SpoolWeightLimit.IsSerialCommand = false;
             SpoolWeightLimit.SerialCommand = StaticStrings.SPOOLWEIGHTLIMIT;
 
-            TraverseHomeOffset.HardwareType = "1";
+            TraverseHomeOffset.HardwareType = "3";
             TraverseHomeOffset.ParameterName = "Traverse Home Offset";
             TraverseHomeOffset.IsSerialCommand = true;
             TraverseHomeOffset.SerialCommand = StaticStrings.TRAVERSEHOMEOFFSET;
@@ -142,7 +142,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseHomeOffset.Unit = "mm";
             TraverseHomeOffset.ParameterType = StaticStrings.TRAVERSE;
 
-            TraverseSpoolWidth.HardwareType = "1";
+            TraverseSpoolWidth.HardwareType = "3";
             TraverseSpoolWidth.ParameterName = "Spool Width";
             TraverseSpoolWidth.IsSerialCommand = true;
             TraverseSpoolWidth.SerialCommand = StaticStrings.SPOOLWIDTH;
@@ -150,7 +150,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseSpoolWidth.Unit = "mm";
             TraverseSpoolWidth.ParameterType = StaticStrings.TRAVERSE;
 
-            TraverseLeadWidth.HardwareType = "1";
+            TraverseLeadWidth.HardwareType = "3";
             TraverseLeadWidth.ParameterName = "Traverse Lead Width";
             TraverseLeadWidth.IsSerialCommand = true;
             TraverseLeadWidth.SerialCommand = "TraverseLeadWidth";
@@ -158,7 +158,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseLeadWidth.Unit = "mm";
             TraverseLeadWidth.ParameterType = StaticStrings.TRAVERSE;
 
-            TraverseSpeed.HardwareType = "1";
+            TraverseSpeed.HardwareType = "3";
             TraverseSpeed.ParameterName = "Traverse Speed";
             TraverseSpeed.IsSerialCommand = true;
             TraverseSpeed.SerialCommand = "TraverseRPM";
@@ -166,7 +166,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             TraverseSpeed.Unit = "rpm";
             TraverseSpeed.ParameterType = StaticStrings.TRAVERSE;
 
-            TraverseLeadSpeed.HardwareType = "1";
+            TraverseLeadSpeed.HardwareType = "3";
             TraverseLeadSpeed.ParameterName = "Traverse Lead Speed";
             TraverseLeadSpeed.IsSerialCommand = true;
             TraverseLeadSpeed.SerialCommand = "TraverseLeadRPM";
@@ -200,7 +200,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
 
 
-            TraverseStartPosition.HardwareType = "1";
+            TraverseStartPosition.HardwareType = "3";
             TraverseStartPosition.ParameterName = "Traverse Start";
             TraverseStartPosition.IsSerialCommand = true;
             TraverseStartPosition.SerialCommand = "TraverseStartPosition";
@@ -229,7 +229,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             OpenSpoolerFolder.ButtonType = Infrastructure.UI.ButtonTypes.OpenFolderType;
             OpenSpoolerFolder.ButtonPathLocation = _fileService.EnvironmentDirectory;
 
-            TraverseMotionStatus.HardwareType = "1";
+            TraverseMotionStatus.HardwareType = "3";
             TraverseMotionStatus.ParameterName = "Traverse Motion Status";
             TraverseMotionStatus.IsSerialCommand = true;
             TraverseMotionStatus.SerialCommand = "TraverseMotionStatus";

@@ -44,7 +44,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
             foreach (KeyValuePair<string, ObservableCollection<ViewModelBase>> item in items.Settings)
             {
-                foreach(ViewModelBase vmb in item.Value)
+                foreach (ViewModelBase vmb in item.Value)
                 {
                     if (vmb.IsXmLParameter)
                     {
@@ -78,7 +78,14 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                 //    ((ButtonPressViewModel)item).ButtonCommand = new DelegateCommand<ButtonPressViewModel>(OnButtonPressed);
                 //}
             }
-            
+            foreach (ViewModelBase item in Settings.Where(x => !x.IsSerialCommand))
+            {
+                if (item.GetType() == typeof(ButtonPressViewModel))
+                {
+                    ((ButtonPressViewModel)item).ButtonCommand = new DelegateCommand<ButtonPressViewModel>(OnButtonPressed);
+                }
+            }
+
         }
 
 
@@ -107,7 +114,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                                 if ((string)item.Value != (string)command.Value)
                                 {
                                     item.Value = command.Value;
-                                    
+
                                 }
                             }
                         }
@@ -124,16 +131,16 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                 spoolNumberItem.PropertyChanged += ItemChange_Handler;
             }
 
-            if (!Errors.Any(x => (string)x.Value == command.Value) && command.Command == "DiameterError") 
+            if (!Errors.Any(x => (string)x.Value == command.Value) && command.Command == "DiameterError")
             {
                 Application.Current.Dispatcher.Invoke((Action)(() =>
               Errors.Add(new ErrorItemViewModel() { Value = command.Value })
                 ));
 
 
-              //  Dispatcher.CurrentDispatcher.Invoke((Action)(() =>
-              //Errors.Add(new ErrorItemViewModel() { Value = command.Value })
-              //  ));
+                //  Dispatcher.CurrentDispatcher.Invoke((Action)(() =>
+                //Errors.Add(new ErrorItemViewModel() { Value = command.Value })
+                //  ));
             }
 
 
@@ -187,7 +194,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
 
                 _filamentService.FilamentServiceVariables[objectItem.XmlParameterName] = objectItem.Value.ToString();
                 _filamentService.SaveXmlData();
-                
+
                 //PropertyInfo prop = _filamentService.GetType().GetProperty(objectItem.XmlParameterName, BindingFlags.Public | BindingFlags.Instance);
 
                 //if (prop != null)
@@ -208,7 +215,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                 System.Diagnostics.Process.Start(objectItem.ButtonPathLocation);
             }
 
-            
+
 
         }
 

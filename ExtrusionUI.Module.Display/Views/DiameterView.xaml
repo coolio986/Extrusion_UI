@@ -418,8 +418,20 @@
                     <ColumnDefinition Width="140"/>
                     <ColumnDefinition Width="120"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
-                <TextBlock x:Name="textBlockDiameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
+                <Label Content="X Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <TextBlock x:Name="textBlock_X_Diameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
+                    <!--<i:Interaction.Behaviors>
+                        <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
+                    </i:Interaction.Behaviors>-->
+                </TextBlock>
+            </Grid>
+            <Grid MaxWidth="270" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="120"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Y Diameter"  FontSize="20" HorizontalAlignment="Left" Padding="5,0" />
+                <TextBlock x:Name="textBlock_Y_Diameter" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" >
                     <!--<i:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="ActualDiameter" />
                     </i:Interaction.Behaviors>-->
@@ -474,10 +486,7 @@
                 <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        <Grid Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="3" Grid.RowSpan="2" Margin="0">
-            <!--<Image Source="/ExtrusionUI.Module.Display;component/Images/FILABOT_LOGO_2017.png" />-->
-            <TextBlock Text="PLEASE HOME TRAVERSE" FontSize="40" Foreground="Red" Visibility="{Binding HomeTraverseIsVisible, Converter={x:Static  conv:Converter.TrueToCollapsedConverter}}" />
-        </Grid>
+        
 
         <Grid Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->
@@ -557,7 +566,7 @@
                     <TextBlock Margin="15 0 0 0" Text="{Binding SerialBufferLargestSize}" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                    <TextBlock Text="TestCode: " />
+                    <TextBlock Text="Blips: " />
                     <TextBlock Margin="29 0 0 0">
                         <i:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TESTCODE}" Unit=""/>

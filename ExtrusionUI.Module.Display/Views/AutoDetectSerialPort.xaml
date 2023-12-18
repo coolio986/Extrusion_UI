@@ -19,19 +19,14 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Horizontal"  HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2"  >
-            <Border BorderBrush="DarkGray" BorderThickness="1"  >
-                <StackPanel >
-                    <Label Content="Spooler" FontSize="26" Width="300" HorizontalContentAlignment="Center" />
-                    <Separator BorderBrush="DarkGray" BorderThickness="1" />
-                    <Label Content="{Binding SpoolerPortNumber}" />
-                </StackPanel>
-            </Border>
+            <Border BorderBrush="DarkGray" BorderThickness="1"  />
             <!--<Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="0" Padding="0" />-->
+            <Border BorderBrush="DarkGray" BorderThickness="1" />
             <Border BorderBrush="DarkGray" BorderThickness="1" >
                 <StackPanel >
-                    <Label Content="Buffer" FontSize="26" Width="300" HorizontalContentAlignment="Center"/>
+                    <Label Content="Dual Axis Laser" FontSize="26" Width="200" HorizontalContentAlignment="Center"/>
                     <Separator BorderBrush="DarkGray" BorderThickness="1" />
-                    <Label Content="{Binding BufferPortNumber}" />
+                    <Label Content="{Binding DualAxisLaserPortNumber}" />
                 </StackPanel>
             </Border>
         </StackPanel>

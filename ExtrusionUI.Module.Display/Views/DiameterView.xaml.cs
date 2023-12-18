@@ -26,8 +26,9 @@ namespace ExtrusionUI.Module.Display.Views
         long previousHistoricalMillis;
         long previousRealTimeMillis;
         long previousScanMillis;
-        private int timeDelayMultiplier = 33;
-        private int minTimeDelayMultiplier = 33;
+        private int timeDelayMultiplier = 100;
+        private int minTimeDelayMultiplier = 100;
+        int blipCounter = 0;
 
         Storyboard plotStoryboard;
 
@@ -163,10 +164,14 @@ namespace ExtrusionUI.Module.Display.Views
             if (timer.ElapsedMilliseconds >= previousScanMillis + 1 && !updateInProgress)
             {
                 updateInProgress = true;
-                Dispatcher.Invoke(new Action(() =>
+
+                Action action = new Action(() =>
                 {
-                    double actDiameter = 0;
-                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER], out actDiameter);
+                    double X_actDiameter = 0;
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER], out X_actDiameter);
+
+                    double Y_actDiameter = 0;
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER], out Y_actDiameter);
 
                     double UpperLimit = 0;
                     double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.FILAMENTUPPERLIMIT], out UpperLimit);
@@ -180,17 +185,36 @@ namespace ExtrusionUI.Module.Display.Views
                     double LowestValue = 0;
                     double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.LOWESTVALUE], out LowestValue);
 
-                    if (actDiameter >= UpperLimit || actDiameter <= LowerLimit)
-                        textBlockDiameter.Foreground = Brushes.Red;
+                    if (X_actDiameter >= UpperLimit || X_actDiameter <= LowerLimit)
+                        textBlock_X_Diameter.Foreground = Brushes.Red;
                     else
-                        textBlockDiameter.Foreground = Brushes.Black;
+                        textBlock_X_Diameter.Foreground = Brushes.Black;
+
+                    if (Y_actDiameter >= UpperLimit || Y_actDiameter <= LowerLimit)
+                        textBlock_Y_Diameter.Foreground = Brushes.Red;
+                    else
+                        textBlock_Y_Diameter.Foreground = Brushes.Black;
 
 
-                    textBlockDiameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.ACTUALDIAMETER] + " mm";
+                    textBlock_X_Diameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER] + " mm";
+                    textBlock_Y_Diameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER] + " mm";
+
+                    if(X_actDiameter < 1.7)
+                    {
+                        blipCounter++;
+
+                        _filamentService.FilamentServiceVariables[StaticStrings.TESTCODE] = blipCounter.ToString();
+                    }
 
                     this.InvalidateVisual();
+                });
 
-                }));
+
+                if (!Dispatcher.CheckAccess())
+                    Dispatcher.BeginInvoke(action);
+                else
+                    action.Invoke();
+
                 previousScanMillis = timer.ElapsedMilliseconds;
                 updateInProgress = false;
             }
@@ -213,17 +237,19 @@ namespace ExtrusionUI.Module.Display.Views
             if (timer.ElapsedMilliseconds >= previousRealTimeMillis + timeDelayMultiplier  && _filamentService.CaptureStarted && !updateInProgress)
             {
                 updateInProgress = true;
-                Dispatcher.Invoke(new Action(() =>
+
+                Action action = new Action(() =>
                 {
-                    //zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Min = new XDate(DateTime.Now.AddMilliseconds(-5000));
-                    //zgraphRealTime.ZedGraph.GraphPane.XAxis.Scale.Max = new XDate(DateTime.Now.AddMilliseconds(2));
                     zgraphRealTime.ZedGraph.AxisChange();
                     zgraphRealTime.ZedGraph.Refresh();
-                    
-                    //zgraphRealTime.ZedGraph.Invalidate();
-                    //zgraphRealTime.ZedGraph.Update();
+                });
 
-                }));
+                if (!Dispatcher.CheckAccess())
+                    Dispatcher.BeginInvoke(action);
+                else
+                    action.Invoke();
+
+                
                 previousRealTimeMillis = timer.ElapsedMilliseconds;
                 updateInProgress = false;
             }
@@ -231,7 +257,8 @@ namespace ExtrusionUI.Module.Display.Views
             if (timer.ElapsedMilliseconds >= previousHistoricalMillis + 5000 && _filamentService.CaptureStarted && !updateInProgress)
             {
                 //updateInProgress = true;
-                Dispatcher.Invoke(new Action(() =>
+
+                Action action = new Action(() =>
                 {
                     if (!zgraphHistorical.IsZoomed)
                     {
@@ -239,8 +266,13 @@ namespace ExtrusionUI.Module.Display.Views
                         zgraphHistorical.ZedGraph.AxisChange();
                         zgraphHistorical.ZedGraph.Refresh();
                     }
+                });
 
-                }));
+                if (!Dispatcher.CheckAccess())
+                    Dispatcher.BeginInvoke(action);
+                else
+                    action.Invoke();
+
                 previousHistoricalMillis = timer.ElapsedMilliseconds;
                 //updateInProgress = false;
             }

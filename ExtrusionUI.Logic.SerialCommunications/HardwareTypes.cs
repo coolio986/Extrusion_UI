@@ -10,6 +10,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
     {
         Spooler = 1,
         Buffer = 2,
+        DualAxisLaser = 3,
         InternalDevice = 100,
     }
 }

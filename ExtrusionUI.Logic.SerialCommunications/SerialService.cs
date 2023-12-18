@@ -20,7 +20,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
     {
         //private SerialPort serialPort;
 
-        public event EventHandler DiameterChanged;
+        public event EventHandler X_DiameterChanged;
+        public event EventHandler Y_DiameterChanged;
 
         public event EventHandler SpoolerDataChanged;
         public event EventHandler TraverseDataChanged;
@@ -112,13 +113,14 @@ namespace ExtrusionUI.Logic.SerialCommunications
             serialPort.PortName = portName;
             //serialPort.DtrEnable = true;
             //serialPort.RtsEnable = true;
-            serialPort.BaudRate = 115200;
+            serialPort.BaudRate = 250000;
             serialPort.Handshake = Handshake.None;
             serialPort.DtrEnable = true;
             serialPort.ReadTimeout = 100;
             serialPort.WriteTimeout = 20;
             serialPort.NewLine = Environment.NewLine;
             serialPort.ReceivedBytesThreshold = 2048;
+            serialPort.ReadBufferSize = 8092;
             //PortDataIsSet = true;
             return serialPort;
         }
@@ -184,7 +186,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         {
             if (serialPort.IsOpen)
             {
-                byte[] buffer = new byte[5000];
+                byte[] buffer = new byte[65536];
                 string ret = string.Empty;
                 Action kickoffRead = null;
                 LineSplitter lineSplitter = new LineSplitter();
@@ -200,7 +202,9 @@ namespace ExtrusionUI.Logic.SerialCommunications
                         if (serialPort.IsOpen)
                             kickoffRead();
                     }
-                }, null)); kickoffRead();
+                }, null)); 
+
+                kickoffRead();
             }
         }
 
@@ -227,6 +231,19 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     {
                         if (func == null)
                         {
+                            if (splitData[1] == "d1")
+                            {
+                                d1(splitData);
+                                return;
+                            }
+
+                            if (splitData[1] == "d2")
+                            {
+                                d2(splitData);
+                                return;
+                            }
+
+
                             Type type = this.GetType();
                             MethodInfo method = type.GetMethod(splitData[1]);
 
@@ -369,7 +386,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
                         formatString += "0";
                     }
 
-                    DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                    X_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                     Thread.Sleep(50);
                 }
             });
@@ -551,7 +568,65 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     //    formatString += "0";
                     //}
 
-                    DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                    X_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                }
+            }
+            catch (Exception oe)
+            {
+
+            }
+        }
+
+        public void d1(string[] splitData) //reflection calls this
+        {
+            double diameter = 0;
+
+            try //if anything fails, skip it and wait for the next serial event
+            {
+
+                if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
+                {
+                    //string formatString = "0.";
+                    //splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
+
+                    diameter = diameter / 10000;
+                    string formatString = "N3";
+
+                    //for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
+                    //{
+                    //    formatString += "0";
+                    //}
+
+                    X_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
+                }
+            }
+            catch (Exception oe)
+            {
+
+            }
+        }
+
+        public void d2(string[] splitData) //reflection calls this
+        {
+            double diameter = 0;
+
+            try //if anything fails, skip it and wait for the next serial event
+            {
+
+                if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
+                {
+                    //string formatString = "0.";
+                    //splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
+
+                    diameter = diameter / 10000;
+                    string formatString = "N3";
+
+                    //for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
+                    //{
+                    //    formatString += "0";
+                    //}
+
+                    Y_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                 }
             }
             catch (Exception oe)

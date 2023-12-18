@@ -31,6 +31,13 @@ namespace ExtrusionUI.Module.Display.ViewModels
             set { SetProperty(ref _bufferPortNumber, value); }
         }
 
+        private string _dualAxisLaserPortNumber;
+        public string DualAxisLaserPortNumber
+        {
+            get { return _dualAxisLaserPortNumber; }
+            set { SetProperty(ref _dualAxisLaserPortNumber, value); }
+        }
+
         public ObservableCollection<SerialPortClass> SerialPortList { get; private set; }
 
         private DelegateCommand<object> _autoDetectDevices;
@@ -48,26 +55,33 @@ namespace ExtrusionUI.Module.Display.ViewModels
         private void ExecuteAutoDetectDevices(object obj)
         {
             SerialPortList = new ObservableCollection<SerialPortClass>(_serialService.GetSerialPortList());
-            string[] hardwareTypes = { "1", "2" }; //TODO get enums from firmware
+            string[] hardwareTypes = { "1", "2", "3" }; //TODO get enums from firmware
 
             foreach (var serialPort in SerialPortList)
             {
                 SerialCommand serialCommand = null;
-                serialCommand = _serialService.CheckIfDeviceExists(serialPort.SerialPort_PortName, hardwareTypes).Result;
-                if (serialCommand != null && serialCommand.DeviceID != "0" && !string.IsNullOrEmpty(serialCommand.DeviceID))
+                try
                 {
-                    switch (Convert.ToInt32(serialCommand.DeviceID))
+                    serialCommand = _serialService.CheckIfDeviceExists(serialPort.SerialPort_PortName, hardwareTypes).Result;
+                    if (serialCommand != null && serialCommand.DeviceID != "0" && !string.IsNullOrEmpty(serialCommand.DeviceID))
                     {
-                        case (int)HARDWARETYPES.Spooler:
-                            SpoolerPortNumber = serialPort.SerialPort_PortName;
-                            break;
-                        case (int)HARDWARETYPES.Buffer:
-                            BufferPortNumber = serialPort.SerialPort_PortName;
-                            break;
-                        default:
-                            break;
+                        switch (Convert.ToInt32(serialCommand.DeviceID))
+                        {
+                            case (int)HARDWARETYPES.Spooler:
+                                SpoolerPortNumber = serialPort.SerialPort_PortName;
+                                break;
+                            case (int)HARDWARETYPES.Buffer:
+                                BufferPortNumber = serialPort.SerialPort_PortName;
+                                break;
+                            case (int)HARDWARETYPES.DualAxisLaser:
+                                DualAxisLaserPortNumber = serialPort.SerialPort_PortName;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+                catch { }
             }
         }
 
@@ -77,6 +91,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 _serialService.ConnectToSerialPort(SpoolerPortNumber, (int)HARDWARETYPES.Spooler);
             if (!string.IsNullOrEmpty(BufferPortNumber))
                 _serialService.ConnectToSerialPort(BufferPortNumber, (int)HARDWARETYPES.Buffer);
+            if (!string.IsNullOrEmpty(DualAxisLaserPortNumber))
+                _serialService.ConnectToSerialPort(DualAxisLaserPortNumber, (int)HARDWARETYPES.DualAxisLaser);
 
             _naviService.NavigateTo("DiameterView");
         }

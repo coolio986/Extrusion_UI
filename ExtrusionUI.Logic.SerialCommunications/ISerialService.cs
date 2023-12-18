@@ -12,7 +12,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         void ConnectToSerialPort(string portName, int deviceId);
 
-        event EventHandler DiameterChanged;
+        event EventHandler X_DiameterChanged;
+        event EventHandler Y_DiameterChanged;
         event EventHandler SpoolerDataChanged;
         event EventHandler TraverseDataChanged;
         event EventHandler GeneralDataChanged;

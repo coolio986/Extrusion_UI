@@ -1,5 +1,6 @@
 ﻿using ExtrusionUI.Infrastructure;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace ExtrusionUI.Logic.Filament
         //string LowestValue { get; set; }
         //string SpoolNumber { get; set; }
         //string SpoolRPM { get; set; }
-        Dictionary<string, string> FilamentServiceVariables { get; }
+        ConcurrentDictionary<string, string> FilamentServiceVariables { get; }
 
         event EventHandler DiameterChanged;
         event EventHandler PropertyChanged;

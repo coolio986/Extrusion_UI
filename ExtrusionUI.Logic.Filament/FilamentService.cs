@@ -5,6 +5,7 @@ using ExtrusionUI.Logic.Helpers;
 using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.WindowForms.ZedGraphUserControl;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace ExtrusionUI.Logic.Filament
 
         public event EventHandler StopWatchedTimeChanged;
 
-        public Dictionary<string, string> FilamentServiceVariables { get; private set; }
+        public ConcurrentDictionary<string, string> FilamentServiceVariables { get; private set; }
 
         public Stopwatch DurationClock { get; private set; }
 
@@ -45,8 +46,12 @@ namespace ExtrusionUI.Logic.Filament
 
                 if (captureStarted)
                 {
-                    FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
-                    FilamentServiceVariables[StaticStrings.LOWESTVALUE] = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+                    //disconnect events while clearing plots to prevent race condition
+                    _serialService.X_DiameterChanged -= SerialService_X_DiameterChanged;
+                    _serialService.Y_DiameterChanged -= SerialService_Y_DiameterChanged;
+
+                    FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER];
+                    FilamentServiceVariables[StaticStrings.LOWESTVALUE] = FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER];
                     if (FilamentServiceVariables[StaticStrings.SPOOLNUMBER] == string.Empty) { FilamentServiceVariables[StaticStrings.SPOOLNUMBER] = "0"; }
 
                     FilamentServiceVariables[StaticStrings.SPOOLNUMBER] = (FilamentServiceVariables[StaticStrings.SPOOLNUMBER].GetInteger() + 1).ToString();
@@ -54,6 +59,10 @@ namespace ExtrusionUI.Logic.Filament
                     SetupPlots();
                     SetupStopwatch();
                     SaveXmlData();
+
+                    //reconnect events
+                    _serialService.X_DiameterChanged += SerialService_X_DiameterChanged;
+                    _serialService.Y_DiameterChanged += SerialService_Y_DiameterChanged;
                 }
                 else
                 {
@@ -76,35 +85,36 @@ namespace ExtrusionUI.Logic.Filament
             DurationClock = new Stopwatch();
 
             _serialService = serialService;
-            _serialService.DiameterChanged += SerialService_DiameterChanged;
+            _serialService.X_DiameterChanged += SerialService_X_DiameterChanged;
+            _serialService.Y_DiameterChanged += SerialService_Y_DiameterChanged;
             //_serialService.TraverseDataChanged += _serialService_TraverseDataChanged;
             _serialService.GeneralDataChanged += _serialService_GeneralDataChanged;
 
             _xmlService = xmlService;
             _csvService = csvService;
 
-            FilamentServiceVariables = new Dictionary<string, string>();
+            FilamentServiceVariables = new ConcurrentDictionary<string, string>();
             //FilamentServiceVariables.Add("Description", "");
-            FilamentServiceVariables.Add(StaticStrings.TRAVERSEMOTIONSTATUS, "None");
-            FilamentServiceVariables.Add(StaticStrings.SPOOLMOTIONSTATUS, "None");
-            FilamentServiceVariables.Add(StaticStrings.ACTUALDIAMETER, "");
-            FilamentServiceVariables.Add(StaticStrings.HIGHESTVALUE, "");
-            FilamentServiceVariables.Add(StaticStrings.LOWESTVALUE, "");
-            FilamentServiceVariables.Add(StaticStrings.FILAMENTNOMINALDIAMETER, "");
-            FilamentServiceVariables.Add(StaticStrings.FILAMENTUPPERLIMIT, "");
-            FilamentServiceVariables.Add(StaticStrings.FILAMENTLOWERLIMIT, "");
-            FilamentServiceVariables.Add(StaticStrings.TRAVERSEHOMEOFFSET, "Nan");
-            FilamentServiceVariables.Add(StaticStrings.SPOOLWIDTH, "Nan");
+            FilamentServiceVariables.TryAdd(StaticStrings.TRAVERSEMOTIONSTATUS, "None");
+            FilamentServiceVariables.TryAdd(StaticStrings.SPOOLMOTIONSTATUS, "None");
+            FilamentServiceVariables.TryAdd(StaticStrings.X_ACTUALDIAMETER, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.HIGHESTVALUE, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.LOWESTVALUE, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTNOMINALDIAMETER, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTUPPERLIMIT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTLOWERLIMIT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.TRAVERSEHOMEOFFSET, "Nan");
+            FilamentServiceVariables.TryAdd(StaticStrings.SPOOLWIDTH, "Nan");
             //FilamentServiceVariables.Add("Tolerance", "");
-            FilamentServiceVariables.Add(StaticStrings.DURATION, "");
-            FilamentServiceVariables.Add(StaticStrings.SPOOLNUMBER, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.DURATION, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.SPOOLNUMBER, "");
             //FilamentServiceVariables.Add("SpoolRPM", "");
             //FilamentServiceVariables.Add("SpecificGravity", "");
-            FilamentServiceVariables.Add(StaticStrings.SPOOLWEIGHTLIMIT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.SPOOLWEIGHTLIMIT, "");
             //FilamentServiceVariables.Add("PullerRPM", "");
             //FilamentServiceVariables.Add("FilamentLength", "");
             //FilamentServiceVariables.Add("Feedrate", "");
-            FilamentServiceVariables.Add(StaticStrings.SPOOLWEIGHT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.SPOOLWEIGHT, "");
             //FilamentServiceVariables.Add("OutputRate", "");
             //FilamentServiceVariables.Add("RemainingTime", "");
             //FilamentServiceVariables.Add("KeepAlive", "Disconnected");
@@ -161,20 +171,21 @@ namespace ExtrusionUI.Logic.Filament
 
         }
 
-        private void SerialService_DiameterChanged(object sender, EventArgs e)
+        private void SerialService_X_DiameterChanged(object sender, EventArgs e)
         {
             //ActualDiameter = sender.ToString();
 
             double newDiameter = (double)Convert.ChangeType(sender, typeof(double));
 
-            FilamentServiceVariables[StaticStrings.ACTUALDIAMETER] = sender.ToString();
+            FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER] = sender.ToString();
 
             if (captureStarted)
             {
-                Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
-                {
-                    zedGraphUserControl.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]);
-                });
+                ZedGraphPlotModel.GetPlots().ForEach(x => x.AddDataPointX(FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER]));
+                //Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
+                //{
+                //    zedGraphUserControl.AddDataPointX(FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER]);
+                //});
             }
                 //ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
 
@@ -184,13 +195,37 @@ namespace ExtrusionUI.Logic.Filament
                 UpdateHighsAndLows();
         }
 
+        private void SerialService_Y_DiameterChanged(object sender, EventArgs e)
+        {
+            //ActualDiameter = sender.ToString();
+
+            double newDiameter = (double)Convert.ChangeType(sender, typeof(double));
+
+            FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER] = sender.ToString();
+
+            if (captureStarted)
+            {
+                ZedGraphPlotModel.GetPlots().ForEach(x => x.AddDataPointY(FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER]));
+                //Parallel.ForEach(ZedGraphPlotModel.GetPlots(), zedGraphUserControl =>
+                //{
+                //    zedGraphUserControl.AddDataPointY(FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER]);
+                //});
+            }
+            //ZedGraphPlotModel.GetPlots().Select(x => { x.AddDataPoint(FilamentServiceVariables[StaticStrings.ACTUALDIAMETER]); return x; }).ToList();
+
+            DiameterChanged?.Invoke(sender, e);
+
+            if (captureStarted)
+                UpdateHighsAndLows();
+        }
+
         private void UpdateHighsAndLows()
         {
-            string actualDiameter = FilamentServiceVariables[StaticStrings.ACTUALDIAMETER];
+            string X_actualDiameter = FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER];
             string highestValue = FilamentServiceVariables[StaticStrings.HIGHESTVALUE];
             string lowestValue = FilamentServiceVariables[StaticStrings.LOWESTVALUE];
-            FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = highestValue == null ? actualDiameter : highestValue.GetDouble() < actualDiameter.GetDouble() ? actualDiameter : highestValue;
-            FilamentServiceVariables[StaticStrings.LOWESTVALUE] = lowestValue == null ? actualDiameter : lowestValue.GetDouble() > actualDiameter.GetDouble() ? actualDiameter : lowestValue;
+            FilamentServiceVariables[StaticStrings.HIGHESTVALUE] = highestValue == null ? X_actualDiameter : highestValue.GetDouble() < X_actualDiameter.GetDouble() ? X_actualDiameter : highestValue;
+            FilamentServiceVariables[StaticStrings.LOWESTVALUE] = lowestValue == null ? X_actualDiameter : lowestValue.GetDouble() > X_actualDiameter.GetDouble() ? X_actualDiameter : lowestValue;
             FilamentServiceVariables["Tolerance"] = ((highestValue.GetDouble() - lowestValue.GetDouble()) / 2).ToString("0.000");
         }
 
