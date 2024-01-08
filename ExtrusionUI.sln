@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.Logic.UI_Intell
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.Core", "ExtrusionUI.Core\ExtrusionUI.Core.csproj", "{58B80657-9961-4E42-9931-629690417B0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtrusionUI.Logic.ModbusTCP", "ExtrusionUI.Logic.ModbusTCP\ExtrusionUI.Logic.ModbusTCP.csproj", "{C20B915D-5C02-4B50-8248-07767F94ED73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{58B80657-9961-4E42-9931-629690417B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58B80657-9961-4E42-9931-629690417B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58B80657-9961-4E42-9931-629690417B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C20B915D-5C02-4B50-8248-07767F94ED73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C20B915D-5C02-4B50-8248-07767F94ED73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C20B915D-5C02-4B50-8248-07767F94ED73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C20B915D-5C02-4B50-8248-07767F94ED73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

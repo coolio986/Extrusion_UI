@@ -20,21 +20,24 @@ namespace ExtrusionUI.Logic.FileOperations
 
         public void SaveSettings(HashSet<DataListXY> dataList, string spoolNumber, string description)
         {
-            StringBuilder stringBuilderCsv = new StringBuilder();
-            stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
-
-            foreach (DataListXY list in dataList.ToList())
+            lock (this)
             {
-                stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
+                StringBuilder stringBuilderCsv = new StringBuilder();
+                stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
+
+                foreach (DataListXY list in dataList.ToList())
+                {
+                    stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
+                }
+
+                string csvString = stringBuilderCsv.ToString();
+                csvString = csvString.TrimEnd(','); //remove trailing comma
+
+                string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
+                    "_" + description + "_" + "Spool" + spoolNumber + ".csv";
+
+                _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
             }
-
-            string csvString = stringBuilderCsv.ToString();
-            csvString = csvString.TrimEnd(','); //remove trailing comma
-
-            string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
-                "_" + description + "_" + "Spool" + spoolNumber + ".csv";
-
-            _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
         }
     }
 }

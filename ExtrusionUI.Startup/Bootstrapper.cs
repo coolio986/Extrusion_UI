@@ -10,6 +10,7 @@ using ExtrusionUI.Logic.Filament;
 using ExtrusionUI.Logic.FileOperations;
 //using ExtrusionUI.Logic.WebService;
 using ExtrusionUI.Logic.UI_Intelligence;
+using ExtrusionUI.Logic.ModbusTCP;
 
 namespace ExtrusionUI.Startup
 {
@@ -53,6 +54,7 @@ namespace ExtrusionUI.Startup
 
             Container.RegisterType<INavigationService, NavigationService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ISerialService, SerialService>(new ContainerControlledLifetimeManager());
+            Container.RegisterType<IModbusTCPService, ModbusTCPService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IFilamentService, FilamentService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<IFileService, FileService>(new ContainerControlledLifetimeManager());
             Container.RegisterType<ICsvService, CsvService>(new ContainerControlledLifetimeManager());

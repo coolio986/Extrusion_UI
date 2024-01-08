@@ -19,7 +19,7 @@ namespace ExtrusionUI.Logic.FileOperations
             EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
             //EnvironmentDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
-            EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "Filalogger");
+            EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "ExtrusionUI");
             EnvironmentDirectory = Path.Combine(EnvironmentDirectory, "spooldata");
 
             CheckEnvironment();
@@ -46,13 +46,16 @@ namespace ExtrusionUI.Logic.FileOperations
 
         public void AppendLog(string filedata)
         {
-            DateTime dateTime = DateTime.Now;
-            string datetime = string.Empty;
-            datetime = dateTime.ToString();
-            datetime = datetime.Substring(0, datetime.Length - 3);
-            filedata = datetime + "." + dateTime.Millisecond.ToString() + "-> " + filedata + "\r\n";
+            lock (this)
+            {
+                DateTime dateTime = DateTime.Now;
+                string datetime = string.Empty;
+                datetime = dateTime.ToString();
+                datetime = datetime.Substring(0, datetime.Length - 3);
+                filedata = datetime + "." + dateTime.Millisecond.ToString() + "-> " + filedata + "\r\n";
 
-            AppendFile(EnvironmentDirectory + "\\log.txt", filedata);
+                AppendFile(EnvironmentDirectory + "\\log.txt", filedata);
+            }
         }
 
         private void CheckEnvironment()

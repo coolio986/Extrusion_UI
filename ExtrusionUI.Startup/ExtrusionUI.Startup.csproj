@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExtrusionUI.Startup</RootNamespace>
     <AssemblyName>ExtrusionUI.Startup</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -121,6 +121,10 @@
     <ProjectReference Include="..\ExtrusionUI.Logic.FileOperations\ExtrusionUI.Logic.FileOperations.csproj">
       <Project>{8035395e-ce20-45cc-8669-f1cbb8cb31bb}</Project>
       <Name>ExtrusionUI.Logic.FileOperations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.ModbusTCP\ExtrusionUI.Logic.ModbusTCP.csproj">
+      <Project>{C20B915D-5C02-4B50-8248-07767F94ED73}</Project>
+      <Name>ExtrusionUI.Logic.ModbusTCP</Name>
     </ProjectReference>
     <ProjectReference Include="..\ExtrusionUI.Logic.Navigation\ExtrusionUI.Logic.Navigation.csproj">
       <Project>{8A4CB387-8CFC-4443-82F8-59FC3C59A14E}</Project>

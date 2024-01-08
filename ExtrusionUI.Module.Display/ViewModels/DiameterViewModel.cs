@@ -9,6 +9,7 @@ using ExtrusionUI.Logic.SerialCommunications;
 using ExtrusionUI.Core;
 using ExtrusionUI.Logic.UI_Intelligence;
 using System.Windows;
+using ExtrusionUI.Logic.ModbusTCP;
 
 namespace ExtrusionUI.Module.Display.ViewModels
 {
@@ -17,6 +18,8 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
         private readonly ISerialService _serialService;
         private readonly IUI_IntelligenceService _iui_IntelligenceService;
+        private readonly IModbusTCPService _modbusTCPService;
+
         public IFilamentService _filamentService { get; }
         public DelegateCommand ResetGraph { get; private set; }
         public DelegateCommand StartCapture { get; private set; }
@@ -202,7 +205,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
             private set { settingsView = value; RaisePropertyChanged(); }
         }
 
-        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService, IUI_IntelligenceService iui_IntelligenceService)
+        public DiameterViewModel(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService, IUI_IntelligenceService iui_IntelligenceService, IModbusTCPService modbusTCPService)
         {
             _filamentService = filamentService;
             _navigationService = navigationService;
@@ -211,6 +214,9 @@ namespace ExtrusionUI.Module.Display.ViewModels
             _filamentService.StopWatchedTimeChanged += _filamentService_StopWatchedTimeChanged;
             _serialService = serialService;
             _iui_IntelligenceService = iui_IntelligenceService;
+            _modbusTCPService = modbusTCPService;
+            _modbusTCPService.RunStatusChanged += _modbusTCPService_RunStatusChanged;
+            _modbusTCPService.Start();
 
             ResetGraph = new DelegateCommand(ResetGraph_Click);
             StartCapture = new DelegateCommand(StartCapture_Click);
@@ -219,6 +225,20 @@ namespace ExtrusionUI.Module.Display.ViewModels
 
             StartCapture.RaiseCanExecuteChanged();
             _serialService.SerialBufferSizeChanged += _serialService_SerialBufferSizeChanged;
+        }
+
+        private void _modbusTCPService_RunStatusChanged(object sender, EventArgs e)
+        {
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                UInt16 runStatus = (UInt16)sender;
+                var bytes = BitConverter.GetBytes(runStatus);
+
+                if (bytes[0] >= 2 && bytes[0] <= 3 || bytes[0] > 9)
+                    StartCapture_Click();
+                else
+                    StopCapture_Click();
+            }));
         }
 
         private void _serialService_SerialBufferSizeChanged(object sender, EventArgs e)

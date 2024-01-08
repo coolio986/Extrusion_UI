@@ -28,13 +28,10 @@ namespace ExtrusionUI.Logic.SerialCommunications
         public event EventHandler GeneralDataChanged;
         public event EventHandler SerialBufferSizeChanged;
         bool autoDetectionCheckFinished = false;
-       
+
         private IFileService _fileService;
+        SerialPort serialPort = null; //make serialport global to help minimize garbage collection dispose
 
-        //ConcurrentQueue<SerialCommand> serialQueue;
-        //int CCqueueCount = 0;
-
-        //private static ReaderWriterLockSlim lock_ = new ReaderWriterLockSlim();
 
         public SerialService(IFileService fileService)
         {
@@ -46,13 +43,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
             //serialQueue = new ConcurrentQueue<SerialCommand>();
         }
 
-        //private string portName;
-        //public string PortName
-        //{
-        //    get { return portName; }
-        //    set
-        //    {
-        //        portName = value;
 
 
         private int serialBufferSize = 0;
@@ -85,7 +75,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
         public void ConnectToSerialPort(string portName, int deviceId)
         {
-            SerialPort serialPort = null;
             if (!IsSimulationModeActive)
             {
                 //PortName = portName;
@@ -104,30 +93,42 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 RunSimulation();
             }
 
-            StartSerialReceive(serialPort, null);
+            StartSerialReceive(serialPort, null, retryOpen: true);
         }
 
         private SerialPort SetPort(string portName)
         {
             SerialPort serialPort = new SerialPort();
             serialPort.PortName = portName;
-            //serialPort.DtrEnable = true;
-            //serialPort.RtsEnable = true;
-            serialPort.BaudRate = 250000;
+            serialPort.BaudRate = 230400;
             serialPort.Handshake = Handshake.None;
+            serialPort.StopBits = StopBits.One;
+            serialPort.Parity = Parity.None;
+            serialPort.DataBits = 8;
+
             serialPort.DtrEnable = true;
-            serialPort.ReadTimeout = 100;
-            serialPort.WriteTimeout = 20;
+            serialPort.RtsEnable = false; //setting to true causes the esp32 to reset as per the firmware flash routine. don't use
+            serialPort.DiscardNull = true;
+            serialPort.ReadTimeout = 1;
+            serialPort.WriteTimeout = 1;
             serialPort.NewLine = Environment.NewLine;
-            serialPort.ReceivedBytesThreshold = 2048;
-            serialPort.ReadBufferSize = 8092;
+            //serialPort.ReceivedBytesThreshold = 2048;
+            //serialPort.ReadBufferSize = 8092;
+            serialPort.ErrorReceived += SerialPort_ErrorReceived;
             //PortDataIsSet = true;
             return serialPort;
         }
 
+        private void SerialPort_ErrorReceived(object sender, SerialErrorReceivedEventArgs e)
+        {
+            SerialError serialError = e.EventType;
+            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial in-> " + e.EventType + " Error");
+            //throw new Exception("serial port error");
+        }
+
         public async Task<SerialCommand> CheckIfDeviceExists(string portName, string[] deviceTypes)
         {
-            SerialPort serialPort = SetPort(portName);
+            serialPort = SetPort(portName);
             serialPort.Open();
 
             SerialCommand returnCommand = new SerialCommand();
@@ -182,7 +183,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
             return sender;
 
         }
-        private void StartSerialReceive(SerialPort serialPort, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null)
+        private void StartSerialReceive(SerialPort serialPort, SerialCommand returnCommand, Func<object, SerialPort, SerialCommand, object> func = null, bool retryOpen = false)
         {
             if (serialPort.IsOpen)
             {
@@ -190,21 +191,47 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 string ret = string.Empty;
                 Action kickoffRead = null;
                 LineSplitter lineSplitter = new LineSplitter();
-
-                kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                try
                 {
-                    if (serialPort.IsOpen)
+                    kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                     {
-                        int count = serialPort.BaseStream.EndRead(ar);
-                        byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
-                        OnDataReceived(dst, returnCommand, serialPort, func);
-
                         if (serialPort.IsOpen)
-                            kickoffRead();
-                    }
-                }, null)); 
+                        {
+                            int count = serialPort.BaseStream.EndRead(ar);
+                            byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
+                            OnDataReceived(dst, returnCommand, serialPort, func);
 
-                kickoffRead();
+                            if (serialPort.IsOpen)
+                                kickoffRead();
+
+                        }
+                        if (!serialPort.IsOpen)
+                        {
+                            Console.WriteLine("Serial port closed");
+                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial port closed");
+                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + $" Bytes left in buffer: {lineSplitter.leftover.Length}");
+                            if (retryOpen)
+                            {
+                                _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " reopening");
+
+                                string comPortName = serialPort.PortName;
+                                serialPort.Close();
+                                serialPort.Dispose();
+                                GC.Collect();
+                                SetPort(comPortName);
+
+                                serialPort.Open();
+
+                            }
+                        }
+                    }, null));
+
+                    kickoffRead();
+                }
+                catch
+                {
+
+                }
             }
         }
 
@@ -231,18 +258,17 @@ namespace ExtrusionUI.Logic.SerialCommunications
                     {
                         if (func == null)
                         {
-                            if (splitData[1] == "d1")
+                            switch (splitData[1]) //switch is faster
                             {
-                                d1(splitData);
-                                return;
+                                case "d1":
+                                    d1(splitData);
+                                    return;
+                                case "d2":
+                                    d2(splitData);
+                                    return;
+                                default:
+                                    break;
                             }
-
-                            if (splitData[1] == "d2")
-                            {
-                                d2(splitData);
-                                return;
-                            }
-
 
                             Type type = this.GetType();
                             MethodInfo method = type.GetMethod(splitData[1]);
@@ -259,7 +285,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
                         {
                             func(splitData, serialPort, returnCommand);
                         }
-
                     }
                 }
             }
@@ -269,7 +294,7 @@ namespace ExtrusionUI.Logic.SerialCommunications
         {
             // based on: http://www.sparxeng.com/blog/software/reading-lines-serial-port
             public byte Delimiter = (byte)'\n';
-            byte[] leftover;
+            public byte[] leftover;
 
 
             public byte[] OnIncomingBinaryBlock(object sender, byte[] buffer, int bytesInBuffer)
@@ -319,58 +344,6 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 return result;
             }
         }
-
-        private void Timer_Elapsed(object serialCounter, ElapsedEventArgs e)
-        {
-
-
-        }
-
-        //private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        //{
-        //    string dataIn = serialPort.ReadLine();
-
-        //    string asciiConvertedBytes = string.Empty;
-
-        //    asciiConvertedBytes = dataIn.Replace("\r", "").Replace("\n", "");
-
-        //    if (asciiConvertedBytes.Length == 52) //if data is valid
-        //    {
-        //        byte[] bytes = new byte[asciiConvertedBytes.Length / 4];
-
-        //        for (int i = 0; i < 13; ++i) //split each 4 bit nibble into array
-        //        {
-        //            bytes[i] = Convert.ToByte(asciiConvertedBytes.Substring(4 * i, 4).Reverse().ToString(), 2);
-        //        }
-
-        //        string diameterStringBuilder = string.Empty;
-        //        for (int i = 5; i <= 10; i++) //diamter resides in array positions 5 to 10
-        //        {
-        //            diameterStringBuilder += bytes[i].ToString();
-        //        }
-
-        //        try //if anything fails, skip it and wait for the next serial event
-        //        {
-        //            //bytes[11] is the decmial position from right
-        //            diameterStringBuilder = diameterStringBuilder.Insert(diameterStringBuilder.Length - bytes[11], ".");
-
-        //            double diameter = 0;
-
-        //            if (Double.TryParse(diameterStringBuilder, out diameter)) //if it can convert to double, do it
-        //            {
-        //                string formatString = "0.";
-        //                for (int i = 0; i < bytes[11]; i++) //format the string for number of decimal places
-        //                {
-        //                    formatString += "0";
-        //                }
-
-        //                DiameterChanged?.Invoke(diameter.ToString(formatString), null);
-        //            }
-
-        //        }
-        //        catch { }
-        //    }
-        //}
 
         private void RunSimulation()
         {
@@ -557,16 +530,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                 if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
                 {
-                    //string formatString = "0.";
-                    //splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
-
                     diameter = diameter / 10000;
                     string formatString = "N3";
-
-                    //for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
-                    //{
-                    //    formatString += "0";
-                    //}
 
                     X_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                 }
@@ -586,16 +551,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                 if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
                 {
-                    //string formatString = "0.";
-                    //splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
-
                     diameter = diameter / 10000;
                     string formatString = "N3";
-
-                    //for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
-                    //{
-                    //    formatString += "0";
-                    //}
 
                     X_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                 }
@@ -615,16 +572,8 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                 if (Double.TryParse(splitData[2], out diameter)) //if it can convert to double, do it
                 {
-                    //string formatString = "0.";
-                    //splitData[2] = splitData[2].Replace("\0", string.Empty); //remove nulls
-
                     diameter = diameter / 10000;
                     string formatString = "N3";
-
-                    //for (int i = 0; i < splitData[2].Split('.')[1].ToString().Length; i++) //format the string for number of decimal places
-                    //{
-                    //    formatString += "0";
-                    //}
 
                     Y_DiameterChanged?.Invoke(diameter.ToString(formatString), null);
                 }
@@ -699,28 +648,13 @@ namespace ExtrusionUI.Logic.SerialCommunications
             sendToDevice(serialCommand);
         }
 
-        public void BufferStatusTEST(string[] splitData) //reflection calls this
-        {
-            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
-        }
-
-        public void BufferPositionTEST(string[] splitData) //reflection calls this
-        {
-            //Console.WriteLine(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " TEST DATA-> " + splitData[1]);
-        }
-
         public void LoggerMotionState(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
             Debug.WriteLine("Logger Motion State: {0};{1};{2};{3}", splitData[0], splitData[1], splitData[2], splitData[3]);
-        } 
-
-        public void TraversePositionStatus(string[] splitData) //reflection calls this
-        {
-            processSerialCommand(splitData);
         }
 
-        public void testCode(string[] splitData) //reflection calls this
+        public void TraversePositionStatus(string[] splitData) //reflection calls this
         {
             processSerialCommand(splitData);
         }

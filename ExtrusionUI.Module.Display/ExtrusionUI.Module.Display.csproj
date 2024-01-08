@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ExtrusionUI.Module.Display</RootNamespace>
     <AssemblyName>ExtrusionUI.Module.Display</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -100,52 +100,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtrusionUI.Core\ExtrusionUI.Core.csproj">
-      <Project>{58B80657-9961-4E42-9931-629690417B0A}</Project>
-      <Name>ExtrusionUI.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Infrastructure.UI\ExtrusionUI.Infrastructure.UI.csproj">
-      <Project>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</Project>
-      <Name>ExtrusionUI.Infrastructure.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Infrastructure\ExtrusionUI.Infrastructure.csproj">
-      <Project>{14852AA5-9B8D-4202-A2E3-D5F9E7004A49}</Project>
-      <Name>ExtrusionUI.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.Filament\ExtrusionUI.Logic.Filament.csproj">
-      <Project>{FDD57CAC-B228-496A-8BC7-496F742013C0}</Project>
-      <Name>ExtrusionUI.Logic.Filament</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.FileOperations\ExtrusionUI.Logic.FileOperations.csproj">
-      <Project>{8035395E-CE20-45CC-8669-F1CBB8CB31BB}</Project>
-      <Name>ExtrusionUI.Logic.FileOperations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.Helpers\ExtrusionUI.Logic.Helpers.csproj">
-      <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
-      <Name>ExtrusionUI.Logic.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.Navigation\ExtrusionUI.Logic.Navigation.csproj">
-      <Project>{8a4cb387-8cfc-4443-82f8-59fc3c59a14e}</Project>
-      <Name>ExtrusionUI.Logic.Navigation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.SerialCommunications\ExtrusionUI.Logic.SerialCommunications.csproj">
-      <Project>{F7861637-3550-49D6-9B8D-F9D38C6A3602}</Project>
-      <Name>ExtrusionUI.Logic.SerialCommunications</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Logic.UI_Intelligence\ExtrusionUI.Logic.UI_Intelligence.csproj">
-      <Project>{988E8B95-AF86-4921-AE86-4A21F7C4CAAF}</Project>
-      <Name>ExtrusionUI.Logic.UI_Intelligence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj">
-      <Project>{5be0334f-ecf2-4af9-bb78-e1d48a2e9af8}</Project>
-      <Name>ExtrusionUI.Toolkits</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.WindowForms.ZedGraphUserControl\ExtrusionUI.WindowForms.ZedGraphUserControl.csproj">
-      <Project>{4304c760-7374-4c33-90d9-032d798e1254}</Project>
-      <Name>ExtrusionUI.WindowForms.ZedGraphUserControl</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Page Include="Views\AutoDetectSerialPort.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -177,6 +131,52 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\FILABOT_LOGO_2017.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExtrusionUI.Core\ExtrusionUI.Core.csproj">
+      <Project>{58b80657-9961-4e42-9931-629690417b0a}</Project>
+      <Name>ExtrusionUI.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Infrastructure.UI\ExtrusionUI.Infrastructure.UI.csproj">
+      <Project>{3cd37f03-d9b7-426c-8447-3cef0284fabe}</Project>
+      <Name>ExtrusionUI.Infrastructure.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.Filament\ExtrusionUI.Logic.Filament.csproj">
+      <Project>{fdd57cac-b228-496a-8bc7-496f742013c0}</Project>
+      <Name>ExtrusionUI.Logic.Filament</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.FileOperations\ExtrusionUI.Logic.FileOperations.csproj">
+      <Project>{8035395e-ce20-45cc-8669-f1cbb8cb31bb}</Project>
+      <Name>ExtrusionUI.Logic.FileOperations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.Helpers\ExtrusionUI.Logic.Helpers.csproj">
+      <Project>{49952abe-8438-4fc1-bc9a-4a4d596e64f5}</Project>
+      <Name>ExtrusionUI.Logic.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.ModbusTCP\ExtrusionUI.Logic.ModbusTCP.csproj">
+      <Project>{c20b915d-5c02-4b50-8248-07767f94ed73}</Project>
+      <Name>ExtrusionUI.Logic.ModbusTCP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.Navigation\ExtrusionUI.Logic.Navigation.csproj">
+      <Project>{8a4cb387-8cfc-4443-82f8-59fc3c59a14e}</Project>
+      <Name>ExtrusionUI.Logic.Navigation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.SerialCommunications\ExtrusionUI.Logic.SerialCommunications.csproj">
+      <Project>{f7861637-3550-49d6-9b8d-f9d38c6a3602}</Project>
+      <Name>ExtrusionUI.Logic.SerialCommunications</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Logic.UI_Intelligence\ExtrusionUI.Logic.UI_Intelligence.csproj">
+      <Project>{988e8b95-af86-4921-ae86-4a21f7c4caaf}</Project>
+      <Name>ExtrusionUI.Logic.UI_Intelligence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj">
+      <Project>{5be0334f-ecf2-4af9-bb78-e1d48a2e9af8}</Project>
+      <Name>ExtrusionUI.Toolkits</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ExtrusionUI.WindowForms.ZedGraphUserControl\ExtrusionUI.WindowForms.ZedGraphUserControl.csproj">
+      <Project>{4304c760-7374-4c33-90d9-032d798e1254}</Project>
+      <Name>ExtrusionUI.WindowForms.ZedGraphUserControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
