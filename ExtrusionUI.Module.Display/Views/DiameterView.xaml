@@ -7,10 +7,9 @@
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
                 xmlns:conv="clr-namespace:ExtrusionUI.Toolkits.Wpf;assembly=ExtrusionUI.Toolkits"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              xmlns:core="clr-namespace:ExtrusionUI.Core;assembly=ExtrusionUI.Core"
-             xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph"
-             x:Name="diameterView" x:Class="ExtrusionUI.Module.Display.Views.DiameterView"
+             xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
+    x:Name="diameterView" x:Class="ExtrusionUI.Module.Display.Views.DiameterView"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"  >
@@ -444,9 +443,9 @@
                 </Grid.ColumnDefinitions>
                 <Label Content="Highest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
-                    <i:Interaction.Behaviors>
+                    <i1:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.HIGHESTVALUE}" Unit="mm"/>
-                    </i:Interaction.Behaviors>
+                    </i1:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
@@ -456,9 +455,9 @@
                 </Grid.ColumnDefinitions>
                 <Label Content="Lowest Value" FontSize="20" HorizontalAlignment="Left" Padding="5,0"/>
                 <TextBlock Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left"  >
-                    <i:Interaction.Behaviors>
+                    <i1:Interaction.Behaviors>
                         <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.LOWESTVALUE}" Unit="mm"/>
-                    </i:Interaction.Behaviors>
+                    </i1:Interaction.Behaviors>
                 </TextBlock>
             </Grid>
             <Grid MaxWidth="270" HorizontalAlignment="Left">
@@ -504,57 +503,57 @@
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Traverse Motion Status: " />
                     <TextBlock Margin="10 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEMOTIONSTATUS}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Spool Motion Status: " />
                     <TextBlock Margin="23 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.SPOOLMOTIONSTATUS}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0"  >
                     <TextBlock Text="Traverse Home Offset: " />
                     <TextBlock Margin="10 0 0 0" >
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEHOMEOFFSET}"  Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Spool Width: " />
                     <TextBlock Margin="52 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.SPOOLWIDTH}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Traverse Position: " />
                     <TextBlock Margin="29 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TRAVERSEPOSITIONSTATUS}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Buffer Position: " />
                     <TextBlock Margin="29 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.BUFFERPOSITION}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Buffer Status: " />
                     <TextBlock Margin="29 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.BUFFERSTATUS}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
@@ -568,9 +567,9 @@
                 <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
                     <TextBlock Text="Blips: " />
                     <TextBlock Margin="29 0 0 0">
-                        <i:Interaction.Behaviors>
+                        <i1:Interaction.Behaviors>
                             <local:HighSpeedTextBlockBehavior FilamentService="{Binding _filamentService}" VariableName="{x:Static core:StaticStrings.TESTCODE}" Unit=""/>
-                        </i:Interaction.Behaviors>
+                        </i1:Interaction.Behaviors>
                     </TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top">

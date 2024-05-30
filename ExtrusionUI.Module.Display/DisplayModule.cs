@@ -2,9 +2,11 @@
 using Prism.Modularity;
 using Prism.Regions;
 using System;
-using Microsoft.Practices.Unity;
 using Prism.Unity;
 using ExtrusionUI.Logic.Navigation;
+using Unity;
+using Prism.Ioc;
+using System.Windows.Forms;
 
 namespace ExtrusionUI.Module.Display
 {
@@ -18,21 +20,19 @@ namespace ExtrusionUI.Module.Display
         {
             _container = container;
             _naviService = naviService;
-            
         }
 
-        public void Initialize()
+        public void OnInitialized(IContainerProvider containerProvider)
         {
-            _container.RegisterTypeForNavigation<DiameterView>();
-            _container.RegisterTypeForNavigation<SerialPortSelectionView>();
-            _container.RegisterTypeForNavigation<SettingsView>();
-            _container.RegisterTypeForNavigation<AutoDetectSerialPort>();
-
-            //_naviService.NavigateTo("DiameterView");
-
-            //_naviService.NavigateTo("SerialPortSelectionView");
             _naviService.NavigateTo("AutoDetectSerialPort");
-            
+        }
+
+        public void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            containerRegistry.RegisterForNavigation<DiameterView>();
+            containerRegistry.RegisterForNavigation<SerialPortSelectionView>();
+            containerRegistry.RegisterForNavigation<SettingsView>();
+            containerRegistry.RegisterForNavigation<AutoDetectSerialPort>();
         }
     }
 }

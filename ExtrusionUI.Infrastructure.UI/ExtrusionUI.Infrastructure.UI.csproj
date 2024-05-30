@@ -1,155 +1,51 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3CD37F03-D9B7-426C-8447-3CEF0284FABE}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ExtrusionUI.Infrastructure.UI</RootNamespace>
-    <AssemblyName>ExtrusionUI.Infrastructure.UI</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.1.39\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="PresentationFramework.Classic" />
-    <Reference Include="Prism, Version=6.3.0.0, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
-      <HintPath>..\packages\Prism.Core.6.3.0\lib\net45\Prism.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlBase\ButtonTypes.cs" />
-    <Compile Include="ControlBase\EnumItem.cs" />
-    <Compile Include="ControlBase\ParameterMachine.cs" />
-    <Compile Include="Controls\BooleanSwitchViewModel.cs" />
-    <Compile Include="Controls\ButtonPressViewModel.cs" />
-    <Compile Include="Controls\DashboardItemViewModel.cs" />
-    <Compile Include="Controls\DataInputViewModel.cs" />
-    <Compile Include="Controls\DoubleInputViewModel.cs" />
-    <Compile Include="Controls\EnumItemsViewModel.cs" />
-    <Compile Include="Controls\ErrorItemViewModel.cs" />
-    <Compile Include="Controls\LargeDataInputViewModel.cs" />
-    <Compile Include="Controls\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\BooleanSwitchView.xaml.cs">
-      <DependentUpon>BooleanSwitchView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ButtonPressView.xaml.cs">
-      <DependentUpon>ButtonPressView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DashboardItemView.xaml.cs">
-      <DependentUpon>DashboardItemView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataInputView.xaml.cs">
-      <DependentUpon>DataInputView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DoubleInputView.xaml.cs">
-      <DependentUpon>DoubleInputView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\EnumItemsView.xaml.cs">
-      <DependentUpon>EnumItemsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ErrorItemView.xaml.cs">
-      <DependentUpon>ErrorItemView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LargeDataInputView.xaml.cs">
-      <DependentUpon>LargeDataInputView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ViewModelBase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\ExtrusionUI.Infrastructure\ExtrusionUI.Infrastructure.csproj" />
+    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj" />
+    <ProjectReference Include="..\ExtrusionUI.VirtualKeyboard\ExtrusionUI.VirtualKeyboard.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExtrusionUI.Infrastructure\ExtrusionUI.Infrastructure.csproj">
-      <Project>{14852aa5-9b8d-4202-a2e3-d5f9e7004a49}</Project>
-      <Name>ExtrusionUI.Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.Toolkits\ExtrusionUI.Toolkits.csproj">
-      <Project>{5be0334f-ecf2-4af9-bb78-e1d48a2e9af8}</Project>
-      <Name>ExtrusionUI.Toolkits</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ExtrusionUI.VirtualKeyboard\ExtrusionUI.VirtualKeyboard.csproj">
-      <Project>{f74b3364-1ff6-4279-a6cb-00de1c592a00}</Project>
-      <Name>ExtrusionUI.VirtualKeyboard</Name>
-    </ProjectReference>
+    <Compile Remove="New folder\BooleanSwitchView.xaml.cs" />
+    <Compile Remove="New folder\BooleanSwitchViewModel.cs" />
+    <Compile Remove="New folder\ButtonPressView.xaml.cs" />
+    <Compile Remove="New folder\ButtonPressViewModel.cs" />
+    <Compile Remove="New folder\DashboardItemView.xaml.cs" />
+    <Compile Remove="New folder\DashboardItemViewModel.cs" />
+    <Compile Remove="New folder\DataInputView.xaml.cs" />
+    <Compile Remove="New folder\DataInputViewModel.cs" />
+    <Compile Remove="New folder\DoubleInputView.xaml.cs" />
+    <Compile Remove="New folder\DoubleInputViewModel.cs" />
+    <Compile Remove="New folder\EnumItemsView.xaml.cs" />
+    <Compile Remove="New folder\EnumItemsViewModel.cs" />
+    <Compile Remove="New folder\ErrorItemView.xaml.cs" />
+    <Compile Remove="New folder\ErrorItemViewModel.cs" />
+    <Compile Remove="New folder\LargeDataInputView.xaml.cs" />
+    <Compile Remove="New folder\LargeDataInputViewModel.cs" />
+    <Compile Remove="New folder\ViewModelBase.cs" />
+    <Page Remove="New folder\BooleanSwitchView.xaml" />
+    <Page Remove="New folder\ButtonPressView.xaml" />
+    <Page Remove="New folder\DashboardItemView.xaml" />
+    <Page Remove="New folder\DataInputView.xaml" />
+    <Page Remove="New folder\DoubleInputView.xaml" />
+    <Page Remove="New folder\EnumItemsView.xaml" />
+    <Page Remove="New folder\ErrorItemView.xaml" />
+    <Page Remove="New folder\LargeDataInputView.xaml" />
   </ItemGroup>
-  <ItemGroup>
-    <Page Include="Controls\BooleanSwitchView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ButtonPressView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\DashboardItemView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\DataInputView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\DoubleInputView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\EnumItemsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ErrorItemView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\LargeDataInputView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\UserControl1.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
