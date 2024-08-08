@@ -32,15 +32,15 @@ namespace ExtrusionUI.Startup
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.Register<INavigationService, NavigationService>();
-            containerRegistry.Register<ISerialService, SerialService>();
-            containerRegistry.Register<IModbusTCPService, ModbusTCPService>();
-            containerRegistry.Register<IFilamentService, FilamentService>();
-            containerRegistry.Register<IFileService, FileService>();
-            containerRegistry.Register<ICsvService, CsvService>();
-            containerRegistry.Register<IXmlService, XmlService>();
+            containerRegistry.RegisterSingleton<INavigationService, NavigationService>();
+            containerRegistry.RegisterSingleton<ISerialService, SerialService>();
+            containerRegistry.RegisterSingleton<IModbusTCPService, ModbusTCPService>();
+            containerRegistry.RegisterSingleton<IFilamentService, FilamentService>();
+            containerRegistry.RegisterSingleton<IFileService, FileService>();
+            containerRegistry.RegisterSingleton<ICsvService, CsvService>();
+            containerRegistry.RegisterSingleton<IXmlService, XmlService>();
             //Container.RegisterType<IWebService, Logic.WebService.WebService>(new ContainerControlledLifetimeManager());
-            containerRegistry.Register<IUI_IntelligenceService, UI_IntelligenceService>();
+            containerRegistry.RegisterSingleton<IUI_IntelligenceService, UI_IntelligenceService>();
 
             StartFilamentService();
         }

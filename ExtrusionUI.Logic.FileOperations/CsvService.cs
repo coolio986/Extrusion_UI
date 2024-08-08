@@ -25,18 +25,27 @@ namespace ExtrusionUI.Logic.FileOperations
                 StringBuilder stringBuilderCsv = new StringBuilder();
                 stringBuilderCsv.Append("Timestamp, Diameter,\r\n");
 
-                foreach (DataListXY list in dataList.ToList())
+                //dataList can be cleared by another thread which causes error's when casting dataList.ToList()
+                //Using try catch for until another way is figured out. Maybe a concurrent queue would solve that?
+                try
                 {
-                    stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
+                    foreach (DataListXY list in dataList.ToList())
+                    {
+                        stringBuilderCsv.Append(list.X.ToString() + "," + list.Y.ToString() + ",\r\n");
+                    }
+
+                    string csvString = stringBuilderCsv.ToString();
+                    csvString = csvString.TrimEnd(','); //remove trailing comma
+
+                    string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
+                        "_" + description + "_" + "Spool" + spoolNumber + ".csv";
+
+                    _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
                 }
-
-                string csvString = stringBuilderCsv.ToString();
-                csvString = csvString.TrimEnd(','); //remove trailing comma
-
-                string fileName = DateTime.Now.Month.ToString("00") + "-" + DateTime.Now.Day.ToString("00") + "-" + DateTime.Now.Year.ToString("0000") +
-                    "_" + description + "_" + "Spool" + spoolNumber + ".csv";
-
-                _fileService.WriteFile(_fileService.EnvironmentDirectory + @"\" + fileName, csvString.ToString());
+                catch (Exception e)
+                {
+                    _fileService.AppendLog(e.Message.ToString());
+                }
             }
         }
     }

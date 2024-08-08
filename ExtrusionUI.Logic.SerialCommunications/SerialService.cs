@@ -191,11 +191,11 @@ namespace ExtrusionUI.Logic.SerialCommunications
                 string ret = string.Empty;
                 Action kickoffRead = null;
                 LineSplitter lineSplitter = new LineSplitter();
-                try
+                kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
                 {
-                    kickoffRead = (Action)(() => serialPort.BaseStream.BeginRead(buffer, 0, buffer.Length, delegate (IAsyncResult ar)
+                    if (serialPort.IsOpen)
                     {
-                        if (serialPort.IsOpen)
+                        try
                         {
                             int count = serialPort.BaseStream.EndRead(ar);
                             byte[] dst = lineSplitter.OnIncomingBinaryBlock(this, buffer, count);
@@ -203,35 +203,36 @@ namespace ExtrusionUI.Logic.SerialCommunications
 
                             if (serialPort.IsOpen)
                                 kickoffRead();
-
                         }
-                        if (!serialPort.IsOpen)
+                        catch (Exception ex)
                         {
-                            Console.WriteLine("Serial port closed");
-                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial port closed");
-                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + $" Bytes left in buffer: {lineSplitter.leftover.Length}");
-                            if (retryOpen)
-                            {
-                                _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " reopening");
-
-                                string comPortName = serialPort.PortName;
-                                serialPort.Close();
-                                serialPort.Dispose();
-                                GC.Collect();
-                                SetPort(comPortName);
-
-                                serialPort.Open();
-
-                            }
+                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + ex.Message.ToString());
                         }
-                    }, null));
 
-                    kickoffRead();
-                }
-                catch
-                {
+                    }
+                    if (!serialPort.IsOpen)
+                    {
+                        Console.WriteLine("Serial port closed");
+                        _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " Serial port closed");
+                        _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + $" Bytes left in buffer: {lineSplitter.leftover.Length}");
+                        if (retryOpen)
+                        {
+                            _fileService.AppendLog(DateTime.Now.ToLongTimeString() + ":" + DateTime.Now.Millisecond.ToString() + " reopening");
 
-                }
+                            string comPortName = serialPort.PortName;
+                            serialPort.Close();
+                            serialPort.Dispose();
+                            GC.Collect();
+                            SetPort(comPortName);
+
+                            serialPort.Open();
+
+                        }
+                    }
+                }, null));
+
+                kickoffRead();
+
             }
         }
 

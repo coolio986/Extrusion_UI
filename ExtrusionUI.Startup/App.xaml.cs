@@ -15,10 +15,17 @@ namespace ExtrusionUI.Startup
     {
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            //Not a great way to solve an issue, but one way to keep the software
+            //running until the issue
+            //"The data area passed to a system call is too small"
+            try
+            {
+                base.OnStartup(e);
 
-            var bootstrapper = new Bootstrapper(e.Args);
-            bootstrapper.Run();
+                var bootstrapper = new Bootstrapper(e.Args);
+                bootstrapper.Run();
+            }
+            catch { }
         }
     }
 }
