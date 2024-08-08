@@ -1,17 +1,20 @@
-﻿using ExtrusionUI.Logic.Navigation;
+﻿using ExtrusionUI.Infrastructure.UI.Controls;
+using ExtrusionUI.Logic.Navigation;
 using ExtrusionUI.Logic.SerialCommunications;
 using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace ExtrusionUI.Module.Display.ViewModels
 {
-    public class AutoDetectSerialPortViewModel : BindableBase
+    public class AutoDetectSerialPortViewModel : BindableBase, INavigationAware
     {
         private readonly ISerialService _serialService;
         private readonly INavigationService _naviService;
@@ -83,18 +86,41 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 }
                 catch { }
             }
+            if (obj != null)
+                ExecuteAcceptDevices(null);
         }
 
         private void ExecuteAcceptDevices(object obj)
         {
             if (!string.IsNullOrEmpty(SpoolerPortNumber))
                 _serialService.ConnectToSerialPort(SpoolerPortNumber, (int)HARDWARETYPES.Spooler);
-            if (!string.IsNullOrEmpty(BufferPortNumber))
+            else if (!string.IsNullOrEmpty(BufferPortNumber))
                 _serialService.ConnectToSerialPort(BufferPortNumber, (int)HARDWARETYPES.Buffer);
-            if (!string.IsNullOrEmpty(DualAxisLaserPortNumber))
+            else if (!string.IsNullOrEmpty(DualAxisLaserPortNumber))
                 _serialService.ConnectToSerialPort(DualAxisLaserPortNumber, (int)HARDWARETYPES.DualAxisLaser);
-
+            else
+            {
+                DualAxisLaserPortNumber = "Unable to find laser, auto detect aborted";
+                return;
+            }
             _naviService.NavigateTo("DiameterView");
         }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            //attempt to autodetect ports
+            ExecuteAutoDetectDevices(new object());
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+
+        }
+
     }
 }
