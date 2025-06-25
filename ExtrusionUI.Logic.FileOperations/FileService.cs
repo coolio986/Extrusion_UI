@@ -86,6 +86,8 @@ namespace ExtrusionUI.Logic.FileOperations
                     settings.Add(new XElement("lowerLimit", "1.70"));
                     settings.Add(new XElement("spoolNumber", "0"));
                     settings.Add(new XElement("batchNumber", "0"));
+                    settings.Add(new XElement("outOfSpecHighLimit", "0.00"));
+                    settings.Add(new XElement("outOfSpecLowLimit", "0.00"));
                     doc.Save(EnvironmentDirectory + @"\persistence.xml");
                 }
                 else

@@ -35,7 +35,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
         private LargeDataInputViewModel MotherboardRestartReason;
         private ButtonPressViewModel OpenSpoolerFolder;
         private DataInputViewModel TraverseMotionStatus;
-
+        private DataInputViewModel OutOfSpecHighLimit;
+        private DataInputViewModel OutOfSpecLowLimit;
         IFileService _fileService;
 
 
@@ -51,6 +52,8 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             FilamentDiameter = new DataInputViewModel();
             UpperLimit = new DataInputViewModel();
             LowerLimit = new DataInputViewModel();
+            OutOfSpecHighLimit = new DataInputViewModel();
+            OutOfSpecLowLimit = new DataInputViewModel();
             SpoolNumber = new DataInputViewModel();
             SpoolerRpm = new DataInputViewModel();
             TraverseHomeOffset = new DataInputViewModel();
@@ -100,6 +103,22 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             LowerLimit.Value = "0.00";
             LowerLimit.IsSerialCommand = true;
             LowerLimit.SerialCommand = StaticStrings.FILAMENTLOWERLIMIT;
+
+            OutOfSpecHighLimit.ParameterName = "Out of Spec High Limit";
+            OutOfSpecHighLimit.IsXmLParameter = true;
+            OutOfSpecHighLimit.XmlParameterName = StaticStrings.OUTOFSPECHIGHLIMIT;
+            OutOfSpecHighLimit.Unit = "mm";
+            OutOfSpecHighLimit.ParameterType = "Production";
+            OutOfSpecHighLimit.Value = "0.00";
+            OutOfSpecHighLimit.IsSerialCommand = false;
+
+            OutOfSpecLowLimit.ParameterName = "Out of Spec Low Limit";
+            OutOfSpecLowLimit.IsXmLParameter = true;
+            OutOfSpecLowLimit.XmlParameterName = StaticStrings.OUTOFSPECLOWLIMIT;
+            OutOfSpecLowLimit.Unit = "mm";
+            OutOfSpecLowLimit.ParameterType = "Production";
+            OutOfSpecLowLimit.Value = "0.00";
+            OutOfSpecLowLimit.IsSerialCommand = false;
 
             SpoolNumber.ParameterName = "Spool Number";
             SpoolNumber.IsXmLParameter = true;
@@ -242,6 +261,9 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             settings.Add(FilamentDiameter);
             settings.Add(UpperLimit);
             settings.Add(LowerLimit);
+            settings.Add(OutOfSpecHighLimit);
+            settings.Add(OutOfSpecLowLimit);
+
             settings.Add(SpoolNumber);
             settings.Add(TraverseHomeOffset);
             settings.Add(TraverseSpoolWidth);
@@ -256,7 +278,7 @@ namespace ExtrusionUI.Logic.UI_Intelligence
             //settings.Add(MotherboardRestartReason);
             settings.Add(OpenSpoolerFolder);
             settings.Add(TraverseMotionStatus);
-
+           
 
             foreach (ViewModelBase item in settings)
             {

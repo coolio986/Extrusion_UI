@@ -84,6 +84,11 @@ namespace ExtrusionUI.Logic.UI_Intelligence
                 {
                     ((ButtonPressViewModel)item).ButtonCommand = new DelegateCommand<ButtonPressViewModel>(OnButtonPressed);
                 }
+
+                if (item.IsXmLParameter)
+                {
+                    item.PropertyChanged += ItemChange_Handler;
+                }
             }
 
         }

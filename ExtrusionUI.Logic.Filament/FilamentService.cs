@@ -103,6 +103,8 @@ namespace ExtrusionUI.Logic.Filament
             FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTNOMINALDIAMETER, "");
             FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTUPPERLIMIT, "");
             FilamentServiceVariables.TryAdd(StaticStrings.FILAMENTLOWERLIMIT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.OUTOFSPECHIGHLIMIT, "");
+            FilamentServiceVariables.TryAdd(StaticStrings.OUTOFSPECLOWLIMIT, "");
             FilamentServiceVariables.TryAdd(StaticStrings.TRAVERSEHOMEOFFSET, "Nan");
             FilamentServiceVariables.TryAdd(StaticStrings.SPOOLWIDTH, "Nan");
             //FilamentServiceVariables.Add("Tolerance", "");

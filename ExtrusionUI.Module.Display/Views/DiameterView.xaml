@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
-                xmlns:conv="clr-namespace:ExtrusionUI.Toolkits.Wpf;assembly=ExtrusionUI.Toolkits"
+             xmlns:conv="clr-namespace:ExtrusionUI.Toolkits.Wpf;assembly=ExtrusionUI.Toolkits"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:core="clr-namespace:ExtrusionUI.Core;assembly=ExtrusionUI.Core"
              xmlns:zed="clr-namespace:ZedGraph;assembly=ZedGraph" xmlns:i1="http://schemas.microsoft.com/xaml/behaviors"
@@ -203,6 +203,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <conv:FalseToHiddenConverter x:Key="falseToHiddenConverter" />
     </UserControl.Resources>
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
@@ -485,7 +486,24 @@
                 <Label Content="{Binding Duration}" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="20" HorizontalAlignment="Left" Margin="0,0,-50,0" Padding="1,0,5,0" />
             </Grid>
         </StackPanel>
-        
+
+        <Grid x:Name="outOfSpec" Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="1" Background="OrangeRed" Visibility="Hidden">
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="18" >
+                OUT OF SPEC, REJECT SPOOL!!
+            </TextBlock>
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="1" Background="Orange" Visibility="Hidden" >
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="18" >
+                CAUTION, SPOOL AT SPEC LIMIT!!
+            </TextBlock>
+        </Grid>
+
+        <Grid  Grid.Row="1" Grid.Column="5" Grid.ColumnSpan="1" Background="LimeGreen" Visibility="Hidden" >
+            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="WrapWithOverflow" FontSize="18" >
+                FILAMENT IN SPEC
+            </TextBlock>
+        </Grid>
 
         <Grid Grid.Column="3" Grid.Row="2" Grid.ColumnSpan="6" Grid.RowSpan="4" x:Name="zedGraphRealTimeModel" HorizontalAlignment="Stretch" Margin="0,5,0,0" >
             <!--Placeholder for zedgraph -->

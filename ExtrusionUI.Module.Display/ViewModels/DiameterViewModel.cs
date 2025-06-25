@@ -26,6 +26,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
         public DelegateCommand StopCapture { get; private set; }
         public DelegateCommand Settings { get; private set; }
 
+
         private DelegateCommand<object> _homeCommand;
         public DelegateCommand<object> HomeCommand => _homeCommand ?? (_homeCommand = new DelegateCommand<object>(ExecuteHomeCommand));
 
@@ -53,6 +54,7 @@ namespace ExtrusionUI.Module.Display.ViewModels
             get { return _serialBufferLargestSize; }
             set { SetProperty(ref _serialBufferLargestSize, value); }
         }
+
         
 
         private bool startButtonMask = false;
@@ -312,6 +314,20 @@ namespace ExtrusionUI.Module.Display.ViewModels
                 )
             {
                 StopCapture_Click();
+            }
+            if (_filamentService.CaptureStarted)
+            {
+
+                double HighestValue = 0;
+                double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.HIGHESTVALUE], out HighestValue);
+
+                double LowestValue = 0;
+                double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.LOWESTVALUE], out LowestValue);
+
+
+                
+
+
             }
 
         }

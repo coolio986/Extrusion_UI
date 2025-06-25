@@ -19,6 +19,8 @@ namespace ExtrusionUI.Core
         public static readonly string LOWESTVALUE = "LowestValue";
         public static readonly string FILAMENTUPPERLIMIT = "FilamentUpperLimit";
         public static readonly string FILAMENTLOWERLIMIT = "FilamentLowerLimit";
+        public static readonly string OUTOFSPECHIGHLIMIT = "OutOfSpecHighLimit";
+        public static readonly string OUTOFSPECLOWLIMIT = "OutOfSpecLowLimit";
         public static readonly string TRAVERSEHOMEOFFSET = "TraverseHomeOffset";
         public static readonly string SPOOLWIDTH = "SpoolWidth";
         public static readonly string DURATION = "Duration";

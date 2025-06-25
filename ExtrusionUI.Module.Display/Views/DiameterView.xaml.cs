@@ -37,6 +37,10 @@ namespace ExtrusionUI.Module.Display.Views
         bool settingsWindowOpen;
         bool updateInProgress;
 
+        private bool _isOutOfSpec;
+        private bool _isCautionSpec;
+        private bool _isGoodSpec;
+        
         public DiameterView(IFilamentService filamentService, INavigationService navigationService, ISerialService serialService)
         {
             InitializeComponent();
@@ -198,6 +202,17 @@ namespace ExtrusionUI.Module.Display.Views
                     textBlock_X_Diameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.X_ACTUALDIAMETER] + " mm";
                     textBlock_Y_Diameter.Text = _filamentService.FilamentServiceVariables[StaticStrings.Y_ACTUALDIAMETER] + " mm";
 
+                    double OutOfSpecHighValue = 0;
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.OUTOFSPECHIGHLIMIT], out OutOfSpecHighValue);
+
+                    double OutOfSpecLowValue = 0;
+                    double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.OUTOFSPECLOWLIMIT], out OutOfSpecLowValue);
+
+                    if ((OutOfSpecHighValue > HighestValue || OutOfSpecLowValue > LowestValue) && !_isOutOfSpec)
+                    {
+                        _isOutOfSpec = true;
+
+                    }
                     
 
                     this.InvalidateVisual();
