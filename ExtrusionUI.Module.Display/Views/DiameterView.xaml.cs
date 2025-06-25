@@ -208,13 +208,19 @@ namespace ExtrusionUI.Module.Display.Views
                     double OutOfSpecLowValue = 0;
                     double.TryParse(_filamentService.FilamentServiceVariables[StaticStrings.OUTOFSPECLOWLIMIT], out OutOfSpecLowValue);
 
-                    if ((OutOfSpecHighValue > HighestValue || OutOfSpecLowValue > LowestValue) && !_isOutOfSpec)
+                    if (HighestValue != 0 && LowestValue != 0)
                     {
-                        _isOutOfSpec = true;
+                        if ((OutOfSpecHighValue > HighestValue || OutOfSpecLowValue < LowestValue) && !_isOutOfSpec)
+                        {
+                            _isOutOfSpec = true;
 
+                        }
                     }
-                    
 
+                    if (_isOutOfSpec)
+                    {
+                        //outOfSpec.Visibility = Visibility.Visible;
+                    }
                     this.InvalidateVisual();
                 });
 
